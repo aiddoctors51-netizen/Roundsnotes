@@ -2,11 +2,12 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
 <title>RoundNotes — Patient</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 :root{
@@ -344,6 +345,14 @@ html,body{height:100%;font-family:'Inter',system-ui,-apple-system,sans-serif;bac
 const KEY = 'rn_patients_v2';
 const DR_KEY = 'rn_doctor';
 
+// ══ SUPABASE CONFIG — replace with your project values ══
+const SUPABASE_URL = 'https://mkpvsbysngnuqtbkuzzt.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1rcHZzYnlzbmdudXF0Ymt1enp0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEzNzkxNzAsImV4cCI6MjA5Njk1NTE3MH0.ug0nnioSrYoCqQ_ZQfduBUbwSO7MnryVFlFjXtWe6SY';
+let sb = null;
+try {
+  sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+} catch(e) { console.warn('Supabase init failed', e); }
+
 // ══ STATE ══
 let patients = [];
 let doctor = {};
@@ -364,6 +373,56 @@ function savePatients(){
     showToast('Storage full! Remove some images.','error');
     return false;
   }
+}
+
+// ══ SUPABASE SYNC ══
+async function syncToSupabase(data){
+  if(!sb) return;
+  // Strip large dataUrls — store only metadata in Supabase, images stay local
+  const payload = {
+    patient_id: String(data.id),
+    name: data.name,
+    age: data.age,
+    gender: data.gender,
+    ward: data.ward,
+    bed: data.bed,
+    contact: data.contact,
+    address: data.address,
+    status: data.status,
+    bp: data.bp,
+    hr: data.hr,
+    spo2: data.spo2,
+    temp: data.temp,
+    observations: data.obs,
+    plan: data.plan,
+    doc_count: (data.docs||[]).length,
+    saved_at: new Date(data.savedAt).toISOString(),
+    doctor_name: doctor.name||null,
+    doctor_desig: doctor.desig||null,
+    hospital: doctor.hospital||null,
+  };
+  try {
+    const { error } = await sb.from('patients').upsert(payload, { onConflict: 'patient_id' });
+    if(error) console.error('Supabase upsert error:', error.message);
+    else console.log('✓ Synced to Supabase');
+  } catch(e){ console.error('Supabase sync failed:', e); }
+}
+
+// ══ IMAGE COMPRESSION ══
+function compressImage(dataUrl, maxW=1200, quality=0.75){
+  return new Promise(res=>{
+    const img = new Image();
+    img.onload = ()=>{
+      const scale = Math.min(1, maxW / Math.max(img.width, img.height));
+      const w = Math.round(img.width * scale);
+      const h = Math.round(img.height * scale);
+      const canvas = document.createElement('canvas');
+      canvas.width = w; canvas.height = h;
+      canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+      res(canvas.toDataURL('image/jpeg', quality));
+    };
+    img.src = dataUrl;
+  });
 }
 
 // ══ INIT ══
@@ -451,16 +510,30 @@ function setCondition(key){
 }
 
 // ══ FILES ══
-function handleFiles(files){
-  const promises = Array.from(files).map(file=>new Promise(res=>{
-    const reader = new FileReader();
-    reader.onload = e => res({name:file.name, dataUrl:e.target.result, isImage:file.type.startsWith('image/')});
-    reader.readAsDataURL(file);
-  }));
-  Promise.all(promises).then(newDocs=>{
-    docs = [...docs, ...newDocs];
-    renderDocGrid();
-  });
+async function handleFiles(files){
+  showProgress('Processing images…');
+  const newDocs = [];
+  for(const file of Array.from(files)){
+    await new Promise(res=>{
+      const reader = new FileReader();
+      reader.onload = async e => {
+        let dataUrl = e.target.result;
+        const isImage = file.type.startsWith('image/');
+        if(isImage){
+          // Compress to avoid storage quota errors
+          dataUrl = await compressImage(dataUrl, 1600, 0.78);
+        }
+        newDocs.push({name: file.name, dataUrl, isImage});
+        res();
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+  docs = [...docs, ...newDocs];
+  hideProgress();
+  renderDocGrid();
+  // Reset input so same file can be re-selected if needed
+  document.getElementById('fileInput').value = '';
 }
 function renderDocGrid(){
   const grid = document.getElementById('docGrid');
@@ -475,7 +548,7 @@ function renderDocGrid(){
 function removeDoc(i){ docs.splice(i,1); renderDocGrid(); }
 
 // ══ SAVE ══
-function saveRecord(){
+async function saveRecord(){
   const data = getFormData();
   if(!data.name){ showToast('Enter patient name first','error'); return; }
   loadAll(); // Re-read in case another tab changed it
@@ -486,6 +559,8 @@ function saveRecord(){
   if(ok){
     updateTitle(data.name);
     showToast('✓ Record saved!','success');
+    // Sync to Supabase in background (non-blocking)
+    syncToSupabase(data).catch(()=>{});
   }
 }
 
@@ -587,6 +662,7 @@ function hideProgress(){ document.getElementById('progress').classList.remove('s
 
 // ══ PDF BUILDER ══
 async function buildPDF(){
+  // already async — needed for per-image aspect ratio calculation
   const {jsPDF} = window.jspdf;
   const d = getFormData();
   const doc = new jsPDF({unit:'mm', format:'a4'});
@@ -693,24 +769,34 @@ async function buildPDF(){
     }
   }
 
-  // ── Attached Images ──
+  // ── Attached Images — each image on its own full A4 page ──
   const imgDocs = docs.filter(d=>d.isImage);
-  if(imgDocs.length){
-    if(y>220){ doc.addPage(); y=M; }
-    section('Attached Images');
-    const imgW=52, imgH=42, gap=5;
-    let ix=M, iy=y;
-    for(let i=0;i<imgDocs.length;i++){
-      if(ix+imgW > W-M){ ix=M; iy+=imgH+gap+10; }
-      if(iy+imgH > 272){ doc.addPage(); iy=M; ix=M; }
-      try{
-        doc.addImage(imgDocs[i].dataUrl,'JPEG',ix,iy,imgW,imgH);
-        doc.setFont('helvetica','normal'); doc.setFontSize(6.5); doc.setTextColor(100,116,139);
-        doc.text(imgDocs[i].name.substring(0,20),ix,iy+imgH+4);
-      }catch(e){ console.warn('Image error',e); }
-      ix+=imgW+gap;
+  for(let i=0;i<imgDocs.length;i++){
+    doc.addPage();
+    // Teal header strip
+    doc.setFillColor(10,79,110);
+    doc.rect(0,0,W,14,'F');
+    doc.setTextColor(255,255,255); doc.setFontSize(9); doc.setFont('helvetica','bold');
+    doc.text('Attached Image '+(i+1)+' of '+imgDocs.length, M, 9.5);
+    doc.setFont('helvetica','normal'); doc.setFontSize(8);
+    doc.text(imgDocs[i].name.substring(0,60), W-M, 9.5, {align:'right'});
+    // Image fills the rest of the page with margins
+    const imgPageTop = 18, imgPageBot = 275;
+    const availH = imgPageBot - imgPageTop;
+    const availW = W - M*2;
+    try{
+      // Compute aspect ratio to fit image within available space
+      const tmpImg = new Image();
+      await new Promise(res=>{tmpImg.onload=res; tmpImg.src=imgDocs[i].dataUrl;});
+      const aspect = tmpImg.naturalWidth / tmpImg.naturalHeight;
+      let iw = availW, ih = availW / aspect;
+      if(ih > availH){ ih = availH; iw = availH * aspect; }
+      const ix = M + (availW - iw)/2;
+      doc.addImage(imgDocs[i].dataUrl,'JPEG', ix, imgPageTop, iw, ih);
+    }catch(e){
+      doc.setTextColor(220,38,38); doc.setFontSize(10);
+      doc.text('(Could not render image)', W/2, imgPageTop+40, {align:'center'});
     }
-    y = iy + imgH + 16;
   }
 
   // ── Doctor Signature ──
