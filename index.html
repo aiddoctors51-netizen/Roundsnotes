@@ -1,969 +1,354 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-  <meta name="apple-mobile-web-app-title" content="RoundNotes" />
-  <meta name="theme-color" content="#0A4F6E" />
-  <title>RoundNotes — Doctor's Round Assistant</title>
-  <link rel="manifest" href="manifest.json" />
-  <link rel="apple-touch-icon" href="icon-192.png" />
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <style>
-    :root {
-      --navy:#0A4F6E; --teal:#0E7490; --sky:#38BDF8; --mint:#ECFDF5;
-      --white:#FFFFFF; --slate-50:#F8FAFC; --slate-100:#F1F5F9;
-      --slate-200:#E2E8F0; --slate-400:#94A3B8; --slate-600:#475569;
-      --slate-700:#334155; --slate-900:#0F172A;
-      --red:#EF4444; --amber:#F59E0B; --green:#10B981;
-      --radius:14px; --radius-sm:8px;
-      --shadow:0 4px 24px rgba(10,79,110,.10);
-      --shadow-sm:0 1px 6px rgba(10,79,110,.08);
-    }
-    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-    html{font-size:16px}
-    body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Segoe UI',sans-serif;background:var(--slate-100);color:var(--slate-900);min-height:100dvh;overflow-x:hidden}
-    button{cursor:pointer;border:none;background:none;font-family:inherit}
-    input,textarea,select{font-family:inherit;font-size:1rem;border:none;outline:none;background:transparent}
-    img{max-width:100%;display:block}
-    ::-webkit-scrollbar{width:4px;height:4px}
-    ::-webkit-scrollbar-track{background:transparent}
-    ::-webkit-scrollbar-thumb{background:var(--slate-200);border-radius:4px}
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>RoundNotes — Doctor</title>
+<link rel="manifest" href="/manifest.json"/>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Inter',system-ui,sans-serif;background:#f1f5f9;height:100vh;display:flex;overflow:hidden;font-size:14px}
 
-    /* ── App Shell ── */
-    #app{display:flex;flex-direction:column;min-height:100dvh}
+  /* ── Sidebar ── */
+  #sidebar{width:260px;background:#fff;border-right:1px solid #e2e8f0;display:flex;flex-direction:column;padding:16px 12px;gap:10px;flex-shrink:0}
+  #sidebar .label{font-size:11px;font-weight:700;color:#64748b;letter-spacing:.08em;text-transform:uppercase}
+  #search{padding:8px 12px;border-radius:8px;border:1px solid #e2e8f0;font-size:13px;outline:none;background:#f8fafc;width:100%}
+  #newPatientBtn{background:#0f5f73;color:#fff;border:none;border-radius:8px;padding:10px;font-weight:600;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;width:100%}
+  #newPatientBtn:hover{background:#0d4f61}
+  #patientList{display:flex;flex-direction:column;gap:8px;overflow-y:auto;flex:1}
+  .patient-card{padding:10px 12px;border-radius:10px;cursor:pointer;background:#f8fafc;border:1.5px solid transparent;transition:all .15s}
+  .patient-card:hover{border-color:#0f5f7366}
+  .patient-card.active{background:#e0f2fe;border-color:#0f5f73}
+  .patient-card .p-name{font-weight:600;font-size:13px;color:#0f172a}
+  .patient-card .p-meta{display:flex;align-items:center;gap:6px;margin-top:3px}
+  .patient-card .p-detail{font-size:11px;color:#64748b}
+  .status-pill{border-radius:20px;padding:1px 8px;font-size:10px;font-weight:600}
+  .pill-stable{background:#dcfce7;color:#15803d}
+  .pill-under_review{background:#fef3c7;color:#92400e}
+  .pill-critical{background:#fee2e2;color:#991b1b}
 
-    /* ── Top Bar ── */
-    .topbar{background:var(--navy);color:var(--white);padding:0 24px;height:64px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(10,79,110,.25)}
-    .topbar-brand{display:flex;align-items:center;gap:10px}
-    .topbar-icon{width:36px;height:36px;background:rgba(56,189,248,.18);border-radius:10px;display:grid;place-items:center}
-    .topbar-icon svg{width:20px;height:20px}
-    .topbar h1{font-size:1.15rem;font-weight:700;letter-spacing:-.02em}
-    .topbar h1 span{color:var(--sky)}
-    .topbar-actions{display:flex;gap:8px;align-items:center}
-    .doctor-badge{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.10);border-radius:24px;padding:6px 14px 6px 8px;font-size:.85rem}
-    .doctor-avatar{width:28px;height:28px;background:var(--sky);border-radius:50%;display:grid;place-items:center;font-size:.7rem;font-weight:700;color:var(--navy)}
-    .sync-status{font-size:.72rem;padding:3px 10px;border-radius:20px;font-weight:600;display:flex;align-items:center;gap:5px}
-    .sync-status.ok{background:rgba(16,185,129,.15);color:#6EE7B7}
-    .sync-status.err{background:rgba(239,68,68,.15);color:#FCA5A5}
-    .sync-status.loading{background:rgba(56,189,248,.15);color:var(--sky)}
-    .sync-dot{width:6px;height:6px;border-radius:50%;background:currentColor}
+  /* ── Main ── */
+  #main{flex:1;overflow-y:auto;padding:24px 32px;display:flex;flex-direction:column;gap:20px}
 
-    /* ── Main Layout ── */
-    .main{flex:1;display:grid;grid-template-columns:300px 1fr;height:calc(100dvh - 64px);overflow:hidden}
+  /* Toast */
+  #toast{display:none;padding:10px 16px;border-radius:8px;font-weight:500;font-size:13px;border:1px solid}
+  #toast.success{background:#dcfce7;color:#15803d;border-color:#86efac;display:block}
+  #toast.error{background:#fee2e2;color:#dc2626;border-color:#fca5a5;display:block}
 
-    /* ── Sidebar ── */
-    .sidebar{background:var(--white);border-right:1px solid var(--slate-200);display:flex;flex-direction:column;overflow:hidden}
-    .sidebar-header{padding:16px;border-bottom:1px solid var(--slate-200)}
-    .sidebar-title{font-size:.75rem;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--slate-400);margin-bottom:10px}
-    .search-box{display:flex;align-items:center;gap:8px;background:var(--slate-50);border:1.5px solid var(--slate-200);border-radius:var(--radius-sm);padding:8px 12px}
-    .search-box svg{flex-shrink:0;color:var(--slate-400)}
-    .search-box input{flex:1;font-size:.9rem;color:var(--slate-700)}
-    .search-box input::placeholder{color:var(--slate-400)}
-    .btn-new{width:100%;margin-top:10px;background:var(--navy);color:var(--white);border-radius:var(--radius-sm);padding:10px;font-size:.9rem;font-weight:600;display:flex;align-items:center;justify-content:center;gap:7px;transition:background .15s}
-    .btn-new:hover{background:var(--teal)}
-    .btn-new svg{width:16px;height:16px}
-    .patient-list{flex:1;overflow-y:auto;padding:8px}
-    .patient-card{padding:12px 14px;border-radius:var(--radius-sm);cursor:pointer;transition:background .12s;border:1.5px solid transparent;margin-bottom:4px}
-    .patient-card:hover{background:var(--slate-50)}
-    .patient-card.active{background:var(--mint);border-color:var(--teal)}
-    .pc-name{font-size:.95rem;font-weight:600;color:var(--slate-900);margin-bottom:3px}
-    .pc-meta{font-size:.78rem;color:var(--slate-400);display:flex;gap:8px;align-items:center}
-    .pc-badge{font-size:.7rem;font-weight:600;padding:2px 8px;border-radius:20px;background:var(--slate-100);color:var(--slate-600)}
-    .pc-badge.critical{background:#FEF2F2;color:var(--red)}
-    .pc-badge.stable{background:#ECFDF5;color:var(--green)}
-    .pc-badge.review{background:#FFFBEB;color:var(--amber)}
-    .empty-list{text-align:center;padding:40px 20px;color:var(--slate-400);font-size:.9rem}
-    .empty-list svg{width:40px;height:40px;margin:0 auto 12px;opacity:.4}
+  /* Cards */
+  .card{background:#fff;border-radius:14px;padding:24px;box-shadow:0 1px 4px #0001}
+  .section-header{display:flex;align-items:center;gap:10px;margin-bottom:16px}
+  .section-header span.icon{font-size:18px}
+  .section-header span.title{font-weight:700;font-size:16px;color:#0f172a}
 
-    /* ── Content ── */
-    .content{flex:1;overflow-y:auto;padding:28px 32px;background:var(--slate-50)}
-    .welcome{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;text-align:center;color:var(--slate-400)}
-    .welcome-icon{width:80px;height:80px;background:linear-gradient(135deg,var(--navy),var(--teal));border-radius:24px;display:grid;place-items:center;margin-bottom:8px}
-    .welcome-icon svg{width:40px;height:40px;color:white}
-    .welcome h2{font-size:1.4rem;color:var(--slate-700);font-weight:700}
-    .welcome p{font-size:.95rem;max-width:320px;line-height:1.6}
+  /* Grid helpers */
+  .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+  .grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
 
-    /* ── Settings Panel ── */
-    .settings-overlay{position:fixed;inset:0;background:rgba(10,20,40,.55);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;z-index:200;padding:20px}
-    .settings-overlay.open{display:flex}
-    .settings-card{background:var(--white);border-radius:20px;padding:36px;width:100%;max-width:420px;box-shadow:0 24px 80px rgba(10,79,110,.25)}
-    .settings-card h2{font-size:1.25rem;font-weight:800;color:var(--slate-900);margin-bottom:4px;display:flex;align-items:center;gap:10px}
-    .settings-card h2 svg{width:22px;height:22px;color:var(--teal)}
-    .settings-card .sub{font-size:.84rem;color:var(--slate-400);margin-bottom:24px}
-    .field-group{margin-bottom:16px}
-    .field-label{font-size:.8rem;font-weight:600;color:var(--slate-600);margin-bottom:7px;display:block}
-    .field-input{width:100%;background:var(--slate-50);border:1.5px solid var(--slate-200);border-radius:var(--radius-sm);padding:11px 14px;font-size:.93rem;color:var(--slate-900);transition:border-color .15s}
-    .field-input:focus{border-color:var(--teal);background:var(--white);outline:none}
-    .settings-actions{display:flex;gap:10px;margin-top:6px}
-    .btn-primary{flex:1;background:linear-gradient(135deg,var(--navy),var(--teal));color:var(--white);border-radius:var(--radius-sm);padding:13px;font-size:1rem;font-weight:700;transition:opacity .15s,transform .12s;border:none;cursor:pointer}
-    .btn-primary:hover{opacity:.92;transform:translateY(-1px)}
-    .btn-secondary{padding:13px 18px;border-radius:var(--radius-sm);font-size:.93rem;font-weight:600;border:1.5px solid var(--slate-200);color:var(--slate-600);background:var(--white);cursor:pointer}
-    .btn-secondary:hover{border-color:var(--slate-400)}
-    .divider{height:1px;background:var(--slate-100);margin:18px 0}
-    .section-label{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--slate-400);margin-bottom:10px}
+  /* Fields */
+  .field{display:flex;flex-direction:column;gap:6px}
+  .field label{font-size:12px;font-weight:600;color:#374151}
+  .field input,.field textarea{padding:9px 12px;border-radius:8px;border:1px solid #e2e8f0;font-size:13px;outline:none;font-family:inherit;width:100%;transition:border-color .15s}
+  .field input:focus,.field textarea:focus{border-color:#0f5f73}
+  .field textarea{resize:vertical}
 
-    /* ── First-launch Profile Screen ── */
-    .profile-overlay{position:fixed;inset:0;background:linear-gradient(135deg,var(--navy) 0%,var(--teal) 100%);display:none;align-items:center;justify-content:center;z-index:300;padding:20px}
-    .profile-overlay.open{display:flex}
-    .profile-card{background:var(--white);border-radius:24px;padding:40px;width:100%;max-width:420px;box-shadow:0 32px 80px rgba(10,79,110,.35)}
-    .profile-logo{width:60px;height:60px;background:linear-gradient(135deg,var(--navy),var(--teal));border-radius:18px;display:grid;place-items:center;margin-bottom:22px}
-    .profile-logo svg{width:30px;height:30px;color:white}
-    .profile-card h2{font-size:1.5rem;font-weight:800;color:var(--slate-900);margin-bottom:6px}
-    .profile-card .sub{font-size:.9rem;color:var(--slate-500);margin-bottom:28px;line-height:1.6}
+  /* Condition buttons */
+  #conditionGroup{display:flex;gap:10px;margin-top:20px}
+  .cond-btn{display:flex;align-items:center;gap:7px;padding:8px 18px;border-radius:999px;border:1.5px solid #d1d5db;background:#fff;color:#6b7280;font-weight:500;font-size:13px;cursor:pointer;transition:all .15s;outline:none;font-family:inherit}
+  .cond-btn .dot{width:9px;height:9px;border-radius:50%;background:#d1d5db;flex-shrink:0;transition:all .15s}
+  /* active states */
+  .cond-btn.active-stable{border-color:#16a34a;background:#f0fdf4;color:#16a34a;font-weight:700;box-shadow:0 0 0 3px #16a34a22}
+  .cond-btn.active-stable .dot{background:#16a34a;box-shadow:0 0 0 2px #16a34a44}
+  .cond-btn.active-under_review{border-color:#d97706;background:#fffbeb;color:#d97706;font-weight:700;box-shadow:0 0 0 3px #d9770622}
+  .cond-btn.active-under_review .dot{background:#d97706;box-shadow:0 0 0 2px #d9770644}
+  .cond-btn.active-critical{border-color:#dc2626;background:#fef2f2;color:#dc2626;font-weight:700;box-shadow:0 0 0 3px #dc262622}
+  .cond-btn.active-critical .dot{background:#dc2626;box-shadow:0 0 0 2px #dc262644}
 
-    /* ── Form Cards ── */
-    .view-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:28px;gap:16px}
-    .view-header-left h2{font-size:1.55rem;font-weight:800;color:var(--slate-900);letter-spacing:-.03em;margin-bottom:4px}
-    .view-header-left p{font-size:.85rem;color:var(--slate-400)}
-    .view-actions{display:flex;gap:8px;flex-shrink:0}
-    .btn-action{display:flex;align-items:center;gap:6px;padding:9px 16px;border-radius:var(--radius-sm);font-size:.88rem;font-weight:600;transition:all .15s}
-    .btn-action svg{width:16px;height:16px}
-    .btn-action.outline{border:1.5px solid var(--slate-200);color:var(--slate-700);background:var(--white)}
-    .btn-action.outline:hover{border-color:var(--teal);color:var(--teal)}
-    .btn-action.danger{border:1.5px solid #FEE2E2;color:var(--red);background:#FEF2F2}
-    .btn-action.danger:hover{background:#FEE2E2}
-    .btn-action.primary-sm{background:var(--navy);color:var(--white)}
-    .btn-action.primary-sm:hover{background:var(--teal)}
-    .form-card{background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow-sm);overflow:hidden;margin-bottom:20px}
-    .form-card-header{padding:16px 20px;border-bottom:1px solid var(--slate-100);display:flex;align-items:center;gap:10px}
-    .form-card-header-icon{width:34px;height:34px;border-radius:9px;display:grid;place-items:center}
-    .form-card-header-icon.navy{background:rgba(10,79,110,.10);color:var(--navy)}
-    .form-card-header-icon.teal{background:rgba(14,116,144,.10);color:var(--teal)}
-    .form-card-header-icon.green{background:rgba(16,185,129,.10);color:var(--green)}
-    .form-card-header-icon.amber{background:rgba(245,158,11,.10);color:var(--amber)}
-    .form-card-header svg{width:18px;height:18px}
-    .form-card-header h3{font-size:.95rem;font-weight:700;color:var(--slate-900)}
-    .form-card-body{padding:20px}
-    .form-grid{display:grid;gap:16px}
-    .form-grid.cols-2{grid-template-columns:1fr 1fr}
-    .form-grid.cols-3{grid-template-columns:1fr 1fr 1fr}
-    .form-field{display:flex;flex-direction:column;gap:6px}
-    .form-field label{font-size:.8rem;font-weight:600;color:var(--slate-600)}
-    .form-field label .opt{font-weight:400;color:var(--slate-400);font-size:.75rem;margin-left:4px}
-    .form-field input,.form-field select,.form-field textarea{background:var(--slate-50);border:1.5px solid var(--slate-200);border-radius:var(--radius-sm);padding:10px 13px;font-size:.93rem;color:var(--slate-900);transition:border-color .15s}
-    .form-field input:focus,.form-field select:focus,.form-field textarea:focus{border-color:var(--teal);background:var(--white)}
-    .form-field textarea{resize:vertical;min-height:90px;line-height:1.6}
-    .form-field select{appearance:none;cursor:pointer}
-    .status-row{display:flex;gap:8px;flex-wrap:wrap}
-    .status-pill{padding:7px 16px;border-radius:20px;font-size:.82rem;font-weight:600;border:1.5px solid transparent;cursor:pointer;transition:all .12s}
-    .status-pill.stable{border-color:var(--green);color:var(--green)}
-    .status-pill.review{border-color:var(--amber);color:var(--amber)}
-    .status-pill.critical{border-color:var(--red);color:var(--red)}
-    .status-pill.selected.stable{background:#ECFDF5}
-    .status-pill.selected.review{background:#FFFBEB}
-    .status-pill.selected.critical{background:#FEF2F2}
-    .vitals-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
-    .vital-box{background:var(--slate-50);border:1.5px solid var(--slate-200);border-radius:var(--radius-sm);padding:10px 12px}
-    .vital-box label{font-size:.72rem;font-weight:600;color:var(--slate-400);text-transform:uppercase;letter-spacing:.05em;display:block;margin-bottom:5px}
-    .vital-box input{font-size:1rem;font-weight:700;color:var(--navy);width:100%}
-    .vital-box .unit{font-size:.72rem;color:var(--slate-400);margin-top:2px}
+  /* Vitals */
+  .vital-card{border:1px solid #e2e8f0;border-radius:10px;padding:12px 14px;background:#f8fafc}
+  .vital-card .v-label{font-size:10px;font-weight:700;color:#64748b;letter-spacing:.07em;margin-bottom:6px}
+  .vital-card input{font-size:22px;font-weight:700;color:#0f172a;border:none;background:transparent;width:100%;outline:none;font-family:inherit}
+  .vital-card .v-unit{font-size:11px;color:#94a3b8;margin-top:2px}
 
-    /* ── Upload ── */
-    .upload-zone{border:2px dashed var(--slate-200);border-radius:var(--radius-sm);padding:28px;text-align:center;cursor:pointer;transition:all .15s;margin-bottom:16px}
-    .upload-zone:hover,.upload-zone.dragging{border-color:var(--teal);background:rgba(14,116,144,.04)}
-    .upload-zone svg{width:28px;height:28px;color:var(--slate-300);margin:0 auto 10px}
-    .upload-zone p{font-size:.88rem;color:var(--slate-400);line-height:1.6}
-    .upload-zone p strong{color:var(--teal)}
-    .upload-zone input[type="file"]{display:none}
-    .docs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:12px}
-    .doc-thumb{border-radius:var(--radius-sm);border:1.5px solid var(--slate-200);overflow:hidden;position:relative;aspect-ratio:1;background:var(--slate-50);display:flex;flex-direction:column;align-items:center;justify-content:center}
-    .doc-thumb img{width:100%;height:100%;object-fit:cover}
-    .doc-thumb .doc-label{position:absolute;bottom:0;left:0;right:0;background:rgba(15,23,42,.65);color:white;font-size:.65rem;padding:4px 6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-    .doc-thumb .doc-remove{position:absolute;top:4px;right:4px;width:22px;height:22px;background:rgba(239,68,68,.85);color:white;border-radius:50%;display:none;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;cursor:pointer}
-    .doc-thumb:hover .doc-remove{display:flex}
-    .doc-file-icon{width:36px;height:36px;color:var(--slate-300)}
+  /* Upload zone */
+  #dropZone{border:2px dashed #cbd5e1;border-radius:12px;padding:28px 20px;display:flex;flex-direction:column;align-items:center;gap:10px;cursor:pointer;background:#f8fafc;transition:border-color .15s}
+  #dropZone:hover{border-color:#0f5f73}
+  #dropZone .upload-icon-wrap{width:48px;height:48px;border-radius:12px;background:#e0f2fe;display:flex;align-items:center;justify-content:center}
+  #dropZone .upload-text{font-size:13px;color:#64748b}
+  #dropZone .upload-text strong{color:#0f5f73}
+  #dropZone .upload-hint{font-size:12px;color:#94a3b8}
+  #docGrid{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+  .doc-thumb{position:relative;border-radius:10px;overflow:hidden;border:1px solid #e2e8f0;background:#f8fafc;width:90px;flex-shrink:0}
+  .doc-thumb img{width:90px;height:70px;object-fit:cover;display:block}
+  .doc-thumb .doc-icon{width:90px;height:70px;display:flex;align-items:center;justify-content:center;font-size:28px;background:#f1f5f9}
+  .doc-thumb .doc-name{padding:4px 6px;font-size:10px;color:#475569;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .doc-thumb .doc-remove{position:absolute;top:4px;right:4px;width:18px;height:18px;border-radius:50%;background:#dc2626;color:#fff;border:none;cursor:pointer;font-size:10px;display:flex;align-items:center;justify-content:center;line-height:1}
 
-    /* ── Save Bar ── */
-    .save-bar{background:var(--white);border-top:1px solid var(--slate-200);padding:14px 32px;display:flex;justify-content:flex-end;gap:10px;position:sticky;bottom:0}
-    .btn-save{background:linear-gradient(135deg,var(--navy),var(--teal));color:var(--white);padding:11px 28px;border-radius:var(--radius-sm);font-size:.93rem;font-weight:700;display:flex;align-items:center;gap:7px;transition:opacity .15s,transform .12s}
-    .btn-save:hover{opacity:.9;transform:translateY(-1px)}
-    .btn-save:disabled{opacity:.5;cursor:not-allowed;transform:none}
-    .btn-save svg{width:16px;height:16px}
-
-    /* ── Toast ── */
-    .toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--slate-900);color:var(--white);padding:12px 22px;border-radius:30px;font-size:.88rem;font-weight:500;pointer-events:none;opacity:0;transition:all .3s cubic-bezier(.34,1.56,.64,1);z-index:999;white-space:nowrap}
-    .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-
-    /* ── Modal ── */
-    .modal-overlay{position:fixed;inset:0;background:rgba(10,20,40,.5);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;z-index:300;padding:20px}
-    .modal-overlay.hidden{display:none}
-    .modal{background:var(--white);border-radius:18px;padding:28px;max-width:460px;width:100%;box-shadow:0 24px 60px rgba(10,79,110,.2)}
-    .modal h3{font-size:1.15rem;font-weight:700;margin-bottom:10px;color:var(--slate-900)}
-    .modal p{font-size:.9rem;color:var(--slate-600);margin-bottom:22px;line-height:1.6}
-    .modal-actions{display:flex;justify-content:flex-end;gap:10px}
-    .btn-modal-cancel{padding:9px 18px;border-radius:var(--radius-sm);font-size:.9rem;font-weight:600;border:1.5px solid var(--slate-200);color:var(--slate-600);background:var(--white)}
-    .btn-modal-confirm{padding:9px 18px;border-radius:var(--radius-sm);font-size:.9rem;font-weight:600;background:var(--red);color:white}
-
-    /* ── Settings btn in topbar ── */
-    .btn-topbar{display:flex;align-items:center;gap:6px;padding:7px 14px;border-radius:20px;font-size:.82rem;font-weight:600;color:white;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.18);transition:background .15s;cursor:pointer}
-    .btn-topbar:hover{background:rgba(255,255,255,.22)}
-    .btn-topbar svg{width:15px;height:15px}
-
-    /* ── Loading spinner ── */
-    .spinner{width:20px;height:20px;border:2.5px solid rgba(255,255,255,.3);border-top-color:white;border-radius:50%;animation:spin .6s linear infinite;display:inline-block}
-    @keyframes spin{to{transform:rotate(360deg)}}
-    .loading-screen{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;color:var(--slate-400)}
-    .loading-screen .spinner{border-color:var(--slate-200);border-top-color:var(--teal);width:32px;height:32px}
-
-    @media(max-width:768px){
-      .main{grid-template-columns:1fr}
-      .sidebar{display:none}
-      .sidebar.show{display:flex;position:fixed;inset:64px 0 0 0;z-index:50}
-      .content{padding:20px 16px}
-      .form-grid.cols-2{grid-template-columns:1fr}
-      .form-grid.cols-3{grid-template-columns:1fr 1fr}
-      .view-header{flex-direction:column}
-      .save-bar{padding:14px 16px}
-      .vitals-grid{grid-template-columns:1fr 1fr}
-    }
-  </style>
+  /* Save button */
+  #saveBar{display:flex;justify-content:flex-end;padding-bottom:32px}
+  #saveBtn{background:#0f5f73;color:#fff;border:none;border-radius:10px;padding:12px 28px;font-weight:700;font-size:14px;cursor:pointer;display:flex;align-items:center;gap:8px;box-shadow:0 2px 8px #0f5f7333;font-family:inherit}
+  #saveBtn:hover{background:#0d4f61}
+</style>
 </head>
 <body>
 
-<!-- First-launch Profile Setup (only shown when no doctor profile saved) -->
-<div class="profile-overlay" id="profileOverlay">
-  <div class="profile-card">
-    <div class="profile-logo">
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 0 0 2.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 0 0-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75 2.25 2.25 0 0 0-.1-.664m-5.8 0A2.251 2.251 0 0 1 13.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25ZM6.75 12h.008v.008H6.75V12Zm0 3h.008v.008H6.75V15Zm0 3h.008v.008H6.75V18Z"/>
-      </svg>
-    </div>
-    <h2>Welcome to RoundNotes</h2>
-    <p class="sub">Tell us a bit about yourself. This appears on your exported PDF reports.</p>
-
-    <div class="field-group">
-      <label class="field-label">Full Name</label>
-      <input class="field-input" id="profileName" type="text" placeholder="Dr. Sarah Johnson" />
-    </div>
-    <div class="field-group">
-      <label class="field-label">Department / Specialisation</label>
-      <input class="field-input" id="profileDept" type="text" placeholder="Internal Medicine" />
-    </div>
-    <div class="field-group">
-      <label class="field-label">Hospital / Institution</label>
-      <input class="field-input" id="profileHospital" type="text" placeholder="City General Hospital" />
-    </div>
-    <button class="btn-primary" id="profileSaveBtn" onclick="saveProfile()">Start Using RoundNotes →</button>
-    <div id="profileError" style="color:var(--red);font-size:.82rem;margin-top:10px;display:none">Please enter your name to continue.</div>
-  </div>
+<!-- ══ SIDEBAR ══ -->
+<div id="sidebar">
+  <div class="label">Patients This Round</div>
+  <input id="search" placeholder="Search patient..." oninput="filterPatients()"/>
+  <button id="newPatientBtn" onclick="addPatient()">
+    <span style="font-size:18px;line-height:1">+</span> New Patient
+  </button>
+  <div id="patientList"></div>
 </div>
 
-<!-- Settings Overlay -->
-<div class="settings-overlay" id="settingsOverlay">
-  <div class="settings-card">
-    <h2>
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"/>
-      </svg>
-      My Profile
-    </h2>
-    <p class="sub">Your details appear in exported PDF reports.</p>
+<!-- ══ MAIN ══ -->
+<div id="main">
+  <div id="toast"></div>
 
-    <div class="field-group">
-      <label class="field-label">Full Name</label>
-      <input class="field-input" id="settingsName" type="text" placeholder="Dr. Sarah Johnson" />
+  <!-- Patient Info -->
+  <div class="card">
+    <div class="grid-2">
+      <div class="field"><label>Full Name</label><input id="f-name" placeholder="Full name"/></div>
+      <div class="field"><label>Age</label><input id="f-age" placeholder="Age"/></div>
     </div>
-    <div class="field-group">
-      <label class="field-label">Department / Specialisation</label>
-      <input class="field-input" id="settingsDept" type="text" placeholder="Internal Medicine" />
+    <div class="grid-3" style="margin-top:16px">
+      <div class="field"><label>Gender</label><input id="f-gender" placeholder="Gender"/></div>
+      <div class="field"><label>Ward / Unit</label><input id="f-ward" placeholder="Ward / Unit"/></div>
+      <div class="field"><label>Bed No.</label><input id="f-bed" placeholder="Bed No."/></div>
     </div>
-    <div class="field-group">
-      <label class="field-label">Hospital / Institution</label>
-      <input class="field-input" id="settingsHospital" type="text" placeholder="City General Hospital" />
+    <div class="grid-2" style="margin-top:16px">
+      <div class="field"><label>Contact <span style="color:#94a3b8;font-weight:400">(optional)</span></label><input id="f-contact" placeholder="Patient or guardian number"/></div>
+      <div class="field"><label>Address <span style="color:#94a3b8;font-weight:400">(optional)</span></label><input id="f-address" placeholder="City, State"/></div>
     </div>
 
-    <div class="divider"></div>
-    <div class="section-label" style="margin-bottom:8px">Connection Status</div>
-    <div id="settingsConnStatus" style="font-size:.85rem;color:var(--slate-600);background:var(--slate-50);border-radius:var(--radius-sm);padding:10px 14px;margin-bottom:18px">Checking…</div>
-
-    <div class="settings-actions">
-      <button class="btn-secondary" onclick="closeSettings()">Cancel</button>
-      <button class="btn-primary" onclick="saveSettings()">Save Changes</button>
-    </div>
-  </div>
-</div>
-
-<!-- Delete Modal -->
-<div class="modal-overlay hidden" id="deleteModal">
-  <div class="modal">
-    <h3>Delete Patient Record?</h3>
-    <p>This will permanently remove this patient's round notes and all uploaded documents. This cannot be undone.</p>
-    <div class="modal-actions">
-      <button class="btn-modal-cancel" id="deleteCancel">Cancel</button>
-      <button class="btn-modal-confirm" id="deleteConfirm">Delete Record</button>
-    </div>
-  </div>
-</div>
-
-<div class="toast" id="toast"></div>
-
-<div id="app">
-  <header class="topbar">
-    <div class="topbar-brand">
-      <div class="topbar-icon">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="#38BDF8">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
-        </svg>
-      </div>
-      <h1>Round<span>Notes</span></h1>
-    </div>
-    <div class="topbar-actions">
-      <div id="syncStatus" class="sync-status loading"><div class="sync-dot"></div><span>Connecting…</span></div>
-      <div class="doctor-badge">
-        <div class="doctor-avatar"><span id="doctorInitials">DR</span></div>
-        <span id="doctorNameBadge">Doctor</span>
-      </div>
-      <button class="btn-topbar" onclick="openSettings()" title="Profile & Settings">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.325.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 0 1 1.37.49l1.296 2.247a1.125 1.125 0 0 1-.26 1.431l-1.003.827c-.293.241-.438.613-.43.992a7.723 7.723 0 0 1 0 .255c-.008.378.137.75.43.991l1.004.827c.424.35.534.955.26 1.43l-1.298 2.247a1.125 1.125 0 0 1-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.47 6.47 0 0 1-.22.128c-.331.183-.581.495-.644.869l-.213 1.281c-.09.543-.56.94-1.11.94h-2.594c-.55 0-1.019-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 0 1-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 0 1-1.369-.49l-1.297-2.247a1.125 1.125 0 0 1 .26-1.431l1.004-.827c.292-.24.437-.613.43-.991a6.932 6.932 0 0 1 0-.255c.007-.38-.138-.751-.43-.992l-1.004-.827a1.125 1.125 0 0 1-.26-1.43l1.297-2.247a1.125 1.125 0 0 1 1.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.086.22-.128.332-.183.582-.495.644-.869l.214-1.28Z"/>
-          <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/>
-        </svg>
-        Settings
-      </button>
-    </div>
-  </header>
-
-  <div class="main">
-    <aside class="sidebar" id="sidebar">
-      <div class="sidebar-header">
-        <div class="sidebar-title">Patients this round</div>
-        <div class="search-box">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="width:16px;height:16px;">
-            <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 15.803 7.5 7.5 0 0 0 15.803 15.803Z"/>
-          </svg>
-          <input type="text" id="searchInput" placeholder="Search patient…" oninput="filterPatients()" />
-        </div>
-        <button class="btn-new" onclick="newPatient()">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
-          New Patient
+    <!-- Condition Status -->
+    <div style="margin-top:8px">
+      <div style="font-size:12px;font-weight:600;color:#374151;margin-bottom:10px">Condition Status</div>
+      <div id="conditionGroup">
+        <button class="cond-btn" data-key="stable" onclick="setCondition('stable')">
+          <span class="dot"></span> Stable
+        </button>
+        <button class="cond-btn" data-key="under_review" onclick="setCondition('under_review')">
+          <span class="dot"></span> Under Review
+        </button>
+        <button class="cond-btn" data-key="critical" onclick="setCondition('critical')">
+          <span class="dot"></span> Critical
         </button>
       </div>
-      <div class="patient-list" id="patientList">
-        <div class="loading-screen" style="height:auto;padding:40px 0">
-          <div class="spinner" style="border-color:var(--slate-200);border-top-color:var(--teal);width:24px;height:24px"></div>
-          <span style="font-size:.85rem">Loading patients…</span>
-        </div>
-      </div>
-    </aside>
+    </div>
+  </div>
 
-    <main class="content" id="contentArea">
-      <div class="welcome" id="welcomeScreen">
-        <div class="welcome-icon">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 0 0 2.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 0 0-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75 2.25 2.25 0 0 0-.1-.664m-5.8 0A2.251 2.251 0 0 1 13.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25ZM6.75 12h.008v.008H6.75V12Zm0 3h.008v.008H6.75V15Zm0 3h.008v.008H6.75V18Z"/>
-          </svg>
-        </div>
-        <h2>Select or add a patient</h2>
-        <p>Choose a patient from the sidebar, or tap <strong>New Patient</strong> to begin your round entry.</p>
+  <!-- Vital Signs -->
+  <div class="card">
+    <div class="section-header">
+      <span class="icon">❤️</span><span class="title">Vital Signs</span>
+    </div>
+    <div class="grid-4">
+      <div class="vital-card">
+        <div class="v-label">BLOOD PRESSURE</div>
+        <input id="v-bp" value="120/80"/>
+        <div class="v-unit">mmHg</div>
       </div>
-      <div id="patientView" style="display:none"></div>
-    </main>
+      <div class="vital-card">
+        <div class="v-label">HEART RATE</div>
+        <input id="v-hr" value="72"/>
+        <div class="v-unit">bpm</div>
+      </div>
+      <div class="vital-card">
+        <div class="v-label">SPO₂</div>
+        <input id="v-spo2" value="98"/>
+        <div class="v-unit">%</div>
+      </div>
+      <div class="vital-card">
+        <div class="v-label">TEMPERATURE</div>
+        <input id="v-temp" value="98.6"/>
+        <div class="v-unit">°F</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Clinical Notes -->
+  <div class="card">
+    <div class="section-header">
+      <span class="icon">📋</span><span class="title">Clinical Notes</span>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <div class="field">
+        <label>Observations</label>
+        <textarea id="f-obs" rows="3" placeholder="Observations, symptoms, examination findings..."></textarea>
+      </div>
+      <div class="field">
+        <label>Plan / Instructions</label>
+        <textarea id="f-plan" rows="3" placeholder="Investigation orders, next steps, follow-up plan..."></textarea>
+      </div>
+    </div>
+  </div>
+
+  <!-- Documents & Images -->
+  <div class="card">
+    <div class="section-header">
+      <span class="icon">🖼️</span><span class="title">Documents & Images</span>
+    </div>
+    <input type="file" id="fileInput" multiple accept="image/*,.pdf" style="display:none" onchange="handleFiles(this.files)"/>
+    <div id="dropZone" onclick="document.getElementById('fileInput').click()"
+         ondragover="event.preventDefault();this.style.borderColor='#0f5f73'"
+         ondragleave="this.style.borderColor='#cbd5e1'"
+         ondrop="event.preventDefault();this.style.borderColor='#cbd5e1';handleFiles(event.dataTransfer.files)">
+      <div class="upload-icon-wrap">
+        <!-- Clean SVG upload icon -->
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#0f5f73" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+          <polyline points="17 8 12 3 7 8"/>
+          <line x1="12" y1="3" x2="12" y2="15"/>
+        </svg>
+      </div>
+      <div class="upload-text"><strong>Tap to upload</strong> or drag & drop</div>
+      <div class="upload-hint">X-rays, lab reports, prescriptions, photos</div>
+    </div>
+    <div id="docGrid"></div>
+  </div>
+
+  <div id="saveBar">
+    <button id="saveBtn" onclick="saveRecord()">✓ Save Record</button>
   </div>
 </div>
 
 <script>
-// ── Hardcoded Supabase Credentials ───────────────────────────────
-const SUPABASE_URL = 'https://mkpvsbysngnuqtbkuzzt.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1rcHZzYnlzbmdudXF0Ymt1enp0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEzNzkxNzAsImV4cCI6MjA5Njk1NTE3MH0.ug0nnioSrYoCqQ_ZQfduBUbwSO7MnryVFlFjXtWe6SY';
+// ── State ──
+let patients = [
+  { id: 1, name: "Unnamed Patient", status: "stable", ward: "", saved: false }
+];
+let activeId = 1;
+let currentCondition = "stable";
+let docs = [];
 
-// ── State ────────────────────────────────────────────────────────
-let sb = null;
-let doctor = null;
-let patients = [];
-let activeId = null;
-let pendingDeleteId = null;
-let currentStatus = 'stable';
+// ── Init ──
+renderPatientList();
+setCondition("stable");
 
-// ── Boot ─────────────────────────────────────────────────────────
-window.addEventListener('DOMContentLoaded', async () => {
-  // Load saved doctor profile (no Supabase details needed from user)
-  const savedDoctor = getSavedDoctor();
-  if (!savedDoctor) {
-    // First launch — ask for doctor name only
-    document.getElementById('profileOverlay').classList.add('open');
-  } else {
-    doctor = savedDoctor;
-    refreshDoctorUI();
-  }
-
-  // Always connect to Supabase with hardcoded credentials
-  try {
-    await initSupabase();
-    await loadPatients();
-  } catch(e) {
-    setSyncStatus('err', 'Connection failed');
-    showToast('⚠ Cannot reach server. Check your internet connection.');
-  }
-
-  document.getElementById('deleteCancel').onclick = () => document.getElementById('deleteModal').classList.add('hidden');
-  document.getElementById('deleteConfirm').onclick = confirmDeleteExec;
-});
-
-function getSavedDoctor() {
-  try {
-    const d = localStorage.getItem('rn_doctor');
-    return d ? JSON.parse(d) : null;
-  } catch { return null; }
-}
-
-function saveDoctorToStorage(doc) {
-  localStorage.setItem('rn_doctor', JSON.stringify(doc));
-}
-
-async function initSupabase() {
-  const { createClient } = supabase;
-  sb = createClient(SUPABASE_URL, SUPABASE_KEY);
-  const { error } = await sb.from('patients').select('id').limit(1);
-  if (error && error.code !== 'PGRST116') throw error;
-  setSyncStatus('ok', 'Synced');
-}
-
-// ── First-launch profile save ────────────────────────────────────
-function saveProfile() {
-  const name     = document.getElementById('profileName').value.trim();
-  const dept     = document.getElementById('profileDept').value.trim();
-  const hospital = document.getElementById('profileHospital').value.trim();
-  const errEl    = document.getElementById('profileError');
-
-  if (!name) {
-    errEl.style.display = 'block';
-    document.getElementById('profileName').focus();
-    return;
-  }
-  errEl.style.display = 'none';
-  doctor = { name, dept, hospital };
-  saveDoctorToStorage(doctor);
-  refreshDoctorUI();
-  document.getElementById('profileOverlay').classList.remove('open');
-  showToast('✓ Profile saved — welcome, ' + name + '!');
-}
-
-// ── Settings panel ───────────────────────────────────────────────
-function openSettings() {
-  const d = doctor || {};
-  document.getElementById('settingsName').value     = d.name     || '';
-  document.getElementById('settingsDept').value     = d.dept     || '';
-  document.getElementById('settingsHospital').value = d.hospital || '';
-
-  // Show connection status
-  const statusEl = document.getElementById('settingsConnStatus');
-  if (sb) {
-    statusEl.innerHTML = '<span style="color:var(--green);font-weight:600">● Connected</span> — patient data is securely synced to the cloud.';
-  } else {
-    statusEl.innerHTML = '<span style="color:var(--red);font-weight:600">● Disconnected</span> — check your internet connection.';
-  }
-
-  document.getElementById('settingsOverlay').classList.add('open');
-}
-
-function closeSettings() {
-  document.getElementById('settingsOverlay').classList.remove('open');
-}
-
-function saveSettings() {
-  const name     = document.getElementById('settingsName').value.trim();
-  const dept     = document.getElementById('settingsDept').value.trim();
-  const hospital = document.getElementById('settingsHospital').value.trim();
-  if (!name) {
-    document.getElementById('settingsName').focus();
-    return;
-  }
-  doctor = { name, dept, hospital };
-  saveDoctorToStorage(doctor);
-  refreshDoctorUI();
-  closeSettings();
-  showToast('✓ Profile updated');
-}
-
-// Close settings overlay on backdrop click
-document.getElementById('settingsOverlay').addEventListener('click', function(e) {
-  if (e.target === this) closeSettings();
-});
-
-function refreshDoctorUI() {
-  if (!doctor) return;
-  const initials = doctor.name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
-  document.getElementById('doctorInitials').textContent = initials;
-  document.getElementById('doctorNameBadge').textContent = doctor.name;
-}
-
-function setSyncStatus(type, text) {
-  const el = document.getElementById('syncStatus');
-  el.className = 'sync-status ' + type;
-  el.innerHTML = `<div class="sync-dot"></div><span>${text}</span>`;
-}
-
-// ── Load Patients ────────────────────────────────────────────────
-async function loadPatients() {
-  setSyncStatus('loading', 'Loading…');
-  const { data, error } = await sb.from('patients').select('*').order('created_at', { ascending: false });
-  if (error) { setSyncStatus('err', 'Sync error'); throw error; }
-  patients = data || [];
-  setSyncStatus('ok', 'Synced');
-  renderPatientList();
-}
-
-// ── New Patient ──────────────────────────────────────────────────
-async function newPatient() {
-  const row = {
-    name:'', age:null, gender:'', ward:'', bed_no:'', contact:'', address:'',
-    status:'stable', bp:'', hr:'', spo2:'', temp:'',
-    diagnosis:'', current_meds:'', notes:'', plan:'',
-    doctor_name: doctor?.name || '', doctor_dept: doctor?.dept || '', doctor_hospital: doctor?.hospital || ''
-  };
-  setSyncStatus('loading', 'Saving…');
-  const { data, error } = await sb.from('patients').insert([row]).select().single();
-  if (error) { setSyncStatus('err', 'Save failed'); showToast('⚠ Could not create patient.'); return; }
-  patients.unshift(data);
-  setSyncStatus('ok', 'Synced');
-  renderPatientList();
-  openPatient(data.id);
-}
-
-// ── Open / Render Patient ────────────────────────────────────────
-async function openPatient(id) {
-  activeId = id;
-  renderPatientList();
-  const p = patients.find(x => x.id === id);
-  if (!p) return;
-  p.docList = await fetchDocList(id);
-  showPatientView(p);
-}
-
-async function fetchDocList(patientId) {
-  const { data, error } = await sb.storage.from('documents').list(String(patientId), { limit: 100 });
-  if (error || !data) return [];
-  return data.map(f => ({
-    name: f.name,
-    path: `${patientId}/${f.name}`,
-    url: sb.storage.from('documents').getPublicUrl(`${patientId}/${f.name}`).data.publicUrl
-  }));
-}
-
-// ── Save Patient ─────────────────────────────────────────────────
-async function saveCurrentPatient() {
-  const p = patients.find(x => x.id === activeId);
-  if (!p) return;
-  const btn = document.querySelector('.btn-save');
-  if (btn) { btn.disabled = true; btn.innerHTML = '<div class="spinner"></div> Saving…'; }
-
-  const updates = {
-    name:         v('pName'),
-    age:          v('pAge') ? parseInt(v('pAge')) : null,
-    gender:       v('pGender'),
-    ward:         v('pWard'),
-    bed_no:       v('pBed'),
-    contact:      v('pContact'),
-    address:      v('pAddress'),
-    bp:           v('pBP'),
-    hr:           v('pHR'),
-    spo2:         v('pSpO2'),
-    temp:         v('pTemp'),
-    diagnosis:    v('pDiagnosis'),
-    current_meds: v('pMeds'),
-    notes:        v('pNotes'),
-    plan:         v('pPlan'),
-    status:       currentStatus,
-    updated_at:   new Date().toISOString()
-  };
-
-  setSyncStatus('loading', 'Saving…');
-  const { error } = await sb.from('patients').update(updates).eq('id', activeId);
-  if (btn) { btn.disabled = false; btn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5"/></svg> Save Record'; }
-  if (error) { setSyncStatus('err', 'Save failed'); showToast('⚠ Save failed. Check connection.'); return; }
-  Object.assign(p, updates);
-  setSyncStatus('ok', 'Synced');
-  renderPatientList();
-  showToast('✓ Patient record saved');
-  const h2 = document.querySelector('.view-header-left h2');
-  if (h2) h2.textContent = updates.name || 'New Patient';
-}
-
-// ── Delete Patient ───────────────────────────────────────────────
-function confirmDelete(id) {
-  pendingDeleteId = id;
-  document.getElementById('deleteModal').classList.remove('hidden');
-}
-async function confirmDeleteExec() {
-  document.getElementById('deleteModal').classList.add('hidden');
-  if (!pendingDeleteId) return;
-  const { data: files } = await sb.storage.from('documents').list(String(pendingDeleteId));
-  if (files?.length) {
-    const paths = files.map(f => `${pendingDeleteId}/${f.name}`);
-    await sb.storage.from('documents').remove(paths);
-  }
-  await sb.from('patients').delete().eq('id', pendingDeleteId);
-  patients = patients.filter(p => p.id !== pendingDeleteId);
-  if (activeId === pendingDeleteId) { activeId = null; showWelcome(); }
-  pendingDeleteId = null;
-  renderPatientList();
-  showToast('Patient record deleted.');
-}
-
-// ── Document Upload ──────────────────────────────────────────────
-function setupDocUpload(p) {
-  const input = document.getElementById('fileInput');
-  const zone  = document.getElementById('uploadZone');
-  if (!input || !zone) return;
-  input.addEventListener('change', e => handleFiles(Array.from(e.target.files), p));
-  zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('dragging'); });
-  zone.addEventListener('dragleave', () => zone.classList.remove('dragging'));
-  zone.addEventListener('drop', e => { e.preventDefault(); zone.classList.remove('dragging'); handleFiles(Array.from(e.dataTransfer.files), p); });
-}
-
-async function handleFiles(files, p) {
-  if (!files.length) return;
-  showToast(`Uploading ${files.length} file(s)…`);
-  for (const file of files) {
-    const safeName = `${Date.now()}_${file.name.replace(/[^a-zA-Z0-9._-]/g,'_')}`;
-    const path = `${p.id}/${safeName}`;
-    const { error } = await sb.storage.from('documents').upload(path, file, { upsert: true });
-    if (error) { showToast('⚠ Upload failed: ' + file.name); continue; }
-    const url = sb.storage.from('documents').getPublicUrl(path).data.publicUrl;
-    p.docList = p.docList || [];
-    p.docList.push({ name: safeName, path, url });
-  }
-  renderDocThumbs(p);
-  showToast(`✓ ${files.length} file(s) uploaded`);
-}
-
-async function removeDoc(idx, p) {
-  const doc = p.docList[idx];
-  if (!doc) return;
-  await sb.storage.from('documents').remove([doc.path]);
-  p.docList.splice(idx, 1);
-  renderDocThumbs(p);
-  showToast('Document removed.');
-}
-
-function renderDocThumbs(p) {
-  const grid = document.getElementById('docsGrid');
-  if (!grid) return;
-  const docs = p.docList || [];
-  if (!docs.length) { grid.innerHTML = ''; return; }
-  grid.innerHTML = docs.map((doc, i) => {
-    const isImg = /\.(jpg|jpeg|png|gif|webp|heic)$/i.test(doc.name);
-    return `<div class="doc-thumb">
-      ${isImg
-        ? `<img src="${doc.url}" alt="${esc(doc.name)}" loading="lazy" />`
-        : `<svg class="doc-file-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z"/></svg>`
-      }
-      <div class="doc-label">${esc(doc.name.replace(/^\d+_/,''))}</div>
-      <span class="doc-remove" onclick="removeDoc(${i}, patients.find(x=>x.id==='${p.id}'))">✕</span>
-    </div>`;
-  }).join('');
-}
-
-// ── Render Sidebar ───────────────────────────────────────────────
+// ── Patient List ──
 function renderPatientList() {
+  const q = document.getElementById('search').value.toLowerCase();
   const list = document.getElementById('patientList');
-  const q = (document.getElementById('searchInput')?.value || '').toLowerCase();
-  const visible = patients.filter(p =>
-    (p.name||'').toLowerCase().includes(q) || (p.ward||'').toLowerCase().includes(q)
-  );
-  if (!visible.length) {
-    list.innerHTML = `<div class="empty-list">
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"/>
-      </svg>
-      <p>${patients.length ? 'No match found.' : 'No patients yet.<br/>Tap <strong>New Patient</strong> to begin.'}</p>
-    </div>`;
-    return;
-  }
-  list.innerHTML = visible.map(p => {
-    const name = p.name || 'Unnamed Patient';
-    const meta = [p.age ? `${p.age}y` : null, p.ward ? `Ward ${p.ward}` : null].filter(Boolean).join(' · ');
-    return `<div class="patient-card ${p.id === activeId ? 'active' : ''}" onclick="openPatient('${p.id}')">
-      <div class="pc-name">${esc(name)}</div>
-      <div class="pc-meta">
-        <span>${meta || 'Details pending'}</span>
-        <span class="pc-badge ${p.status||'stable'}">${p.status||'stable'}</span>
-      </div>
-    </div>`;
-  }).join('');
+  list.innerHTML = '';
+  patients
+    .filter(p => p.name.toLowerCase().includes(q))
+    .forEach(p => {
+      const div = document.createElement('div');
+      div.className = 'patient-card' + (p.id === activeId ? ' active' : '');
+      div.innerHTML = `
+        <div class="p-name">${p.name}</div>
+        <div class="p-meta">
+          <span class="p-detail">${p.ward ? 'Ward: ' + p.ward : 'Details pending'}</span>
+          <span class="status-pill pill-${p.status}">${p.status.replace('_',' ')}</span>
+        </div>`;
+      div.onclick = () => loadPatient(p.id);
+      list.appendChild(div);
+    });
 }
 
 function filterPatients() { renderPatientList(); }
 
-// ── Views ────────────────────────────────────────────────────────
-function showWelcome() {
-  document.getElementById('welcomeScreen').style.display = 'flex';
-  document.getElementById('patientView').style.display = 'none';
+function addPatient() {
+  const id = Date.now();
+  patients.push({ id, name: "Unnamed Patient", status: "stable", ward: "", saved: false });
+  activeId = id;
+  clearForm();
+  renderPatientList();
 }
 
-function showPatientView(p) {
-  document.getElementById('welcomeScreen').style.display = 'none';
-  const view = document.getElementById('patientView');
-  view.style.display = 'block';
-  view.innerHTML = buildPatientForm(p);
-  currentStatus = p.status || 'stable';
-  highlightStatus();
-  renderDocThumbs(p);
-  setupDocUpload(p);
+function loadPatient(id) {
+  activeId = id;
+  renderPatientList();
+  // In a real app you'd restore saved form data here
 }
 
-// ── Form HTML ────────────────────────────────────────────────────
-function buildPatientForm(p) {
-  const dateStr = new Date(p.created_at).toLocaleString('en-IN',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});
-  return `
-  <div class="view-header">
-    <div class="view-header-left">
-      <h2>${esc(p.name || 'New Patient')}</h2>
-      <p>Round entry · ${dateStr}</p>
-    </div>
-    <div class="view-actions">
-      <button class="btn-action danger" onclick="confirmDelete('${p.id}')">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0"/></svg>
-        Delete
-      </button>
-      <button class="btn-action primary-sm" onclick="exportPDF('${p.id}')">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3"/></svg>
-        Export PDF
-      </button>
-    </div>
-  </div>
-
-  <div class="form-card">
-    <div class="form-card-header">
-      <div class="form-card-header-icon navy">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"/></svg>
-      </div>
-      <h3>Patient Information</h3>
-    </div>
-    <div class="form-card-body">
-      <div class="form-grid cols-2">
-        <div class="form-field"><label>Full Name</label><input id="pName" type="text" value="${esc(p.name||'')}" placeholder="Patient's full name" /></div>
-        <div class="form-field"><label>Age</label><input id="pAge" type="number" value="${p.age||''}" placeholder="Years" min="0" max="130" /></div>
-      </div>
-      <div class="form-grid cols-3" style="margin-top:14px">
-        <div class="form-field"><label>Gender</label>
-          <select id="pGender">
-            <option value="" ${!p.gender?'selected':''}>Select</option>
-            <option value="Male" ${p.gender==='Male'?'selected':''}>Male</option>
-            <option value="Female" ${p.gender==='Female'?'selected':''}>Female</option>
-            <option value="Other" ${p.gender==='Other'?'selected':''}>Other</option>
-          </select>
-        </div>
-        <div class="form-field"><label>Ward / Unit</label><input id="pWard" type="text" value="${esc(p.ward||'')}" placeholder="e.g. ICU, Ward 4" /></div>
-        <div class="form-field"><label>Bed No.</label><input id="pBed" type="text" value="${esc(p.bed_no||'')}" placeholder="e.g. 12A" /></div>
-      </div>
-      <div class="form-grid cols-2" style="margin-top:14px">
-        <div class="form-field"><label>Contact <span class="opt">(optional)</span></label><input id="pContact" type="tel" value="${esc(p.contact||'')}" placeholder="Patient or guardian number" /></div>
-        <div class="form-field"><label>Address <span class="opt">(optional)</span></label><input id="pAddress" type="text" value="${esc(p.address||'')}" placeholder="City, State" /></div>
-      </div>
-      <div style="margin-top:18px">
-        <div class="form-field"><label>Condition Status</label></div>
-        <div class="status-row" id="statusRow">
-          <button class="status-pill stable"   onclick="setStatus('stable')"  >● Stable</button>
-          <button class="status-pill review"   onclick="setStatus('review')"  >● Under Review</button>
-          <button class="status-pill critical" onclick="setStatus('critical')">● Critical</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="form-card">
-    <div class="form-card-header">
-      <div class="form-card-header-icon teal">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"/></svg>
-      </div>
-      <h3>Vital Signs</h3>
-    </div>
-    <div class="form-card-body">
-      <div class="vitals-grid">
-        <div class="vital-box"><label>Blood Pressure</label><input id="pBP" type="text" value="${esc(p.bp||'')}" placeholder="120/80" /><div class="unit">mmHg</div></div>
-        <div class="vital-box"><label>Heart Rate</label><input id="pHR" type="text" value="${esc(p.hr||'')}" placeholder="72" /><div class="unit">bpm</div></div>
-        <div class="vital-box"><label>SpO₂</label><input id="pSpO2" type="text" value="${esc(p.spo2||'')}" placeholder="98" /><div class="unit">%</div></div>
-        <div class="vital-box"><label>Temperature</label><input id="pTemp" type="text" value="${esc(p.temp||'')}" placeholder="98.6" /><div class="unit">°F</div></div>
-      </div>
-    </div>
-  </div>
-
-  <div class="form-card">
-    <div class="form-card-header">
-      <div class="form-card-header-icon green">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 0 0 2.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 0 0-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75 2.25 2.25 0 0 0-.1-.664m-5.8 0A2.251 2.251 0 0 1 13.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25ZM6.75 12h.008v.008H6.75V12Zm0 3h.008v.008H6.75V15Zm0 3h.008v.008H6.75V18Z"/></svg>
-      </div>
-      <h3>Clinical Notes</h3>
-    </div>
-    <div class="form-card-body">
-      <div class="form-grid">
-        <div class="form-field"><label>Primary Diagnosis / Working Diagnosis</label><textarea id="pDiagnosis" rows="3" placeholder="Enter diagnosis details…">${esc(p.diagnosis||'')}</textarea></div>
-        <div class="form-field"><label>Current Medications</label><textarea id="pMeds" rows="3" placeholder="List medications, doses, frequency…">${esc(p.current_meds||'')}</textarea></div>
-        <div class="form-field"><label>Examination Findings & Notes</label><textarea id="pNotes" rows="4" placeholder="Observations, symptoms, examination findings…">${esc(p.notes||'')}</textarea></div>
-        <div class="form-field"><label>Plan / Instructions</label><textarea id="pPlan" rows="3" placeholder="Investigation orders, next steps, follow-up plan…">${esc(p.plan||'')}</textarea></div>
-      </div>
-    </div>
-  </div>
-
-  <div class="form-card">
-    <div class="form-card-header">
-      <div class="form-card-header-icon amber">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z"/></svg>
-      </div>
-      <h3>Documents & Images</h3>
-    </div>
-    <div class="form-card-body">
-      <label class="upload-zone" id="uploadZone" for="fileInput">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5m-13.5-9L12 3m0 0 4.5 4.5M12 3v13.5"/>
-        </svg>
-        <p><strong>Tap to upload</strong> or drag & drop<br/>X-rays, lab reports, prescriptions, photos</p>
-        <input type="file" id="fileInput" accept="image/*,.pdf" multiple />
-      </label>
-      <div class="docs-grid" id="docsGrid"></div>
-    </div>
-  </div>
-
-  <div class="save-bar">
-    <button class="btn-save" onclick="saveCurrentPatient()">
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5"/></svg>
-      Save Record
-    </button>
-  </div>`;
-}
-
-// ── Status Pills ─────────────────────────────────────────────────
-function setStatus(s) {
-  currentStatus = s;
-  highlightStatus();
-}
-function highlightStatus() {
-  document.querySelectorAll('.status-pill').forEach(btn => {
-    btn.classList.toggle('selected', btn.classList.contains(currentStatus));
+// ── Condition Status (FIX #3) ──
+function setCondition(key) {
+  currentCondition = key;
+  document.querySelectorAll('.cond-btn').forEach(btn => {
+    btn.className = 'cond-btn'; // reset
+    if (btn.dataset.key === key) {
+      btn.classList.add('active-' + key);
+    }
   });
 }
 
-// ── PDF Export ───────────────────────────────────────────────────
-async function exportPDF(id) {
-  await saveCurrentPatient();
-  const p = patients.find(x => x.id === id);
-  if (!p) return;
-
-  const { jsPDF } = window.jspdf;
-  const doc = new jsPDF({ orientation:'portrait', unit:'mm', format:'a4' });
-  const W = 210, M = 18, cW = W - M*2;
-  let y = 0;
-
-  function checkPage(n=10) { if(y+n>272){doc.addPage();y=20;} }
-
-  doc.setFillColor(10,79,110);
-  doc.rect(0,0,W,40,'F');
-  doc.setFont('helvetica','bold').setFontSize(22).setTextColor(255,255,255);
-  doc.text('RoundNotes',M,16);
-  doc.setFont('helvetica','normal').setFontSize(9).setTextColor(150,210,240);
-  doc.text("Doctor's Patient Round Report",M,24);
-  const dLine = [doctor?.name, doctor?.dept, doctor?.hospital].filter(Boolean).join('  ·  ');
-  doc.setFontSize(8.5).setTextColor(200,235,255);
-  doc.text(dLine, M, 33);
-  const dateStr = new Date().toLocaleString('en-IN',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});
-  doc.setFontSize(7.5).setTextColor(150,210,240);
-  doc.text('Generated: '+dateStr, W-M, 33, {align:'right'});
-  y = 52;
-
-  function secTitle(t, r=10,g=79,b=110) {
-    checkPage(14);
-    doc.setFillColor(r,g,b).roundedRect(M,y,cW,8,1.5,1.5,'F');
-    doc.setFont('helvetica','bold').setFontSize(9).setTextColor(255,255,255);
-    doc.text(t, M+4, y+5.5);
-    y += 12;
-  }
-  function twoCol(pairs) {
-    const colW = cW/2-2;
-    let maxL = 1;
-    pairs.forEach(([l,val],i) => {
-      if (!val) return;
-      const x = M+(i%2)*(colW+4);
-      doc.setFont('helvetica','bold').setFontSize(8.5).setTextColor(70,90,120);
-      doc.text(l+':', x, y);
-      doc.setFont('helvetica','normal').setTextColor(15,23,42);
-      const lines = doc.splitTextToSize(String(val), colW-28);
-      doc.text(lines, x+28, y);
-      maxL = Math.max(maxL, lines.length);
-      if(i%2===1){y+=maxL*5.5+2;maxL=1;}
-    });
-    if(pairs.length%2!==0) y+=maxL*5.5+2;
-  }
-  function block(l,txt) {
-    if(!txt) return;
-    checkPage(14);
-    doc.setFont('helvetica','bold').setFontSize(8.5).setTextColor(70,90,120);
-    doc.text(l+':', M+2, y); y+=6;
-    doc.setFont('helvetica','normal').setTextColor(15,23,42);
-    doc.splitTextToSize(txt, cW-4).forEach(line => { checkPage(6); doc.text(line,M+4,y); y+=5.2; });
-    y+=2;
-  }
-
-  secTitle('PATIENT INFORMATION');
-  twoCol([
-    ['Name',p.name],['Age',p.age?p.age+' years':''],
-    ['Gender',p.gender],['Status',(p.status||'stable').toUpperCase()],
-    ['Ward',p.ward],['Bed No.',p.bed_no],
-    ['Contact',p.contact],['Address',p.address],
-  ]);
-
-  if(p.bp||p.hr||p.spo2||p.temp){
-    y+=4; secTitle('VITAL SIGNS',14,116,144);
-    twoCol([
-      ['Blood Pressure',p.bp?p.bp+' mmHg':''],['Heart Rate',p.hr?p.hr+' bpm':''],
-      ['SpO₂',p.spo2?p.spo2+'%':''],['Temperature',p.temp?p.temp+' °F':''],
-    ]);
-  }
-
-  y+=4; secTitle('CLINICAL NOTES',16,185,129);
-  block('Diagnosis', p.diagnosis);
-  block('Current Medications', p.current_meds);
-  block('Examination Findings', p.notes);
-  block('Plan / Instructions', p.plan);
-
-  const imgDocs = (p.docList||[]).filter(d => /\.(jpg|jpeg|png|gif|webp)$/i.test(d.name));
-  if(imgDocs.length) {
-    y+=4; secTitle('ATTACHED DOCUMENTS',245,158,11); y+=2;
-    let xPos=M; const sz=56, gap=6;
-    for(const imgDoc of imgDocs) {
-      checkPage(sz+14);
-      try {
-        const resp = await fetch(imgDoc.url);
-        const blob = await resp.blob();
-        const b64 = await new Promise(res => { const r=new FileReader(); r.onload=e=>res(e.target.result); r.readAsDataURL(blob); });
-        doc.addImage(b64,'JPEG',xPos,y,sz,sz);
-        doc.setFont('helvetica','normal').setFontSize(6.5).setTextColor(100,120,140);
-        const nm = imgDoc.name.replace(/^\d+_/,'');
-        doc.text(nm.length>16?nm.slice(0,13)+'…':nm, xPos, y+sz+4, {maxWidth:sz});
-        xPos+=sz+gap;
-        if(xPos+sz>W-M){xPos=M;y+=sz+14;}
-      } catch(e){}
-    }
-    y+=sz+14;
-  }
-
-  y=278;
-  doc.setDrawColor(220,230,240).setLineWidth(0.3).line(M,y,W-M,y); y+=5;
-  doc.setFont('helvetica','italic').setFontSize(7.5).setTextColor(140,160,180);
-  doc.text(`Report prepared by ${doctor?.name||'Doctor'}${doctor?.dept?', '+doctor.dept:''}`,M,y);
-  doc.text(doctor?.hospital||'',W-M,y,{align:'right'});
-
-  const filename = `RoundNotes_${(p.name||'patient').replace(/\s+/g,'_')}_${new Date().toISOString().slice(0,10)}.pdf`;
-  doc.save(filename);
-  showToast('📄 PDF exported — '+filename);
+// ── File Upload (FIX #1) ──
+function handleFiles(files) {
+  Array.from(files).forEach(file => {
+    const url = URL.createObjectURL(file);
+    docs.push({ name: file.name, url, isImage: file.type.startsWith('image/') });
+  });
+  renderDocs();
 }
 
-// ── Helpers ──────────────────────────────────────────────────────
-function v(id) { return document.getElementById(id)?.value||''; }
-function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
-function showToast(msg) {
-  const t=document.getElementById('toast');
-  t.textContent=msg; t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'),3000);
+function renderDocs() {
+  const grid = document.getElementById('docGrid');
+  grid.innerHTML = '';
+  docs.forEach((doc, i) => {
+    const div = document.createElement('div');
+    div.className = 'doc-thumb';
+    div.innerHTML = doc.isImage
+      ? `<img src="${doc.url}" alt="${doc.name}"/>`
+      : `<div class="doc-icon">📄</div>`;
+    div.innerHTML += `
+      <div class="doc-name">${doc.name}</div>
+      <button class="doc-remove" onclick="removeDoc(${i})">✕</button>`;
+    grid.appendChild(div);
+  });
 }
 
-// ── Service Worker ───────────────────────────────────────────────
-if('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('sw.js').catch(()=>{});
+function removeDoc(i) {
+  docs.splice(i, 1);
+  renderDocs();
+}
+
+// ── Save Record (FIX #2) ──
+function saveRecord() {
+  const name = document.getElementById('f-name').value.trim();
+  if (!name) {
+    showToast('Please enter patient name before saving.', 'error');
+    return;
+  }
+  const ward = document.getElementById('f-ward').value.trim();
+  // Update patient in sidebar
+  const p = patients.find(p => p.id === activeId);
+  if (p) {
+    p.name = name;
+    p.status = currentCondition;
+    p.ward = ward;
+    p.saved = true;
+  }
+  renderPatientList();
+  showToast('Record saved successfully!', 'success');
+}
+
+function showToast(msg, type) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = type;
+  setTimeout(() => { t.className = ''; t.style.display = 'none'; }, 3000);
+}
+
+function clearForm() {
+  ['f-name','f-age','f-gender','f-ward','f-bed','f-contact','f-address','f-obs','f-plan'].forEach(id => {
+    document.getElementById(id).value = '';
+  });
+  document.getElementById('v-bp').value = '120/80';
+  document.getElementById('v-hr').value = '72';
+  document.getElementById('v-spo2').value = '98';
+  document.getElementById('v-temp').value = '98.6';
+  docs = [];
+  renderDocs();
+  setCondition('stable');
+}
+
+// Register service worker
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/sw.js');
 }
 </script>
 </body>
