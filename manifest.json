@@ -2,7 +2,7 @@
   "name": "RoundNotes — Doctor's Round Assistant",
   "short_name": "RoundNotes",
   "description": "A digital assistant for documenting hospital patient rounds",
-  "start_url": "/",
+  "start_url": "/index.html",
   "display": "standalone",
   "background_color": "#0A4F6E",
   "theme_color": "#0A4F6E",
