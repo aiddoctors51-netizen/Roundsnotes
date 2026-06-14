@@ -17,71 +17,32 @@
   --red:#dc2626;--red-bg:#fee2e2;--red-light:#fef2f2;
   --slate:#64748b;--border:#e2e8f0;--bg:#f1f5f9;--white:#fff;
   --radius:14px;--shadow:0 2px 8px rgba(0,0,0,.08);
-  --safe-top:env(safe-area-inset-top,0px);
-  --safe-bottom:env(safe-area-inset-bottom,0px);
+  --safe-top:env(safe-area-inset-top,0px);--safe-bottom:env(safe-area-inset-bottom,0px);
 }
 html,body{height:100%;font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg);color:#0f172a}
 #pageWrap{display:flex;flex-direction:column;height:100dvh;height:100vh;overflow:hidden}
-
-/* ── TOPBAR ── */
-.topbar{
-  background:var(--teal);
-  padding:calc(12px + var(--safe-top)) 14px 14px;
-  display:flex;align-items:center;gap:10px;flex-shrink:0;
-}
-.back-btn{
-  background:rgba(255,255,255,.18);border:none;color:#fff;
-  width:38px;height:38px;border-radius:50%;font-size:20px;
-  cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;
-}
+.topbar{background:var(--teal);padding:calc(12px + var(--safe-top)) 14px 14px;display:flex;align-items:center;gap:10px;flex-shrink:0}
+.back-btn{background:rgba(255,255,255,.18);border:none;color:#fff;width:38px;height:38px;border-radius:50%;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .back-btn:active{background:rgba(255,255,255,.3)}
 .topbar h1{color:#fff;font-size:17px;font-weight:800;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.tb-share{
-  background:rgba(255,255,255,.18);border:none;color:#fff;
-  padding:8px 13px;border-radius:9px;font-size:13px;font-weight:700;
-  cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:5px;flex-shrink:0;
-}
+.tb-share{background:rgba(255,255,255,.18);border:none;color:#fff;padding:8px 13px;border-radius:9px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:5px;flex-shrink:0}
 .tb-share:active{background:rgba(255,255,255,.3)}
-
-/* ── SCROLL BODY ── */
-#formBody{
-  flex:1;overflow-y:auto;overflow-x:hidden;
-  padding:14px 14px calc(28px + var(--safe-bottom));
-  display:flex;flex-direction:column;gap:13px;
-  -webkit-overflow-scrolling:touch;
-}
-
-/* ── CARD ── */
+#formBody{flex:1;overflow-y:auto;overflow-x:hidden;padding:14px 14px calc(28px + var(--safe-bottom));display:flex;flex-direction:column;gap:13px;-webkit-overflow-scrolling:touch}
 .card{background:var(--white);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow)}
 .card-title{display:flex;align-items:center;gap:8px;margin-bottom:14px}
 .card-title .icon{font-size:17px}
-.card-title .t{font-weight:800;font-size:14px;letter-spacing:-.1px}
-
-/* ── FIELDS ── */
+.card-title .t{font-weight:800;font-size:14px}
 .field{display:flex;flex-direction:column;gap:5px;margin-bottom:11px}
 .field:last-child{margin-bottom:0}
 .field label{font-size:11px;font-weight:700;color:#374151;letter-spacing:.04em;text-transform:uppercase}
-.field input,.field textarea,.field select{
-  padding:11px 12px;border-radius:10px;border:1.5px solid var(--border);
-  font-size:15px;outline:none;font-family:inherit;width:100%;
-  background:#fff;color:#0f172a;transition:border-color .15s;
-  -webkit-appearance:none;appearance:none;
-}
+.field input,.field textarea,.field select{padding:11px 12px;border-radius:10px;border:1.5px solid var(--border);font-size:15px;outline:none;font-family:inherit;width:100%;background:#fff;color:#0f172a;transition:border-color .15s;-webkit-appearance:none;appearance:none}
 .field input:focus,.field textarea:focus,.field select:focus{border-color:var(--teal)}
 .field textarea{resize:none;line-height:1.55}
 .row-2{display:grid;grid-template-columns:1fr 1fr;gap:11px}
 .row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px}
 @media(max-width:380px){.row-3{grid-template-columns:1fr 1fr}}
-
-/* ── CONDITION BUTTONS ── */
 .cond-group{display:flex;flex-direction:column;gap:9px;margin-top:2px}
-@media(orientation:landscape){.cond-group{flex-direction:row}}
-.cond-btn{
-  display:flex;align-items:center;gap:10px;padding:12px 14px;
-  border-radius:11px;border:1.5px solid var(--border);background:#fff;
-  font-size:14px;font-weight:600;cursor:pointer;transition:all .12s;
-  font-family:inherit;text-align:left;flex:1;
-}
+.cond-btn{display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:11px;border:1.5px solid var(--border);background:#fff;font-size:14px;font-weight:600;cursor:pointer;transition:all .12s;font-family:inherit;text-align:left;flex:1}
 .cond-btn .dot{width:10px;height:10px;border-radius:50%;background:#d1d5db;flex-shrink:0}
 .cond-btn.active-stable{border-color:var(--green);background:var(--green-light);color:var(--green);font-weight:800}
 .cond-btn.active-stable .dot{background:var(--green)}
@@ -89,55 +50,24 @@ html,body{height:100%;font-family:'Inter',system-ui,-apple-system,sans-serif;bac
 .cond-btn.active-under_review .dot{background:var(--amber)}
 .cond-btn.active-critical{border-color:var(--red);background:var(--red-light);color:var(--red);font-weight:800}
 .cond-btn.active-critical .dot{background:var(--red)}
-
-/* ── VITALS ── */
 .vital-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-@media(orientation:landscape) and (min-width:600px){.vital-grid{grid-template-columns:repeat(4,1fr)}}
 .vital-box{background:var(--bg);border-radius:11px;padding:12px}
 .vital-box .v-label{font-size:10px;font-weight:800;color:var(--slate);letter-spacing:.06em;text-transform:uppercase;margin-bottom:7px}
-.vital-box input{
-  font-size:22px;font-weight:800;color:#0f172a;border:none;
-  background:transparent;width:100%;outline:none;font-family:inherit;
-  /* Dimmed default value */
-  opacity:0.45;transition:opacity .1s;
-}
+.vital-box input{font-size:22px;font-weight:800;color:#0f172a;border:none;background:transparent;width:100%;outline:none;font-family:inherit;opacity:.45;transition:opacity .1s}
 .vital-box input:focus,.vital-box input.has-value{opacity:1}
 .vital-box .v-unit{font-size:11px;color:#94a3b8;margin-top:3px}
-
-/* ── CUSTOM PARAMS ── */
 .custom-params{display:flex;flex-direction:column;gap:9px;margin-top:4px}
-.custom-param-row{
-  display:flex;gap:8px;align-items:center;
-  background:var(--bg);border-radius:11px;padding:10px 12px;
-}
-.custom-param-row input{
-  border:none;background:transparent;outline:none;font-family:inherit;
-  font-size:14px;color:#0f172a;flex:1;min-width:0;
-}
-.custom-param-row input.param-name{
-  font-weight:700;color:var(--slate);font-size:12px;text-transform:uppercase;letter-spacing:.04em;max-width:110px;
-}
+.custom-param-row{display:flex;gap:8px;align-items:center;background:var(--bg);border-radius:11px;padding:10px 12px}
+.custom-param-row input{border:none;background:transparent;outline:none;font-family:inherit;font-size:14px;color:#0f172a;flex:1;min-width:0}
+.custom-param-row input.param-name{font-weight:700;color:var(--slate);font-size:12px;text-transform:uppercase;letter-spacing:.04em;max-width:110px}
 .custom-param-row input.param-value{font-size:20px;font-weight:800;color:#0f172a;text-align:right;max-width:90px}
 .custom-param-row input.param-unit{font-size:11px;color:#94a3b8;max-width:60px;text-align:right}
-.custom-param-row .param-del{
-  background:none;border:none;color:#cbd5e1;font-size:16px;cursor:pointer;padding:2px 0 2px 4px;flex-shrink:0;
-}
+.custom-param-row .param-del{background:none;border:none;color:#cbd5e1;font-size:16px;cursor:pointer;padding:2px 0 2px 4px;flex-shrink:0}
 .custom-param-row .param-del:active{color:var(--red)}
-.btn-add-param{
-  display:flex;align-items:center;gap:8px;padding:10px 14px;
-  border-radius:11px;border:1.5px dashed #cbd5e1;background:transparent;
-  font-size:13px;font-weight:700;color:var(--slate);cursor:pointer;font-family:inherit;
-  margin-top:4px;width:100%;
-}
+.btn-add-param{display:flex;align-items:center;gap:8px;padding:10px 14px;border-radius:11px;border:1.5px dashed #cbd5e1;background:transparent;font-size:13px;font-weight:700;color:var(--slate);cursor:pointer;font-family:inherit;margin-top:4px;width:100%}
 .btn-add-param:active{border-color:var(--teal);color:var(--teal)}
-
-/* ── UPLOAD ── */
 .upload-btns{display:flex;gap:9px;margin-bottom:12px}
-.upload-btn{
-  flex:1;padding:14px 8px;border-radius:12px;border:2px dashed #cbd5e1;
-  background:#f8fafc;cursor:pointer;display:flex;flex-direction:column;align-items:center;
-  gap:6px;transition:border-color .15s, background .15s;
-}
+.upload-btn{flex:1;padding:14px 8px;border-radius:12px;border:2px dashed #cbd5e1;background:#f8fafc;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:6px;transition:border-color .15s,background .15s}
 .upload-btn:active{border-color:var(--teal);background:var(--teal-xlight)}
 .upload-btn .ub-icon{font-size:26px}
 .upload-btn .ub-label{font-size:11px;font-weight:700;color:#64748b;text-align:center}
@@ -153,82 +83,37 @@ html,body{height:100%;font-family:'Inter',system-ui,-apple-system,sans-serif;bac
 .doc-thumb .doc-icon{width:82px;height:66px;display:flex;align-items:center;justify-content:center;font-size:28px;background:#f1f5f9}
 .doc-thumb .doc-name{padding:3px 5px;font-size:9px;color:#475569;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:#fff}
 .doc-thumb .doc-remove{position:absolute;top:3px;right:3px;width:22px;height:22px;border-radius:50%;background:var(--red);color:#fff;border:none;cursor:pointer;font-size:12px;display:flex;align-items:center;justify-content:center;font-weight:700}
-
-/* ── SAVE / SHARE ── */
 .btn-row{display:flex;gap:10px;padding:4px 0 8px}
-.btn-save{
-  flex:1;background:var(--teal);color:#fff;border:none;border-radius:11px;
-  padding:15px;font-size:15px;font-weight:700;cursor:pointer;
-  display:flex;align-items:center;justify-content:center;gap:8px;font-family:inherit;
-}
+.btn-save{flex:1;background:var(--teal);color:#fff;border:none;border-radius:11px;padding:15px;font-size:15px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;font-family:inherit}
 .btn-save:active{background:var(--teal-2)}
-.btn-share{
-  background:#fff;color:var(--teal);border:2px solid var(--teal);
-  border-radius:11px;padding:15px 18px;font-size:15px;font-weight:700;
-  cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;font-family:inherit;
-}
+.btn-share{background:#fff;color:var(--teal);border:2px solid var(--teal);border-radius:11px;padding:15px 18px;font-size:15px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;font-family:inherit}
 .btn-share:active{background:var(--teal-light)}
-
-/* ── SUCCESS OVERLAY ── */
-#successOverlay{
-  position:fixed;inset:0;z-index:950;
-  background:rgba(10,79,110,.92);
-  display:none;flex-direction:column;align-items:center;justify-content:center;gap:16px;
-  color:#fff;
-}
+#successOverlay{position:fixed;inset:0;z-index:950;background:rgba(10,79,110,.92);display:none;flex-direction:column;align-items:center;justify-content:center;gap:16px;color:#fff}
 #successOverlay.show{display:flex}
-.success-check{
-  width:78px;height:78px;border-radius:50%;background:var(--green);
-  display:flex;align-items:center;justify-content:center;
-  font-size:38px;
-  animation:checkPop .4s cubic-bezier(.34,1.56,.64,1) both;
-}
+.success-check{width:78px;height:78px;border-radius:50%;background:var(--green);display:flex;align-items:center;justify-content:center;font-size:38px;animation:checkPop .4s cubic-bezier(.34,1.56,.64,1) both}
 @keyframes checkPop{from{transform:scale(0)}to{transform:scale(1)}}
-#successOverlay h2{font-size:22px;font-weight:900;animation:fadeUp .4s .15s ease both}
-#successOverlay p{font-size:14px;color:rgba(255,255,255,.75);animation:fadeUp .4s .25s ease both}
-@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
-
-/* ── SHARE SHEET ── */
+#successOverlay h2{font-size:22px;font-weight:900}
+#successOverlay p{font-size:14px;color:rgba(255,255,255,.75)}
 #shareSheet{position:fixed;inset:0;z-index:900;display:none}
 #shareSheet.open{display:flex;flex-direction:column;justify-content:flex-end}
 #shareSheet .ovl{position:absolute;inset:0;background:rgba(0,0,0,.45)}
-#shareSheet .sh{
-  position:relative;background:#fff;border-radius:22px 22px 0 0;
-  padding:20px 16px calc(28px + var(--safe-bottom));z-index:1;
-}
+#shareSheet .sh{position:relative;background:#fff;border-radius:22px 22px 0 0;padding:20px 16px calc(28px + var(--safe-bottom));z-index:1}
 #shareSheet h3{font-size:16px;font-weight:800;margin-bottom:4px;text-align:center}
 #shareSheet .sh-sub{font-size:12px;color:var(--slate);text-align:center;margin-bottom:18px}
 .share-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:10px}
-.sh-opt{
-  display:flex;flex-direction:column;align-items:center;gap:7px;
-  cursor:pointer;padding:10px 4px;border-radius:12px;border:none;background:none;font-family:inherit;
-}
+.sh-opt{display:flex;flex-direction:column;align-items:center;gap:7px;cursor:pointer;padding:10px 4px;border-radius:12px;border:none;background:none;font-family:inherit}
 .sh-opt:active{background:#f1f5f9}
 .sh-icon{width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:26px}
 .sh-opt span{font-size:11px;font-weight:700;color:#374151}
-.sh-cancel{
-  width:100%;margin-top:10px;padding:13px;border-radius:11px;border:none;
-  background:#f1f5f9;font-size:15px;font-weight:700;color:var(--slate);cursor:pointer;font-family:inherit;
-}
+.sh-drive{width:100%;display:flex;align-items:center;gap:14px;padding:13px 16px;background:#f0fdf4;border-radius:13px;border:1.5px solid #bbf7d0;cursor:pointer;font-family:inherit;margin-top:4px}
+.sh-drive:active{background:#dcfce7}
+.sh-cancel{width:100%;margin-top:10px;padding:13px;border-radius:11px;border:none;background:#f1f5f9;font-size:15px;font-weight:700;color:var(--slate);cursor:pointer;font-family:inherit}
 .sh-cancel:active{background:#e2e8f0}
-
-/* ── TOAST ── */
-#toast{
-  position:fixed;bottom:calc(28px + var(--safe-bottom));left:50%;
-  transform:translateX(-50%);padding:12px 22px;border-radius:10px;
-  font-weight:700;font-size:14px;z-index:999;display:none;
-  white-space:nowrap;box-shadow:0 4px 20px rgba(0,0,0,.18);pointer-events:none;
-}
+#toast{position:fixed;bottom:calc(28px + var(--safe-bottom));left:50%;transform:translateX(-50%);padding:12px 22px;border-radius:10px;font-weight:700;font-size:14px;z-index:9999;display:none;white-space:nowrap;box-shadow:0 4px 20px rgba(0,0,0,.18);pointer-events:none}
 #toast.show-success{display:block;background:var(--green);color:#fff}
 #toast.show-error{display:block;background:var(--red);color:#fff}
 #toast.show-info{display:block;background:var(--teal);color:#fff}
-
-/* ── PROGRESS OVERLAY ── */
-#progress{
-  position:fixed;inset:0;background:rgba(10,79,110,.88);z-index:1000;
-  display:none;flex-direction:column;align-items:center;justify-content:center;gap:14px;
-  color:#fff;font-weight:700;font-size:15px;
-}
+#progress{position:fixed;inset:0;background:rgba(10,79,110,.88);z-index:1000;display:none;flex-direction:column;align-items:center;justify-content:center;gap:14px;color:#fff;font-weight:700;font-size:15px}
 #progress.show{display:flex}
 .spinner{width:40px;height:40px;border:4px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .8s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
@@ -236,7 +121,6 @@ html,body{height:100%;font-family:'Inter',system-ui,-apple-system,sans-serif;bac
 </head>
 <body>
 <div id="pageWrap">
-  <!-- TOPBAR -->
   <div class="topbar">
     <button class="back-btn" onclick="goBack()">←</button>
     <h1 id="pageTitle">New Patient</h1>
@@ -246,9 +130,7 @@ html,body{height:100%;font-family:'Inter',system-ui,-apple-system,sans-serif;bac
     </button>
   </div>
 
-  <!-- FORM BODY -->
   <div id="formBody">
-
     <!-- Patient Info -->
     <div class="card">
       <div class="card-title"><span class="icon">👤</span><span class="t">Patient Information</span></div>
@@ -259,10 +141,7 @@ html,body{height:100%;font-family:'Inter',system-ui,-apple-system,sans-serif;bac
       <div class="row-3">
         <div class="field">
           <label>Gender</label>
-          <select id="f-gender">
-            <option value="">Select</option>
-            <option>Male</option><option>Female</option><option>Other</option>
-          </select>
+          <select id="f-gender"><option value="">Select</option><option>Male</option><option>Female</option><option>Other</option></select>
         </div>
         <div class="field"><label>Ward / Unit</label><input id="f-ward" placeholder="e.g. ICU" autocomplete="off"/></div>
         <div class="field"><label>Bed No.</label><input id="f-bed" placeholder="e.g. 12A" autocomplete="off"/></div>
@@ -287,40 +166,18 @@ html,body{height:100%;font-family:'Inter',system-ui,-apple-system,sans-serif;bac
     <div class="card">
       <div class="card-title"><span class="icon">❤️</span><span class="t">Vital Signs</span></div>
       <div class="vital-grid">
-        <div class="vital-box">
-          <div class="v-label">Blood Pressure</div>
-          <input id="v-bp" value="120/80" inputmode="text" oninput="markVital(this)" onfocus="markVital(this)"/>
-          <div class="v-unit">mmHg</div>
-        </div>
-        <div class="vital-box">
-          <div class="v-label">Heart Rate</div>
-          <input id="v-hr" value="72" inputmode="numeric" oninput="markVital(this)" onfocus="markVital(this)"/>
-          <div class="v-unit">bpm</div>
-        </div>
-        <div class="vital-box">
-          <div class="v-label">SPO₂</div>
-          <input id="v-spo2" value="98" inputmode="numeric" oninput="markVital(this)" onfocus="markVital(this)"/>
-          <div class="v-unit">%</div>
-        </div>
-        <div class="vital-box">
-          <div class="v-label">Temperature</div>
-          <input id="v-temp" value="98.6" inputmode="decimal" oninput="markVital(this)" onfocus="markVital(this)"/>
-          <div class="v-unit">°F</div>
-        </div>
-        <div class="vital-box">
-          <div class="v-label">Sugar Level</div>
-          <input id="v-sugar" value="" placeholder="—" inputmode="numeric" oninput="markVital(this)" onfocus="markVital(this)"/>
-          <div class="v-unit">mg/dL</div>
-        </div>
+        <div class="vital-box"><div class="v-label">Blood Pressure</div><input id="v-bp" value="120/80" inputmode="text" oninput="markVital(this)" onfocus="markVital(this)"/><div class="v-unit">mmHg</div></div>
+        <div class="vital-box"><div class="v-label">Heart Rate</div><input id="v-hr" value="72" inputmode="numeric" oninput="markVital(this)" onfocus="markVital(this)"/><div class="v-unit">bpm</div></div>
+        <div class="vital-box"><div class="v-label">SPO₂</div><input id="v-spo2" value="98" inputmode="numeric" oninput="markVital(this)" onfocus="markVital(this)"/><div class="v-unit">%</div></div>
+        <div class="vital-box"><div class="v-label">Temperature</div><input id="v-temp" value="98.6" inputmode="decimal" oninput="markVital(this)" onfocus="markVital(this)"/><div class="v-unit">°F</div></div>
+        <div class="vital-box"><div class="v-label">Sugar Level</div><input id="v-sugar" value="" placeholder="—" inputmode="numeric" oninput="markVital(this)" onfocus="markVital(this)"/><div class="v-unit">mg/dL</div></div>
       </div>
-
-      <!-- Custom Parameters -->
       <div style="margin-top:14px">
         <div style="font-size:10px;font-weight:800;color:var(--slate);letter-spacing:.06em;text-transform:uppercase;margin-bottom:8px">Additional Parameters</div>
         <div class="custom-params" id="customParamList"></div>
         <button class="btn-add-param" onclick="addCustomParam()">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-          Add Parameter (e.g. Platelets, HbA1c, TOSH…)
+          Add Parameter (e.g. Platelets, HbA1c…)
         </button>
       </div>
     </div>
@@ -328,44 +185,23 @@ html,body{height:100%;font-family:'Inter',system-ui,-apple-system,sans-serif;bac
     <!-- Clinical Notes -->
     <div class="card">
       <div class="card-title"><span class="icon">📋</span><span class="t">Clinical Notes</span></div>
-      <div class="field">
-        <label>Observations</label>
-        <textarea id="f-obs" rows="4" placeholder="Symptoms, examination findings, lab results..."></textarea>
-      </div>
-      <div class="field">
-        <label>Plan / Instructions</label>
-        <textarea id="f-plan" rows="4" placeholder="Orders, medications, next steps, follow-up..."></textarea>
-      </div>
+      <div class="field"><label>Observations</label><textarea id="f-obs" rows="4" placeholder="Symptoms, examination findings, lab results..."></textarea></div>
+      <div class="field"><label>Plan / Instructions</label><textarea id="f-plan" rows="4" placeholder="Orders, medications, next steps, follow-up..."></textarea></div>
     </div>
 
     <!-- Documents & Images -->
     <div class="card">
       <div class="card-title"><span class="icon">🖼️</span><span class="t">Documents & Images</span></div>
-
-      <!-- Hidden file inputs -->
       <input type="file" id="fileInputGallery" multiple accept="image/*,.pdf" style="display:none" onchange="handleFiles(this.files)"/>
       <input type="file" id="fileInputCamera" accept="image/*" capture="environment" style="display:none" onchange="handleFiles(this.files)"/>
-
       <div class="upload-btns">
-        <div class="upload-btn" onclick="document.getElementById('fileInputGallery').click()">
-          <div class="ub-icon">📁</div>
-          <div class="ub-label">Files &amp; Gallery</div>
-        </div>
-        <div class="upload-btn" onclick="document.getElementById('fileInputCamera').click()">
-          <div class="ub-icon">📷</div>
-          <div class="ub-label">Take Photo</div>
-        </div>
+        <div class="upload-btn" onclick="document.getElementById('fileInputGallery').click()"><div class="ub-icon">📁</div><div class="ub-label">Files &amp; Gallery</div></div>
+        <div class="upload-btn" onclick="document.getElementById('fileInputCamera').click()"><div class="ub-icon">📷</div><div class="ub-label">Take Photo</div></div>
       </div>
-
-      <!-- Storage indicator -->
       <div class="storage-bar-wrap" id="storageBarWrap" style="display:none">
-        <div class="storage-bar-label">
-          <span>Image storage used</span>
-          <span id="storagePct">0%</span>
-        </div>
+        <div class="storage-bar-label"><span>Image storage</span><span id="storagePct">0%</span></div>
         <div class="storage-bar"><div class="storage-bar-fill" id="storageFill" style="width:0%"></div></div>
       </div>
-
       <div class="doc-grid" id="docGrid"></div>
     </div>
 
@@ -375,19 +211,16 @@ html,body{height:100%;font-family:'Inter',system-ui,-apple-system,sans-serif;bac
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
         Share
       </button>
-      <button class="btn-save" onclick="saveRecord()">
-        ✓ Save Record
-      </button>
+      <button class="btn-save" onclick="saveRecord()">✓ Save Record</button>
     </div>
-
-  </div><!-- /formBody -->
-</div><!-- /pageWrap -->
+  </div>
+</div>
 
 <!-- SUCCESS OVERLAY -->
 <div id="successOverlay">
   <div class="success-check">✓</div>
   <h2>Record Saved!</h2>
-  <p id="successMsg">Returning to patient list…</p>
+  <p id="successMsg">Syncing to cloud…</p>
 </div>
 
 <!-- SHARE SHEET -->
@@ -395,35 +228,22 @@ html,body{height:100%;font-family:'Inter',system-ui,-apple-system,sans-serif;bac
   <div class="ovl" onclick="closeShareSheet()"></div>
   <div class="sh">
     <h3>Share Patient Report</h3>
-    <p class="sh-sub">A PDF will be generated with your doctor signature</p>
+    <p class="sh-sub">PDF generated with your doctor signature</p>
     <div class="share-grid">
-      <button class="sh-opt" onclick="shareVia('download')">
-        <div class="sh-icon" style="background:#e0f2fe">📥</div>
-        <span>Save PDF</span>
-      </button>
-      <button class="sh-opt" onclick="shareVia('whatsapp')">
-        <div class="sh-icon" style="background:#dcfce7">💬</div>
-        <span>WhatsApp</span>
-      </button>
-      <button class="sh-opt" onclick="shareVia('email')">
-        <div class="sh-icon" style="background:#fef3c7">📧</div>
-        <span>Email</span>
-      </button>
-      <button class="sh-opt" onclick="shareVia('native')">
-        <div class="sh-icon" style="background:#f3e8ff">📤</div>
-        <span>More…</span>
-      </button>
+      <button class="sh-opt" onclick="shareVia('download')"><div class="sh-icon" style="background:#e0f2fe">📥</div><span>Save PDF</span></button>
+      <button class="sh-opt" onclick="shareVia('whatsapp')"><div class="sh-icon" style="background:#dcfce7">💬</div><span>WhatsApp</span></button>
+      <button class="sh-opt" onclick="shareVia('email')"><div class="sh-icon" style="background:#fef3c7">📧</div><span>Email</span></button>
+      <button class="sh-opt" onclick="shareVia('native')"><div class="sh-icon" style="background:#f3e8ff">📤</div><span>More…</span></button>
     </div>
-    <!-- Google Drive backup row -->
-    <div id="driveBackupRow" style="margin:10px 0 4px;border-top:1px solid #e2e8f0;padding-top:14px;display:none">
-      <div style="font-size:10px;font-weight:800;color:#64748b;letter-spacing:.06em;text-transform:uppercase;margin-bottom:10px">☁️ Cloud Backup</div>
-      <button class="sh-opt" style="width:100%;flex-direction:row;justify-content:flex-start;gap:14px;padding:12px 14px;background:#f0fdf4;border-radius:13px;border:1.5px solid #bbf7d0" onclick="shareVia('gdrive')">
-        <div class="sh-icon" style="background:#fff;width:44px;height:44px;border-radius:11px;font-size:22px;flex-shrink:0">
-          <svg width="24" height="24" viewBox="0 0 87.3 78" xmlns="http://www.w3.org/2000/svg"><path d="m6.6 66.85 3.85 6.65c.8 1.4 1.95 2.5 3.3 3.3l13.75-23.8h-27.5c0 1.55.4 3.1 1.2 4.5z" fill="#0066da"/><path d="m43.65 25-13.75-23.8c-1.35.8-2.5 1.9-3.3 3.3l-25.4 44a9.06 9.06 0 0 0 -1.2 4.5h27.5z" fill="#00ac47"/><path d="m73.55 76.8c1.35-.8 2.5-1.9 3.3-3.3l1.6-2.75 7.65-13.25c.8-1.4 1.2-2.95 1.2-4.5h-27.502l5.852 11.5z" fill="#ea4335"/><path d="m43.65 25 13.75-23.8c-1.35-.8-2.9-1.2-4.5-1.2h-18.5c-1.6 0-3.15.45-4.5 1.2z" fill="#00832d"/><path d="m59.8 53h-32.3l-13.75 23.8c1.35.8 2.9 1.2 4.5 1.2h50.8c1.6 0 3.15-.45 4.5-1.2z" fill="#2684fc"/><path d="m73.4 26.5-12.7-22c-.8-1.4-1.95-2.5-3.3-3.3l-13.75 23.8 16.15 28h27.45c0-1.55-.4-3.1-1.2-4.5z" fill="#ffba00"/></svg>
+    <!-- Google Drive -->
+    <div id="driveBackupRow" style="display:none">
+      <button class="sh-drive" onclick="shareVia('gdrive')">
+        <div class="sh-icon" style="background:#fff;width:44px;height:44px;border-radius:11px;font-size:22px;flex-shrink:0;border:1px solid #e2e8f0">
+          <svg width="22" height="22" viewBox="0 0 87.3 78" xmlns="http://www.w3.org/2000/svg"><path d="m6.6 66.85 3.85 6.65c.8 1.4 1.95 2.5 3.3 3.3l13.75-23.8h-27.5c0 1.55.4 3.1 1.2 4.5z" fill="#0066da"/><path d="m43.65 25-13.75-23.8c-1.35.8-2.5 1.9-3.3 3.3l-25.4 44a9.06 9.06 0 0 0 -1.2 4.5h27.5z" fill="#00ac47"/><path d="m73.55 76.8c1.35-.8 2.5-1.9 3.3-3.3l1.6-2.75 7.65-13.25c.8-1.4 1.2-2.95 1.2-4.5h-27.502l5.852 11.5z" fill="#ea4335"/><path d="m43.65 25 13.75-23.8c-1.35-.8-2.9-1.2-4.5-1.2h-18.5c-1.6 0-3.15.45-4.5 1.2z" fill="#00832d"/><path d="m59.8 53h-32.3l-13.75 23.8c1.35.8 2.9 1.2 4.5 1.2h50.8c1.6 0 3.15-.45 4.5-1.2z" fill="#2684fc"/><path d="m73.4 26.5-12.7-22c-.8-1.4-1.95-2.5-3.3-3.3l-13.75 23.8 16.15 28h27.45c0-1.55-.4-3.1-1.2-4.5z" fill="#ffba00"/></svg>
         </div>
         <div style="text-align:left">
           <div style="font-size:14px;font-weight:800;color:#15803d">Save to Google Drive</div>
-          <div style="font-size:11px;color:#64748b;margin-top:2px">PDF saved to your Drive — always accessible</div>
+          <div style="font-size:11px;color:#64748b;margin-top:2px">Signs in with your Google account</div>
         </div>
       </button>
     </div>
@@ -431,100 +251,84 @@ html,body{height:100%;font-family:'Inter',system-ui,-apple-system,sans-serif;bac
   </div>
 </div>
 
-<!-- PROGRESS OVERLAY -->
 <div id="progress"><div class="spinner"></div><span id="progressMsg">Generating PDF…</span></div>
-
-<!-- TOAST -->
 <div id="toast"></div>
 
 <script>
-// ══ CONSTANTS ══
-const KEY = 'rn_patients_v2';
-const DR_KEY = 'rn_doctor';
+// ══ SUPABASE CONFIG ══
+const SUPABASE_URL = 'https://mkpvsbysngnuqtbkuzzt.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1rcHZzYnlzbmdudXF0Ymt1enp0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEzNzkxNzAsImV4cCI6MjA5Njk1NTE3MH0.ug0nnioSrYoCqQ_ZQfduBUbwSO7MnryVFlFjXtWe6SY';
 
 // ══ STATE ══
 let patients = [];
 let doctor = {};
+let currentUser = null;
 let activeId = null;
 let currentCondition = 'stable';
 let docs = [];
-let customParams = []; // [{name, value, unit}]
+let customParams = [];
+const VITAL_DEFAULTS = {'v-bp':'120/80','v-hr':'72','v-spo2':'98','v-temp':'98.6','v-sugar':''};
 
-// Default vital placeholders (shown dim until edited)
-const VITAL_DEFAULTS = { 'v-bp':'120/80', 'v-hr':'72', 'v-spo2':'98', 'v-temp':'98.6', 'v-sugar':'' };
-
-// ══ STORAGE ══
-function loadAll(){
-  try{ patients = JSON.parse(localStorage.getItem(KEY)||'[]'); } catch(e){ patients=[]; }
-  try{ doctor = JSON.parse(localStorage.getItem(DR_KEY)||'{}'); } catch(e){ doctor={}; }
-}
-function savePatients(){
-  try {
-    localStorage.setItem(KEY, JSON.stringify(patients));
-    return true;
-  } catch(e) {
-    // Try stripping images and retry
-    const stripped = patients.map(p=>({...p, docs:(p.docs||[]).map(d=>d.isImage?{...d,dataUrl:''}:d)}));
-    try{ localStorage.setItem(KEY, JSON.stringify(stripped)); } catch(e2){}
-    showToast('Storage full — remove some images to save properly','error');
-    return false;
-  }
-}
-
-// ══ VITAL OPACITY ── dim defaults, bright on edit
-function markVital(inp){
-  const defaultVal = VITAL_DEFAULTS[inp.id];
-  if(inp.value !== '' && inp.value !== defaultVal){
-    inp.classList.add('has-value');
-  } else if(inp.value === ''){
-    inp.classList.remove('has-value');
-  }
-}
-function initVitalOpacity(){
-  Object.keys(VITAL_DEFAULTS).forEach(id=>{
-    const el = document.getElementById(id);
-    if(!el) return;
-    markVital(el);
-  });
+// ══ SUPABASE FETCH ══
+async function sbFetch(path, options={}){
+  const token = localStorage.getItem('rn_token');
+  const headers = {'Content-Type':'application/json','apikey':SUPABASE_ANON_KEY,'Authorization':`Bearer ${token||SUPABASE_ANON_KEY}`,...options.headers};
+  return fetch(`${SUPABASE_URL}${path}`, {...options, headers});
 }
 
 // ══ INIT ══
-function init(){
-  loadAll();
+async function init(){
+  loadLocalState();
   const editId = sessionStorage.getItem('rn_edit_id');
   if(editId){
-    activeId = parseInt(editId);
-    const p = patients.find(x=>x.id===activeId);
-    if(p){ fillForm(p); setCondition(p.status||'stable'); updateTitle(p.name||'Patient'); return; }
+    activeId = editId;
+    // Try to find in cached patients first
+    const cached = patients.find(p=>String(p.id)===String(activeId));
+    if(cached){ fillForm(cached); setCondition(cached.status||'stable'); updateTitle(cached.name||'Patient'); }
+    else { await fetchPatientFromDB(activeId); }
+  } else {
+    activeId = crypto.randomUUID ? crypto.randomUUID() : Date.now().toString();
+    clearForm(); setCondition('stable'); updateTitle('New Patient');
   }
-  activeId = Date.now();
-  clearForm();
-  setCondition('stable');
-  updateTitle('New Patient');
+  // Show/hide Drive button
+  const clientId = doctor.googleClientId;
+  document.getElementById('driveBackupRow').style.display = clientId ? 'block' : 'none';
+}
+
+function loadLocalState(){
+  try{ patients = JSON.parse(localStorage.getItem('rn_patients_cache')||'[]'); }catch(e){ patients=[]; }
+  try{ doctor = JSON.parse(localStorage.getItem('rn_doctor')||'{}'); }catch(e){ doctor={}; }
+  try{ const u=localStorage.getItem('rn_user'); if(u) currentUser=JSON.parse(u); }catch(e){}
+  // Also get user from token
+  const token = localStorage.getItem('rn_token');
+  if(token && !currentUser){
+    try{ const parts=token.split('.'); const payload=JSON.parse(atob(parts[1])); currentUser={id:payload.sub,email:payload.email}; }catch(e){}
+  }
+}
+
+async function fetchPatientFromDB(id){
+  try {
+    const res = await sbFetch(`/rest/v1/patients?id=eq.${id}&select=*`);
+    if(res.ok){
+      const rows = await res.json();
+      if(rows.length){ const p=rows[0]; fillForm(p); setCondition(p.status||'stable'); updateTitle(p.name||'Patient'); }
+    }
+  } catch(e){}
 }
 
 function updateTitle(name){ document.getElementById('pageTitle').textContent = name; }
-
-// ══ NAVIGATION ══
-function goBack(){
-  sessionStorage.removeItem('rn_edit_id');
-  window.location.href = 'index.html';
-}
+function goBack(){ sessionStorage.removeItem('rn_edit_id'); window.location.href='index.html'; }
 
 // ══ FORM ══
 function clearForm(){
-  ['f-name','f-age','f-ward','f-bed','f-contact','f-address','f-obs','f-plan'].forEach(id=>{
-    const el=document.getElementById(id); if(el) el.value='';
-  });
+  ['f-name','f-age','f-ward','f-bed','f-contact','f-address','f-obs','f-plan'].forEach(id=>{ const el=document.getElementById(id); if(el) el.value=''; });
   document.getElementById('f-gender').value='';
   document.getElementById('v-bp').value='120/80';
   document.getElementById('v-hr').value='72';
   document.getElementById('v-spo2').value='98';
   document.getElementById('v-temp').value='98.6';
   document.getElementById('v-sugar').value='';
-  docs=[]; customParams=[];
-  renderDocGrid(); renderCustomParams();
-  initVitalOpacity();
+  docs=[]; customParams=[]; renderDocGrid(); renderCustomParams(); initVitalOpacity();
 }
 
 function fillForm(p){
@@ -542,20 +346,16 @@ function fillForm(p){
   document.getElementById('v-spo2').value=p.spo2||'98';
   document.getElementById('v-temp').value=p.temp||'98.6';
   document.getElementById('v-sugar').value=p.sugar||'';
-  docs = (p.docs||[]).map(d=>({...d}));
-  customParams = (p.customParams||[]).map(cp=>({...cp}));
-  renderDocGrid(); renderCustomParams();
-  initVitalOpacity();
-  // Mark edited vitals as full opacity
-  ['v-bp','v-hr','v-spo2','v-temp','v-sugar'].forEach(id=>{
-    const el=document.getElementById(id);
-    if(el&&el.value) el.classList.add('has-value');
-  });
+  docs=(p.docs||[]).map(d=>({...d}));
+  customParams=(p.custom_params||p.customParams||[]).map(cp=>({...cp}));
+  renderDocGrid(); renderCustomParams(); initVitalOpacity();
+  ['v-bp','v-hr','v-spo2','v-temp','v-sugar'].forEach(id=>{ const el=document.getElementById(id); if(el&&el.value) el.classList.add('has-value'); });
 }
 
 function getFormData(){
   return {
     id: activeId,
+    user_id: currentUser?.id,
     name: document.getElementById('f-name').value.trim(),
     age: document.getElementById('f-age').value.trim(),
     gender: document.getElementById('f-gender').value,
@@ -570,346 +370,267 @@ function getFormData(){
     spo2: document.getElementById('v-spo2').value.trim(),
     temp: document.getElementById('v-temp').value.trim(),
     sugar: document.getElementById('v-sugar').value.trim(),
-    customParams: customParams.filter(cp=>cp.name||cp.value),
+    custom_params: customParams.filter(cp=>cp.name||cp.value),
     status: currentCondition,
     docs: docs,
-    savedAt: Date.now()
+    updated_at: new Date().toISOString()
   };
 }
 
 // ══ CONDITION ══
 function setCondition(key){
-  currentCondition = key;
-  document.querySelectorAll('.cond-btn').forEach(btn=>{
-    btn.className='cond-btn';
-    if(btn.dataset.key===key) btn.classList.add('active-'+key);
-  });
+  currentCondition=key;
+  document.querySelectorAll('.cond-btn').forEach(btn=>{ btn.className='cond-btn'; if(btn.dataset.key===key) btn.classList.add('active-'+key); });
 }
 
 // ══ CUSTOM PARAMS ══
-function addCustomParam(name='',value='',unit=''){
-  customParams.push({name,value,unit});
-  renderCustomParams();
-  // Focus new name input
-  setTimeout(()=>{
-    const rows = document.querySelectorAll('.custom-param-row');
-    const last = rows[rows.length-1];
-    if(last) last.querySelector('.param-name').focus();
-  }, 50);
-}
+function addCustomParam(name='',value='',unit=''){ customParams.push({name,value,unit}); renderCustomParams(); setTimeout(()=>{ const rows=document.querySelectorAll('.custom-param-row'); const last=rows[rows.length-1]; if(last) last.querySelector('.param-name').focus(); },50); }
 function removeCustomParam(i){ customParams.splice(i,1); renderCustomParams(); }
 function updateCustomParam(i,field,val){ customParams[i][field]=val; }
 function renderCustomParams(){
-  const list = document.getElementById('customParamList');
-  list.innerHTML = customParams.map((cp,i)=>`
+  const list=document.getElementById('customParamList');
+  list.innerHTML=customParams.map((cp,i)=>`
     <div class="custom-param-row">
-      <input class="param-name" placeholder="Parameter name" value="${esc(cp.name)}"
-        oninput="updateCustomParam(${i},'name',this.value)" />
-      <input class="param-value" placeholder="—" value="${esc(cp.value)}" inputmode="decimal"
-        oninput="updateCustomParam(${i},'value',this.value)" />
-      <input class="param-unit" placeholder="unit" value="${esc(cp.unit)}"
-        oninput="updateCustomParam(${i},'unit',this.value)" />
+      <input class="param-name" placeholder="Parameter name" value="${esc(cp.name)}" oninput="updateCustomParam(${i},'name',this.value)"/>
+      <input class="param-value" placeholder="—" value="${esc(cp.value)}" inputmode="decimal" oninput="updateCustomParam(${i},'value',this.value)"/>
+      <input class="param-unit" placeholder="unit" value="${esc(cp.unit)}" oninput="updateCustomParam(${i},'unit',this.value)"/>
       <button class="param-del" onclick="removeCustomParam(${i})">✕</button>
-    </div>
-  `).join('');
+    </div>`).join('');
 }
 
-// ══ FILES — unlimited with compression ══
-const MAX_IMAGE_SIZE = 800; // px max dimension for compression
-const IMAGE_QUALITY = 0.72;
+// ══ VITALS ══
+function markVital(inp){ const def=VITAL_DEFAULTS[inp.id]; if(inp.value!==''&&inp.value!==def) inp.classList.add('has-value'); else if(inp.value==='') inp.classList.remove('has-value'); }
+function initVitalOpacity(){ Object.keys(VITAL_DEFAULTS).forEach(id=>{ const el=document.getElementById(id); if(el) markVital(el); }); }
 
-function compressImage(dataUrl, cb){
-  const img = new Image();
-  img.onload = function(){
-    let w = img.width, h = img.height;
-    if(w > MAX_IMAGE_SIZE || h > MAX_IMAGE_SIZE){
-      const ratio = Math.min(MAX_IMAGE_SIZE/w, MAX_IMAGE_SIZE/h);
-      w = Math.round(w*ratio); h = Math.round(h*ratio);
-    }
-    const canvas = document.createElement('canvas');
-    canvas.width=w; canvas.height=h;
-    const ctx = canvas.getContext('2d');
-    ctx.drawImage(img,0,0,w,h);
-    cb(canvas.toDataURL('image/jpeg', IMAGE_QUALITY));
+// ══ FILES ══
+const MAX_IMAGE_SIZE=1200, IMAGE_QUALITY=0.8;
+function compressImage(dataUrl,cb){
+  const img=new Image();
+  img.onload=function(){
+    let w=img.width,h=img.height;
+    if(w>MAX_IMAGE_SIZE||h>MAX_IMAGE_SIZE){ const r=Math.min(MAX_IMAGE_SIZE/w,MAX_IMAGE_SIZE/h); w=Math.round(w*r); h=Math.round(h*r); }
+    const canvas=document.createElement('canvas'); canvas.width=w; canvas.height=h;
+    canvas.getContext('2d').drawImage(img,0,0,w,h);
+    cb(canvas.toDataURL('image/jpeg',IMAGE_QUALITY));
   };
-  img.src = dataUrl;
+  img.src=dataUrl;
 }
-
 function handleFiles(files){
-  const arr = Array.from(files);
-  if(!arr.length) return;
+  const arr=Array.from(files); if(!arr.length) return;
   showToast(`Processing ${arr.length} file(s)…`,'info');
-  let done=0;
-  const results=[];
+  let done=0; const results=[];
   arr.forEach((file,i)=>{
-    const reader = new FileReader();
-    reader.onload = e=>{
-      const raw = {name:file.name, dataUrl:e.target.result, isImage:file.type.startsWith('image/')};
-      if(raw.isImage){
-        compressImage(raw.dataUrl, compressed=>{
-          results[i]={...raw, dataUrl:compressed};
-          done++;
-          if(done===arr.length) finishFiles(results);
-        });
-      } else {
-        results[i]=raw;
-        done++;
-        if(done===arr.length) finishFiles(results);
-      }
+    const reader=new FileReader();
+    reader.onload=e=>{
+      const raw={name:file.name,dataUrl:e.target.result,isImage:file.type.startsWith('image/')};
+      if(raw.isImage){ compressImage(raw.dataUrl,compressed=>{ results[i]={...raw,dataUrl:compressed}; done++; if(done===arr.length) finishFiles(results); }); }
+      else { results[i]=raw; done++; if(done===arr.length) finishFiles(results); }
     };
     reader.readAsDataURL(file);
   });
 }
-function finishFiles(newDocs){
-  docs = [...docs, ...newDocs.filter(Boolean)];
-  renderDocGrid();
-  updateStorageBar();
-  // Reset inputs so same file can be re-selected
-  document.getElementById('fileInputGallery').value='';
-  document.getElementById('fileInputCamera').value='';
-}
-
+function finishFiles(newDocs){ docs=[...docs,...newDocs.filter(Boolean)]; renderDocGrid(); updateStorageBar(); document.getElementById('fileInputGallery').value=''; document.getElementById('fileInputCamera').value=''; }
 function updateStorageBar(){
-  const imgCount = docs.filter(d=>d.isImage).length;
-  if(imgCount===0){ document.getElementById('storageBarWrap').style.display='none'; return; }
-  // Estimate storage: sum of dataUrl lengths (rough bytes)
-  const totalBytes = docs.reduce((s,d)=>s+(d.dataUrl?d.dataUrl.length:0),0);
-  const maxBytes = 4*1024*1024; // 4MB threshold display
-  const pct = Math.min(100, Math.round(totalBytes/maxBytes*100));
+  const imgCount=docs.filter(d=>d.isImage).length;
+  if(!imgCount){ document.getElementById('storageBarWrap').style.display='none'; return; }
+  const totalBytes=docs.reduce((s,d)=>s+(d.dataUrl?d.dataUrl.length:0),0);
+  const pct=Math.min(100,Math.round(totalBytes/(4*1024*1024)*100));
   document.getElementById('storageBarWrap').style.display='block';
-  document.getElementById('storagePct').textContent = pct+'%';
-  const fill = document.getElementById('storageFill');
-  fill.style.width=pct+'%';
-  fill.className='storage-bar-fill'+(pct>=90?' danger':pct>=70?' warn':'');
+  document.getElementById('storagePct').textContent=pct+'%';
+  const fill=document.getElementById('storageFill');
+  fill.style.width=pct+'%'; fill.className='storage-bar-fill'+(pct>=90?' danger':pct>=70?' warn':'');
 }
-
 function renderDocGrid(){
-  const grid = document.getElementById('docGrid');
-  grid.innerHTML = docs.map((d,i)=>`
+  document.getElementById('docGrid').innerHTML=docs.map((d,i)=>`
     <div class="doc-thumb">
-      ${d.isImage?`<img src="${d.dataUrl}" alt="${d.name}"/>`:`<div class="doc-icon">📄</div>`}
+      ${d.isImage?`<img src="${d.dataUrl}" alt="${d.name}"/>`:'<div class="doc-icon">📄</div>'}
       <div class="doc-name">${d.name}</div>
       <button class="doc-remove" onclick="removeDoc(${i})">✕</button>
-    </div>
-  `).join('');
+    </div>`).join('');
 }
 function removeDoc(i){ docs.splice(i,1); renderDocGrid(); updateStorageBar(); }
 
-// ══ SAVE — then show success overlay & redirect ══
-function saveRecord(andGoBack){
-  const data = getFormData();
+// ══ SAVE ══
+async function saveRecord(){
+  const data=getFormData();
   if(!data.name){ showToast('Enter patient name first','error'); return; }
-  loadAll();
-  const idx = patients.findIndex(p=>p.id===activeId);
-  if(idx>=0) patients[idx]={...data};
-  else patients.push(data);
-  const ok = savePatients();
-  if(ok){
-    showSuccessAndReturn(data.name);
-  }
+  // Update local cache
+  const idx=patients.findIndex(p=>String(p.id)===String(activeId));
+  if(idx>=0) patients[idx]=data; else patients.unshift(data);
+  localStorage.setItem('rn_patients_cache',JSON.stringify(patients));
+  // Save to Supabase
+  try {
+    const res = await sbFetch('/rest/v1/patients', {
+      method:'POST',
+      headers:{'Prefer':'resolution=merge-duplicates'},
+      body:JSON.stringify(data)
+    });
+    if(res.ok) showSuccessAndReturn(data.name,'Saved & synced to cloud ✓');
+    else showSuccessAndReturn(data.name,'Saved locally (sync pending)');
+  } catch(e){ showSuccessAndReturn(data.name,'Saved locally (offline)'); }
 }
 
-function showSuccessAndReturn(name){
-  const overlay = document.getElementById('successOverlay');
-  document.getElementById('successMsg').textContent = `${name} — returning to patient list…`;
+function showSuccessAndReturn(name,msg){
+  const overlay=document.getElementById('successOverlay');
+  document.getElementById('successMsg').textContent=msg||`${name} — returning to list…`;
   overlay.classList.add('show');
-  setTimeout(()=>{
-    sessionStorage.removeItem('rn_edit_id');
-    window.location.href='index.html';
-  }, 1800);
+  setTimeout(()=>{ sessionStorage.removeItem('rn_edit_id'); window.location.href='index.html'; },1800);
 }
 
-// ══ TOAST ══
-let _tt;
-function showToast(msg,type='info'){
-  const t=document.getElementById('toast');
-  t.textContent=msg; t.className='show-'+type;
-  clearTimeout(_tt); _tt=setTimeout(()=>t.className='',2800);
-}
-
-// ══ SHARE SHEET ══
+// ══ SHARE ══
 function openShareSheet(){
   const data=getFormData();
-  if(!data.name){ showToast('Enter patient name and save first','error'); return; }
-  // Show/hide Drive option based on whether client ID is configured
-  const hasClientId = !!getGoogleClientId();
-  const driveRow = document.getElementById('driveBackupRow');
-  if(driveRow) driveRow.style.display = hasClientId ? 'block' : 'none';
+  if(!data.name){ showToast('Enter patient name first','error'); return; }
+  const hasClientId=!!(doctor.googleClientId);
+  document.getElementById('driveBackupRow').style.display=hasClientId?'block':'none';
   document.getElementById('shareSheet').classList.add('open');
 }
 function closeShareSheet(){ document.getElementById('shareSheet').classList.remove('open'); }
 
 async function shareVia(mode){
   closeShareSheet();
-  const data = getFormData();
+  const data=getFormData();
   if(!data.name){ showToast('Enter patient name first','error'); return; }
-  loadAll();
-  const idx = patients.findIndex(p=>p.id===activeId);
-  if(idx>=0) patients[idx]={...data}; else patients.push(data);
-  savePatients();
+  // Auto-save before sharing
+  const idx=patients.findIndex(p=>String(p.id)===String(activeId));
+  if(idx>=0) patients[idx]=data; else patients.unshift(data);
+  localStorage.setItem('rn_patients_cache',JSON.stringify(patients));
+  try{ await sbFetch('/rest/v1/patients',{method:'POST',headers:{'Prefer':'resolution=merge-duplicates'},body:JSON.stringify(data)}); }catch(e){}
 
   showProgress('Generating PDF…');
   let pdfBlob;
-  try{ pdfBlob = await buildPDF(); }
+  try{ pdfBlob=await buildPDF(); }
   catch(e){ hideProgress(); showToast('PDF generation failed','error'); return; }
   hideProgress();
 
-  const safeName = (data.name||'patient').replace(/[^a-zA-Z0-9]/g,'_');
-  const fileName = `${safeName}_record_${new Date().toISOString().slice(0,10)}.pdf`;
+  const safeName=(data.name||'patient').replace(/[^a-zA-Z0-9]/g,'_');
+  const fileName=`${safeName}_${new Date().toISOString().slice(0,10)}.pdf`;
 
   if(mode==='download'){
-    downloadBlob(pdfBlob, fileName);
-    showToast('PDF saved to device ✓','success');
+    downloadBlob(pdfBlob,fileName); showToast('PDF saved ✓','success');
   } else if(mode==='whatsapp'){
-    if(navigator.share && navigator.canShare){
-      try{
-        const file = new File([pdfBlob], fileName, {type:'application/pdf'});
-        if(navigator.canShare({files:[file]})){
-          await navigator.share({files:[file], title:`Patient Record: ${data.name}`});
-          return;
-        }
-      }catch(e){ if(e.name==='AbortError') return; }
+    if(navigator.share&&navigator.canShare){
+      try{ const file=new File([pdfBlob],fileName,{type:'application/pdf'}); if(navigator.canShare({files:[file]})){ await navigator.share({files:[file],title:`Patient: ${data.name}`}); return; } }catch(e){ if(e.name==='AbortError') return; }
     }
-    downloadBlob(pdfBlob, fileName);
-    setTimeout(()=>window.open('https://wa.me/','_blank'),600);
-    showToast('PDF saved — attach it in WhatsApp','info');
+    downloadBlob(pdfBlob,fileName); setTimeout(()=>window.open('https://wa.me/','_blank'),600); showToast('PDF saved — attach in WhatsApp','info');
   } else if(mode==='email'){
-    downloadBlob(pdfBlob, fileName);
-    const subject=encodeURIComponent(`Patient Record: ${data.name}`);
-    const body=encodeURIComponent(`Please find the attached patient record for ${data.name}.\n\nGenerated by RoundNotes.`);
-    setTimeout(()=>window.open(`mailto:?subject=${subject}&body=${body}`,'_blank'),600);
-    showToast('PDF saved — attach in your email app','info');
+    downloadBlob(pdfBlob,fileName);
+    const s=encodeURIComponent(`Patient Record: ${data.name}`),b=encodeURIComponent(`Please find attached patient record for ${data.name}.\n\nGenerated by RoundNotes.`);
+    setTimeout(()=>window.open(`mailto:?subject=${s}&body=${b}`,'_blank'),600); showToast('PDF saved — attach in email','info');
   } else if(mode==='native'){
-    if(navigator.share && navigator.canShare){
-      try{
-        const file = new File([pdfBlob], fileName, {type:'application/pdf'});
-        if(navigator.canShare({files:[file]})){
-          await navigator.share({files:[file], title:`Patient Record: ${data.name}`});
-          return;
-        }
-      }catch(e){ if(e.name==='AbortError') return; }
+    if(navigator.share&&navigator.canShare){
+      try{ const file=new File([pdfBlob],fileName,{type:'application/pdf'}); if(navigator.canShare({files:[file]})){ await navigator.share({files:[file],title:`Patient: ${data.name}`}); return; } }catch(e){ if(e.name==='AbortError') return; }
     }
-    downloadBlob(pdfBlob, fileName);
-    showToast('PDF saved to device ✓','success');
+    downloadBlob(pdfBlob,fileName); showToast('PDF saved ✓','success');
   } else if(mode==='gdrive'){
-    showProgress('Uploading to Google Drive…');
-    try {
-      await uploadToGoogleDrive(pdfBlob, fileName);
-    } catch(e) {
-      hideProgress();
-      showToast('Drive upload failed — PDF saved to device','error');
-      downloadBlob(pdfBlob, fileName);
-    }
+    showProgress('Connecting to Google Drive…');
+    try{ await uploadToGoogleDrive(pdfBlob,fileName,data.name); }
+    catch(e){ hideProgress(); showToast('Drive upload failed — PDF saved locally','error'); downloadBlob(pdfBlob,fileName); }
   }
 }
 
-// ══ GOOGLE DRIVE UPLOAD ══
-async function uploadToGoogleDrive(blob, fileName){
-  // Step 1: Get OAuth token via Google Identity Services
-  return new Promise((resolve, reject) => {
-    if(!window.google || !window.google.accounts){
-      reject(new Error('Google API not loaded'));
-      return;
-    }
-    const client = google.accounts.oauth2.initTokenClient({
-      client_id: getGoogleClientId(),
-      scope: 'https://www.googleapis.com/auth/drive.file',
-      callback: async (tokenResponse) => {
+// ══ GOOGLE DRIVE ══
+async function uploadToGoogleDrive(blob,fileName,patientName){
+  return new Promise((resolve,reject)=>{
+    if(!window.google||!window.google.accounts){ reject(new Error('Google API not loaded')); return; }
+    const clientId=doctor.googleClientId;
+    if(!clientId){ reject(new Error('No client ID')); return; }
+    const client=google.accounts.oauth2.initTokenClient({
+      client_id:clientId,
+      scope:'https://www.googleapis.com/auth/drive.file',
+      callback:async(tokenResponse)=>{
         if(tokenResponse.error){ reject(new Error(tokenResponse.error)); return; }
-        try {
-          await driveUpload(blob, fileName, tokenResponse.access_token);
+        try{
+          showProgress('Creating folder in Drive…');
+          const folderId=await getOrCreateFolder(tokenResponse.access_token);
+          showProgress('Uploading PDF…');
+          await driveUpload(blob,fileName,tokenResponse.access_token,folderId);
           hideProgress();
           showToast('Saved to Google Drive ✓','success');
           resolve();
-        } catch(e) { reject(e); }
+        }catch(e){ reject(e); }
       }
     });
     client.requestAccessToken();
   });
 }
 
-function getGoogleClientId(){
-  // Doctors can set their Google Client ID in settings
-  try { return JSON.parse(localStorage.getItem('rn_doctor')||'{}').googleClientId || ''; } catch(e){ return ''; }
+async function getOrCreateFolder(accessToken){
+  const now=new Date();
+  const folderName=now.toLocaleString('default',{month:'long'})+' '+now.getFullYear();
+  const parentName='RoundNotes';
+  // Find or create RoundNotes folder
+  let parentId=await findOrCreateDriveFolder(parentName,null,accessToken);
+  // Find or create month folder inside
+  let monthId=await findOrCreateDriveFolder(folderName,parentId,accessToken);
+  return monthId;
 }
 
-async function driveUpload(blob, fileName, accessToken){
-  const metadata = { name: fileName, mimeType: 'application/pdf' };
-  const form = new FormData();
-  form.append('metadata', new Blob([JSON.stringify(metadata)], {type:'application/json'}));
-  form.append('file', blob);
-  const res = await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart', {
-    method: 'POST',
-    headers: { 'Authorization': 'Bearer ' + accessToken },
-    body: form
-  });
-  if(!res.ok) throw new Error('Upload failed: ' + res.status);
+async function findOrCreateDriveFolder(name,parentId,accessToken){
+  const q=`mimeType='application/vnd.google-apps.folder' and name='${name}' and trashed=false${parentId?` and '${parentId}' in parents`:''}`;
+  const searchRes=await fetch(`https://www.googleapis.com/drive/v3/files?q=${encodeURIComponent(q)}&fields=files(id,name)`,{headers:{'Authorization':'Bearer '+accessToken}});
+  const searchData=await searchRes.json();
+  if(searchData.files&&searchData.files.length) return searchData.files[0].id;
+  const meta={name,mimeType:'application/vnd.google-apps.folder'};
+  if(parentId) meta.parents=[parentId];
+  const createRes=await fetch('https://www.googleapis.com/drive/v3/files',{method:'POST',headers:{'Authorization':'Bearer '+accessToken,'Content-Type':'application/json'},body:JSON.stringify(meta)});
+  const created=await createRes.json();
+  return created.id;
+}
+
+async function driveUpload(blob,fileName,accessToken,folderId){
+  const metadata={name:fileName,mimeType:'application/pdf'};
+  if(folderId) metadata.parents=[folderId];
+  const form=new FormData();
+  form.append('metadata',new Blob([JSON.stringify(metadata)],{type:'application/json'}));
+  form.append('file',blob);
+  const res=await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart',{method:'POST',headers:{'Authorization':'Bearer '+accessToken},body:form});
+  if(!res.ok) throw new Error('Upload failed: '+res.status);
   return res.json();
 }
 
-function downloadBlob(blob, name){
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href=url; a.download=name; document.body.appendChild(a); a.click();
-  document.body.removeChild(a);
-  setTimeout(()=>URL.revokeObjectURL(url),5000);
-}
-
-function showProgress(msg){
-  document.getElementById('progressMsg').textContent=msg||'Please wait…';
-  document.getElementById('progress').classList.add('show');
-}
-function hideProgress(){ document.getElementById('progress').classList.remove('show'); }
-
-function esc(s){ return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
-
 // ══ PDF BUILDER ══
 async function buildPDF(){
-  const {jsPDF} = window.jspdf;
-  const d = getFormData();
-  const doc = new jsPDF({unit:'mm', format:'a4'});
-  const W=210, M=16, cW=W-M*2;
-  let y = M;
+  const {jsPDF}=window.jspdf;
+  const d=getFormData();
+  const doc=new jsPDF({unit:'mm',format:'a4'});
+  const W=210,M=16,cW=W-M*2;
+  let y=M;
 
-  // Header
+  // ── Header ──
   doc.setFillColor(10,79,110);
-  doc.rect(0,0,W,36,'F');
+  doc.rect(0,0,W,38,'F');
 
-  // Left side: App name + subtitle
+  // Left: App branding
   doc.setTextColor(255,255,255);
-  doc.setFontSize(16); doc.setFont('helvetica','bold');
-  doc.text('RoundNotes',M,13);
+  doc.setFontSize(17); doc.setFont('helvetica','bold');
+  doc.text('RoundNotes',M,14);
   doc.setFontSize(9); doc.setFont('helvetica','normal');
-  doc.text('Patient Medical Record',M,20);
-  doc.setFontSize(8);
-  doc.text('Generated: '+new Date().toLocaleString(),M,27);
+  doc.text('Patient Medical Record',M,21);
+  doc.setFontSize(7.5);
+  doc.text('Generated: '+new Date().toLocaleString(),M,28);
 
-  // Right side: Doctor info box
-  const drLines = [];
-  if(doctor.name)    drLines.push({text: doctor.name,    bold:true,  size:10});
-  if(doctor.desig)   drLines.push({text: doctor.desig,   bold:false, size:8.5});
-  if(doctor.dept)    drLines.push({text: doctor.dept,    bold:false, size:8});
-  if(doctor.hospital)drLines.push({text: doctor.hospital,bold:false, size:8});
-  if(doctor.phone)   drLines.push({text: '📞 '+doctor.phone, bold:false, size:8});
+  // Right: Doctor info box
+  const drLines=[];
+  if(doctor.name)     drLines.push({text:doctor.name,    bold:true, size:10});
+  if(doctor.desig)    drLines.push({text:doctor.desig,   bold:false,size:8.5});
+  if(doctor.dept)     drLines.push({text:doctor.dept,    bold:false,size:8});
+  if(doctor.hospital) drLines.push({text:doctor.hospital,bold:false,size:8});
+  if(doctor.phone)    drLines.push({text:'📞 '+doctor.phone,bold:false,size:8});
 
   if(drLines.length){
-    // White semi-transparent box on right
-    doc.setFillColor(255,255,255);
-    doc.setGState && doc.setGState(new doc.GState({opacity:0.12}));
-    const boxW = 80, boxH = drLines.length*7+6, boxX = W-M-boxW, boxY = 2;
-    doc.roundedRect(boxX, boxY, boxW, boxH, 2, 2, 'F');
-    doc.setGState && doc.setGState(new doc.GState({opacity:1}));
-
-    let dy = boxY+6;
+    let dy=6;
     drLines.forEach(l=>{
-      doc.setFont('helvetica', l.bold ? 'bold' : 'normal');
+      doc.setFont('helvetica',l.bold?'bold':'normal');
       doc.setFontSize(l.size);
       doc.setTextColor(255,255,255);
-      doc.text(l.text, W-M-2, dy, {align:'right', maxWidth: boxW-4});
-      dy += 7;
+      const maxW=85;
+      const lines=doc.splitTextToSize(l.text,maxW);
+      lines.forEach(line=>{ doc.text(line,W-M,dy,{align:'right'}); dy+=l.size*0.42; });
+      dy+=1;
     });
   }
-  y=44;
+  y=46;
 
   // Status badge
   const sc={stable:[22,163,74],under_review:[217,119,6],critical:[220,38,38]}[d.status]||[22,163,74];
@@ -920,33 +641,29 @@ async function buildPDF(){
   y+=14;
 
   function section(title){
-    if(y>260){ doc.addPage(); y=M; }
-    doc.setFillColor(240,249,255);
-    doc.rect(M,y,cW,8,'F');
-    doc.setFillColor(10,79,110);
-    doc.rect(M,y,3,8,'F');
+    if(y>260){doc.addPage();y=M;}
+    doc.setFillColor(240,249,255); doc.rect(M,y,cW,8,'F');
+    doc.setFillColor(10,79,110); doc.rect(M,y,3,8,'F');
     doc.setTextColor(10,79,110); doc.setFontSize(10); doc.setFont('helvetica','bold');
     doc.text(title,M+6,y+5.5);
-    y+=12;
-    doc.setTextColor(15,23,42); doc.setFont('helvetica','normal'); doc.setFontSize(10);
+    y+=12; doc.setTextColor(15,23,42); doc.setFont('helvetica','normal'); doc.setFontSize(10);
   }
 
   function row(label,val,label2,val2){
-    if(y>270){ doc.addPage(); y=M; }
+    if(y>270){doc.addPage();y=M;}
     doc.setFont('helvetica','bold'); doc.setFontSize(9); doc.setTextColor(100,116,139);
     doc.text(label,M,y);
     doc.setFont('helvetica','normal'); doc.setTextColor(15,23,42);
-    doc.text(String(val||'—'),M+30,y);
+    doc.text(String(val||'—'),M+32,y);
     if(label2!==undefined){
       doc.setFont('helvetica','bold'); doc.setTextColor(100,116,139);
       doc.text(label2,M+cW/2,y);
       doc.setFont('helvetica','normal'); doc.setTextColor(15,23,42);
-      doc.text(String(val2||'—'),M+cW/2+30,y);
+      doc.text(String(val2||'—'),M+cW/2+32,y);
     }
     y+=7;
   }
 
-  // Patient Info
   section('Patient Information');
   row('Name:',d.name,'Age:',d.age?d.age+' years':'—');
   row('Gender:',d.gender||'—','Bed No.:',d.bed||'—');
@@ -954,133 +671,116 @@ async function buildPDF(){
   if(d.address) row('Address:',d.address);
   y+=4;
 
-  // Vitals
   section('Vital Signs');
   const vitals=[['Blood Pressure',d.bp,'mmHg'],['Heart Rate',d.hr,'bpm'],['SPO₂',d.spo2,'%'],['Temperature',d.temp,'°F'],['Sugar Level',d.sugar,'mg/dL']];
-  const colCount=5, colW=cW/colCount-1.5;
+  const colCount=5,colW=cW/colCount-1.5;
   vitals.forEach((v,i)=>{
     const vx=M+i*(colW+1.9);
-    doc.setFillColor(248,250,252);
-    doc.roundedRect(vx,y,colW,18,2,2,'F');
-    doc.setDrawColor(226,232,240); doc.setLineWidth(0.3);
-    doc.roundedRect(vx,y,colW,18,2,2,'S');
-    doc.setFont('helvetica','bold'); doc.setFontSize(6.5); doc.setTextColor(100,116,139);
-    doc.text(v[0],vx+colW/2,y+5,{align:'center'});
-    doc.setFont('helvetica','bold'); doc.setFontSize(12); doc.setTextColor(10,79,110);
-    doc.text(String(v[1]||'—'),vx+colW/2,y+13,{align:'center'});
-    doc.setFont('helvetica','normal'); doc.setFontSize(6.5); doc.setTextColor(148,163,184);
-    doc.text(v[2],vx+colW/2,y+17,{align:'center'});
+    doc.setFillColor(248,250,252); doc.roundedRect(vx,y,colW,18,2,2,'F');
+    doc.setDrawColor(226,232,240); doc.setLineWidth(0.3); doc.roundedRect(vx,y,colW,18,2,2,'S');
+    doc.setFont('helvetica','bold'); doc.setFontSize(6.5); doc.setTextColor(100,116,139); doc.text(v[0],vx+colW/2,y+5,{align:'center'});
+    doc.setFont('helvetica','bold'); doc.setFontSize(12); doc.setTextColor(10,79,110); doc.text(String(v[1]||'—'),vx+colW/2,y+13,{align:'center'});
+    doc.setFont('helvetica','normal'); doc.setFontSize(6.5); doc.setTextColor(148,163,184); doc.text(v[2],vx+colW/2,y+17,{align:'center'});
   });
   y+=24;
 
-  // Custom params in PDF
-  const validCustom=(d.customParams||[]).filter(cp=>cp.name||cp.value);
+  const validCustom=(d.custom_params||[]).filter(cp=>cp.name||cp.value);
   if(validCustom.length){
-    if(y>260){ doc.addPage(); y=M; }
+    if(y>260){doc.addPage();y=M;}
     section('Additional Parameters');
-    const cpColW=cW/3-2;
-    let cx=M, rowStart=y;
+    const cpColW=cW/3-2; let cx=M;
     validCustom.forEach((cp,i)=>{
-      if(cx+cpColW>W-M){ cx=M; y+=22; rowStart=y; }
-      doc.setFillColor(248,250,252);
-      doc.roundedRect(cx,y,cpColW,18,2,2,'F');
-      doc.setFont('helvetica','bold'); doc.setFontSize(7); doc.setTextColor(100,116,139);
-      doc.text((cp.name||'Parameter').toUpperCase(),cx+cpColW/2,y+5,{align:'center'});
-      doc.setFont('helvetica','bold'); doc.setFontSize(12); doc.setTextColor(10,79,110);
-      doc.text(String(cp.value||'—'),cx+cpColW/2,y+13,{align:'center'});
-      doc.setFont('helvetica','normal'); doc.setFontSize(6.5); doc.setTextColor(148,163,184);
-      if(cp.unit) doc.text(cp.unit,cx+cpColW/2,y+17,{align:'center'});
+      if(cx+cpColW>W-M){cx=M;y+=22;}
+      doc.setFillColor(248,250,252); doc.roundedRect(cx,y,cpColW,18,2,2,'F');
+      doc.setFont('helvetica','bold'); doc.setFontSize(7); doc.setTextColor(100,116,139); doc.text((cp.name||'Parameter').toUpperCase(),cx+cpColW/2,y+5,{align:'center'});
+      doc.setFont('helvetica','bold'); doc.setFontSize(12); doc.setTextColor(10,79,110); doc.text(String(cp.value||'—'),cx+cpColW/2,y+13,{align:'center'});
+      doc.setFont('helvetica','normal'); doc.setFontSize(6.5); doc.setTextColor(148,163,184); if(cp.unit) doc.text(cp.unit,cx+cpColW/2,y+17,{align:'center'});
       cx+=cpColW+3;
     });
     y+=26;
   }
 
-  // Clinical Notes
   if(d.obs||d.plan){
     section('Clinical Notes');
     if(d.obs){
-      doc.setFont('helvetica','bold'); doc.setFontSize(9); doc.setTextColor(55,65,81);
-      doc.text('Observations:',M,y); y+=5;
+      doc.setFont('helvetica','bold'); doc.setFontSize(9); doc.setTextColor(55,65,81); doc.text('Observations:',M,y); y+=5;
       doc.setFont('helvetica','normal'); doc.setFontSize(9); doc.setTextColor(30,30,30);
-      doc.splitTextToSize(d.obs,cW).forEach(line=>{ if(y>270){doc.addPage();y=M;} doc.text(line,M,y); y+=5; });
-      y+=3;
+      doc.splitTextToSize(d.obs,cW).forEach(line=>{if(y>270){doc.addPage();y=M;}doc.text(line,M,y);y+=5;}); y+=3;
     }
     if(d.plan){
       if(y>265){doc.addPage();y=M;}
-      doc.setFont('helvetica','bold'); doc.setFontSize(9); doc.setTextColor(55,65,81);
-      doc.text('Plan / Instructions:',M,y); y+=5;
+      doc.setFont('helvetica','bold'); doc.setFontSize(9); doc.setTextColor(55,65,81); doc.text('Plan / Instructions:',M,y); y+=5;
       doc.setFont('helvetica','normal'); doc.setFontSize(9); doc.setTextColor(30,30,30);
-      doc.splitTextToSize(d.plan,cW).forEach(line=>{ if(y>270){doc.addPage();y=M;} doc.text(line,M,y); y+=5; });
-      y+=3;
+      doc.splitTextToSize(d.plan,cW).forEach(line=>{if(y>270){doc.addPage();y=M;}doc.text(line,M,y);y+=5;}); y+=3;
     }
   }
 
-  // Attached Images — each image on its own full page for clarity
+  // ── Images — each on own full page ──
   const imgDocs=docs.filter(d=>d.isImage);
   if(imgDocs.length){
     for(let i=0;i<imgDocs.length;i++){
       doc.addPage();
-      // Page header bar
-      doc.setFillColor(10,79,110);
-      doc.rect(0,0,W,18,'F');
-      doc.setTextColor(255,255,255);
-      doc.setFont('helvetica','bold'); doc.setFontSize(10);
-      doc.text('Attached Image '+(i+1)+' of '+imgDocs.length,M,12);
+      doc.setFillColor(10,79,110); doc.rect(0,0,W,20,'F');
+      doc.setTextColor(255,255,255); doc.setFont('helvetica','bold'); doc.setFontSize(11);
+      doc.text(`Image ${i+1} of ${imgDocs.length}`,M,13);
       doc.setFont('helvetica','normal'); doc.setFontSize(8);
-      doc.text(imgDocs[i].name.substring(0,50), W-M, 12, {align:'right'});
-
-      // Image: full usable area, preserve aspect ratio
-      try {
-        // Determine image dimensions using a canvas
-        const imgEl = new Image();
-        await new Promise(res=>{ imgEl.onload=res; imgEl.onerror=res; imgEl.src=imgDocs[i].dataUrl; });
-        const natW = imgEl.naturalWidth||1, natH = imgEl.naturalHeight||1;
-        const maxW = W - M*2, maxH = 255 - 4; // usable area below header
-        const scale = Math.min(maxW/natW, maxH/natH);
-        const drawW = natW*scale, drawH = natH*scale;
-        const drawX = M + (maxW - drawW)/2;
-        const drawY = 22 + (maxH - drawH)/2;
+      doc.text(imgDocs[i].name.substring(0,50),W-M,13,{align:'right'});
+      try{
+        const imgEl=new Image();
+        await new Promise(res=>{imgEl.onload=res;imgEl.onerror=res;imgEl.src=imgDocs[i].dataUrl;});
+        const natW=imgEl.naturalWidth||1,natH=imgEl.naturalHeight||1;
+        const maxW=W-M*2,maxH=260;
+        const scale=Math.min(maxW/natW,maxH/natH);
+        const drawW=natW*scale,drawH=natH*scale;
+        const drawX=M+(maxW-drawW)/2,drawY=24+(maxH-drawH)/2;
         doc.addImage(imgDocs[i].dataUrl,'JPEG',drawX,drawY,drawW,drawH);
-      } catch(e) {
+      }catch(e){
         doc.setFont('helvetica','normal'); doc.setFontSize(10); doc.setTextColor(150,150,150);
-        doc.text('[Image could not be rendered]', W/2, 150, {align:'center'});
+        doc.text('[Image could not be rendered]',W/2,150,{align:'center'});
       }
     }
   }
 
-  // Doctor Signature
+  // ── Footer + Signature on every page ──
   const totalPgs=doc.internal.getNumberOfPages();
   const signDate=new Date().toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});
   for(let pg=1;pg<=totalPgs;pg++){
     doc.setPage(pg);
     const isLast=(pg===totalPgs);
-    doc.setFillColor(248,250,252);
-    doc.rect(0,281,W,16,'F');
-    doc.setDrawColor(226,232,240); doc.setLineWidth(0.3);
-    doc.line(0,281,W,281);
+    doc.setFillColor(248,250,252); doc.rect(0,281,W,16,'F');
+    doc.setDrawColor(226,232,240); doc.setLineWidth(0.3); doc.line(0,281,W,281);
     doc.setFont('helvetica','normal'); doc.setFontSize(8); doc.setTextColor(148,163,184);
     doc.text(`RoundNotes  •  Page ${pg} of ${totalPgs}`,W/2,289,{align:'center'});
     if(isLast&&(doctor.name||doctor.desig)){
-      const sigY=Math.max(y+10,240);
-      doc.setDrawColor(10,79,110); doc.setLineWidth(0.4);
-      doc.line(W-M-60,sigY,W-M,sigY);
+      const sigY=Math.max(y+10,242);
+      doc.setDrawColor(10,79,110); doc.setLineWidth(0.4); doc.line(W-M-60,sigY,W-M,sigY);
       doc.setFont('helvetica','bold'); doc.setFontSize(10); doc.setTextColor(10,79,110);
       doc.text(doctor.name||'',W-M,sigY+6,{align:'right'});
       doc.setFont('helvetica','normal'); doc.setFontSize(8.5); doc.setTextColor(55,65,81);
       if(doctor.desig) doc.text(doctor.desig,W-M,sigY+12,{align:'right'});
       if(doctor.dept) doc.text(doctor.dept,W-M,sigY+18,{align:'right'});
       if(doctor.hospital) doc.text(doctor.hospital,W-M,sigY+24,{align:'right'});
+      if(doctor.phone) doc.text(doctor.phone,W-M,sigY+30,{align:'right'});
       doc.setFont('helvetica','normal'); doc.setFontSize(8); doc.setTextColor(100,116,139);
-      doc.text('Date: '+signDate,W-M,sigY+31,{align:'right'});
+      doc.text('Date: '+signDate,W-M,sigY+37,{align:'right'});
     }
   }
-
   return doc.output('blob');
 }
 
-// ── START ──
-init();
+function downloadBlob(blob,name){
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a'); a.href=url; a.download=name; document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  setTimeout(()=>URL.revokeObjectURL(url),5000);
+}
+function showProgress(msg){ document.getElementById('progressMsg').textContent=msg||'Please wait…'; document.getElementById('progress').classList.add('show'); }
+function hideProgress(){ document.getElementById('progress').classList.remove('show'); }
+function esc(s){ return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+let _tt;
+function showToast(msg,type='info'){ const t=document.getElementById('toast'); t.textContent=msg; t.className='show-'+type; clearTimeout(_tt); _tt=setTimeout(()=>t.className='',2800); }
+
 if('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(()=>{});
+init();
 </script>
 </body>
 </html>
