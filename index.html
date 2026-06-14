@@ -23,93 +23,69 @@ html,body{height:100%;font-family:'Inter',system-ui,-apple-system,sans-serif;bac
 
 /* ── SPLASH ── */
 #splash{
-  position:fixed;inset:0;z-index:9999;
-  background:var(--teal);
+  position:fixed;inset:0;z-index:9999;background:var(--teal);
   display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;
-  transition:opacity .5s ease, visibility .5s ease;
+  transition:opacity .5s ease,visibility .5s ease;
 }
-#splash.hide{opacity:0;visibility:hidden}
-.splash-logo{
-  width:90px;height:90px;border-radius:22px;
-  background:#fff;display:flex;align-items:center;justify-content:center;
-  font-size:44px;
-  box-shadow:0 8px 32px rgba(0,0,0,.2);
-  animation:splashPop .5s cubic-bezier(.34,1.56,.64,1) both;
-}
-@keyframes splashPop{
-  from{transform:scale(.4);opacity:0}
-  to{transform:scale(1);opacity:1}
-}
-.splash-name{
-  color:#fff;font-size:26px;font-weight:900;letter-spacing:-.5px;
-  animation:splashFade .5s .25s ease both;
-}
-.splash-tagline{
-  color:rgba(255,255,255,.7);font-size:13px;font-weight:500;
-  animation:splashFade .5s .35s ease both;
-}
+#splash.hide{opacity:0;visibility:hidden;pointer-events:none}
+.splash-logo{width:90px;height:90px;border-radius:22px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:44px;box-shadow:0 8px 32px rgba(0,0,0,.2);animation:splashPop .5s cubic-bezier(.34,1.56,.64,1) both}
+@keyframes splashPop{from{transform:scale(.4);opacity:0}to{transform:scale(1);opacity:1}}
+.splash-name{color:#fff;font-size:26px;font-weight:900;letter-spacing:-.5px;animation:splashFade .5s .25s ease both}
+.splash-tagline{color:rgba(255,255,255,.7);font-size:13px;font-weight:500;animation:splashFade .5s .35s ease both}
 @keyframes splashFade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
-.splash-dots{
-  display:flex;gap:7px;margin-top:8px;
-  animation:splashFade .5s .5s ease both;
-}
-.splash-dots span{
-  width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.4);
-  animation:dotPulse 1.2s .7s ease-in-out infinite;
-}
+.splash-dots{display:flex;gap:7px;margin-top:8px;animation:splashFade .5s .5s ease both}
+.splash-dots span{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.4);animation:dotPulse 1.2s .7s ease-in-out infinite}
 .splash-dots span:nth-child(2){animation-delay:.85s}
 .splash-dots span:nth-child(3){animation-delay:1s}
 @keyframes dotPulse{0%,100%{opacity:.4;transform:scale(1)}50%{opacity:1;transform:scale(1.3)}}
 
+/* ── SCREENS ── */
+.screen{display:none;flex-direction:column;height:100dvh;height:100vh;overflow:hidden}
+.screen.active{display:flex}
+
+/* ── AUTH SCREEN ── */
+#authScreen{background:var(--teal);align-items:center;justify-content:center;padding:24px}
+.auth-card{background:#fff;border-radius:24px;padding:28px 24px;width:100%;max-width:420px;box-shadow:0 20px 60px rgba(0,0,0,.25)}
+.auth-logo{display:flex;align-items:center;gap:12px;margin-bottom:24px;justify-content:center}
+.auth-logo-icon{width:52px;height:52px;border-radius:14px;background:var(--teal);display:flex;align-items:center;justify-content:center;font-size:26px}
+.auth-logo-text{font-size:22px;font-weight:900;color:var(--teal);letter-spacing:-.5px}
+.auth-tabs{display:flex;background:#f1f5f9;border-radius:11px;padding:4px;margin-bottom:22px;gap:4px}
+.auth-tab{flex:1;padding:10px;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;background:transparent;color:var(--slate);font-family:inherit;transition:all .15s}
+.auth-tab.active{background:#fff;color:var(--teal);box-shadow:0 1px 4px rgba(0,0,0,.1)}
+.auth-field{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
+.auth-field label{font-size:11px;font-weight:800;color:#374151;letter-spacing:.05em;text-transform:uppercase}
+.auth-field input{padding:13px 14px;border-radius:11px;border:1.5px solid var(--border);font-size:15px;outline:none;font-family:inherit;width:100%;background:#fff;color:#0f172a;transition:border-color .15s}
+.auth-field input:focus{border-color:var(--teal)}
+.auth-btn{width:100%;background:var(--teal);color:#fff;border:none;border-radius:11px;padding:15px;font-size:16px;font-weight:800;cursor:pointer;font-family:inherit;margin-top:4px;transition:background .15s}
+.auth-btn:active{background:var(--teal-2)}
+.auth-divider{text-align:center;font-size:12px;color:#94a3b8;margin:16px 0;position:relative}
+.auth-divider::before{content:'';position:absolute;top:50%;left:0;right:0;height:1px;background:var(--border)}
+.auth-divider span{background:#fff;padding:0 10px;position:relative}
+.auth-error{background:#fee2e2;color:#dc2626;border-radius:9px;padding:10px 13px;font-size:13px;font-weight:600;margin-bottom:12px;display:none}
+.auth-error.show{display:block}
+.auth-hint{font-size:11px;color:#94a3b8;text-align:center;margin-top:14px;line-height:1.6}
+
 /* ── TOPBAR ── */
-.topbar{
-  background:var(--teal);
-  padding:calc(12px + var(--safe-top)) 16px 14px;
-  display:flex;align-items:center;gap:10px;flex-shrink:0;
-}
+.topbar{background:var(--teal);padding:calc(12px + var(--safe-top)) 16px 14px;display:flex;align-items:center;gap:10px;flex-shrink:0}
 .topbar h1{color:#fff;font-size:18px;font-weight:800;flex:1;letter-spacing:-.3px;display:flex;align-items:center;gap:8px}
 .topbar-logo{width:28px;height:28px;border-radius:7px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
 .topbar-sub{color:rgba(255,255,255,.75);font-size:12px;font-weight:500}
-.icon-btn{
-  background:rgba(255,255,255,.18);border:none;color:#fff;
-  width:38px;height:38px;border-radius:50%;font-size:19px;
-  cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;
-}
+.icon-btn{background:rgba(255,255,255,.18);border:none;color:#fff;width:38px;height:38px;border-radius:50%;font-size:19px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .icon-btn:active{background:rgba(255,255,255,.3)}
 
 /* ── HOME BODY ── */
-#homeBody{
-  flex:1;overflow-y:auto;overflow-x:hidden;
-  padding:16px 16px calc(24px + var(--safe-bottom));
-  -webkit-overflow-scrolling:touch;
-}
-.add-btn{
-  width:100%;background:var(--teal);color:#fff;border:none;
-  border-radius:var(--radius);padding:17px;font-size:16px;font-weight:700;
-  cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;
-  box-shadow:0 4px 14px rgba(10,79,110,.35);margin-bottom:22px;
-  -webkit-appearance:none;
-}
+#homeBody{flex:1;overflow-y:auto;overflow-x:hidden;padding:16px 16px calc(24px + var(--safe-bottom));-webkit-overflow-scrolling:touch}
+.add-btn{width:100%;background:var(--teal);color:#fff;border:none;border-radius:var(--radius);padding:17px;font-size:16px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;box-shadow:0 4px 14px rgba(10,79,110,.35);margin-bottom:22px;-webkit-appearance:none}
 .add-btn:active{background:var(--teal-2);transform:scale(.98)}
 .section-label{font-size:11px;font-weight:800;color:var(--slate);letter-spacing:.09em;text-transform:uppercase;margin-bottom:10px;padding-left:2px}
 .section-hint{font-size:10px;color:#94a3b8;font-weight:500;float:right;text-transform:none;letter-spacing:0}
 
-/* ── PATIENT CARD + DRAG ── */
-.patient-card{
-  background:var(--white);border-radius:var(--radius);padding:14px 14px;
-  margin-bottom:10px;box-shadow:var(--shadow);display:flex;align-items:center;
-  gap:12px;cursor:pointer;border:2px solid transparent;transition:border-color .12s, opacity .15s, transform .15s;
-  -webkit-appearance:none;position:relative;
-}
+/* ── PATIENT CARD ── */
+.patient-card{background:var(--white);border-radius:var(--radius);padding:14px;margin-bottom:10px;box-shadow:var(--shadow);display:flex;align-items:center;gap:12px;cursor:pointer;border:2px solid transparent;transition:border-color .12s,opacity .15s,transform .15s;position:relative}
 .patient-card:active{border-color:var(--teal);background:#fafafa}
 .patient-card.drag-over{border-color:var(--teal);background:var(--teal-xlight)}
 .patient-card.dragging{opacity:.4;transform:scale(.97)}
-.drag-handle{
-  color:#cbd5e1;font-size:17px;cursor:grab;padding:4px 2px 4px 0;
-  flex-shrink:0;touch-action:none;user-select:none;
-  display:flex;flex-direction:column;gap:3px;align-items:center;
-}
-.drag-handle:active{cursor:grabbing}
+.drag-handle{color:#cbd5e1;font-size:17px;cursor:grab;padding:4px 2px 4px 0;flex-shrink:0;touch-action:none;user-select:none;display:flex;flex-direction:column;gap:3px;align-items:center}
 .drag-handle svg{pointer-events:none}
 .p-avatar{width:46px;height:46px;border-radius:50%;background:var(--teal-xlight);display:flex;align-items:center;justify-content:center;font-size:19px;font-weight:800;color:var(--teal);flex-shrink:0}
 .p-info{flex:1;min-width:0}
@@ -126,49 +102,46 @@ html,body{height:100%;font-family:'Inter',system-ui,-apple-system,sans-serif;bac
 .empty-icon{font-size:52px;margin-bottom:14px}
 .empty-state p{font-size:14px;line-height:1.6}
 
+/* ── SYNC STATUS ── */
+.sync-bar{background:rgba(255,255,255,.12);border-radius:8px;padding:6px 12px;font-size:11px;color:rgba(255,255,255,.85);font-weight:600;display:flex;align-items:center;gap:6px;flex-shrink:0}
+.sync-dot{width:7px;height:7px;border-radius:50%;background:#4ade80;flex-shrink:0}
+.sync-dot.syncing{background:#fbbf24;animation:pulse .8s infinite}
+.sync-dot.offline{background:#f87171}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+
 /* ── SETTINGS MODAL ── */
 #settingsModal{position:fixed;inset:0;z-index:800;display:none}
 #settingsModal.open{display:flex;flex-direction:column;justify-content:flex-end}
 #settingsModal .ovl{position:absolute;inset:0;background:rgba(0,0,0,.45)}
-#settingsModal .sheet{
-  position:relative;background:#fff;border-radius:22px 22px 0 0;
-  padding:20px 18px calc(28px + var(--safe-bottom));z-index:1;max-height:85vh;overflow-y:auto;
-}
+#settingsModal .sheet{position:relative;background:#fff;border-radius:22px 22px 0 0;padding:20px 18px calc(28px + var(--safe-bottom));z-index:1;max-height:88vh;overflow-y:auto}
 #settingsModal h3{font-size:17px;font-weight:800;margin-bottom:4px;text-align:center}
 #settingsModal .sh-sub{font-size:12px;color:var(--slate);text-align:center;margin-bottom:20px}
 .setting-field{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
 .setting-field label{font-size:12px;font-weight:700;color:#374151;letter-spacing:.04em;text-transform:uppercase}
-.setting-field input{
-  padding:12px 13px;border-radius:10px;border:1.5px solid var(--border);
-  font-size:15px;outline:none;font-family:inherit;width:100%;background:#fff;
-  color:#0f172a;transition:border-color .15s;
-}
+.setting-field input{padding:12px 13px;border-radius:10px;border:1.5px solid var(--border);font-size:15px;outline:none;font-family:inherit;width:100%;background:#fff;color:#0f172a;transition:border-color .15s}
 .setting-field input:focus{border-color:var(--teal)}
-.btn-save-settings{
-  width:100%;background:var(--teal);color:#fff;border:none;border-radius:11px;
-  padding:14px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;margin-top:6px;
-}
+.btn-save-settings{width:100%;background:var(--teal);color:#fff;border:none;border-radius:11px;padding:14px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;margin-top:6px}
 .btn-save-settings:active{background:var(--teal-2)}
+.btn-logout{width:100%;background:#fee2e2;color:#dc2626;border:none;border-radius:11px;padding:13px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;margin-top:10px}
 .settings-hint{font-size:11px;color:#94a3b8;text-align:center;margin-top:12px;line-height:1.5}
+.settings-section-title{font-size:11px;font-weight:800;color:var(--slate);letter-spacing:.06em;text-transform:uppercase;margin:16px 0 10px;padding-top:14px;border-top:1px solid #e2e8f0}
 
 /* ── TOAST ── */
-#toast{
-  position:fixed;bottom:calc(28px + var(--safe-bottom));left:50%;
-  transform:translateX(-50%);padding:12px 22px;border-radius:10px;
-  font-weight:700;font-size:14px;z-index:999;display:none;
-  white-space:nowrap;box-shadow:0 4px 20px rgba(0,0,0,.18);pointer-events:none;
-}
+#toast{position:fixed;bottom:calc(28px + var(--safe-bottom));left:50%;transform:translateX(-50%);padding:12px 22px;border-radius:10px;font-weight:700;font-size:14px;z-index:9999;display:none;white-space:nowrap;box-shadow:0 4px 20px rgba(0,0,0,.18);pointer-events:none}
 #toast.show-success{display:block;background:var(--green);color:#fff}
 #toast.show-error{display:block;background:var(--red);color:#fff}
 #toast.show-info{display:block;background:var(--teal);color:#fff}
 
-.screen{display:none;flex-direction:column;height:100dvh;height:100vh;overflow:hidden}
-.screen.active{display:flex}
+/* ── LOADING OVERLAY ── */
+#loadingOverlay{position:fixed;inset:0;background:rgba(10,79,110,.88);z-index:1000;display:none;flex-direction:column;align-items:center;justify-content:center;gap:14px;color:#fff;font-weight:700;font-size:15px}
+#loadingOverlay.show{display:flex}
+.spinner{width:40px;height:40px;border:4px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
 </style>
 </head>
 <body>
 
-<!-- ══ SPLASH SCREEN ══ -->
+<!-- SPLASH -->
 <div id="splash">
   <div class="splash-logo">🏥</div>
   <div class="splash-name">RoundNotes</div>
@@ -176,14 +149,65 @@ html,body{height:100%;font-family:'Inter',system-ui,-apple-system,sans-serif;bac
   <div class="splash-dots"><span></span><span></span><span></span></div>
 </div>
 
-<!-- ══════════ HOME SCREEN ══════════ -->
-<div id="homeScreen" class="screen active">
+<!-- AUTH SCREEN -->
+<div id="authScreen" class="screen">
+  <div class="auth-card">
+    <div class="auth-logo">
+      <div class="auth-logo-icon">🏥</div>
+      <div class="auth-logo-text">RoundNotes</div>
+    </div>
+    <div class="auth-tabs">
+      <button class="auth-tab active" onclick="switchTab('login')">Sign In</button>
+      <button class="auth-tab" onclick="switchTab('signup')">Create Account</button>
+    </div>
+    <div id="authError" class="auth-error"></div>
+
+    <!-- Login Form -->
+    <div id="loginForm">
+      <div class="auth-field">
+        <label>Email</label>
+        <input id="login-email" type="email" placeholder="doctor@hospital.com" inputmode="email" autocomplete="email"/>
+      </div>
+      <div class="auth-field">
+        <label>Password</label>
+        <input id="login-password" type="password" placeholder="Your password" autocomplete="current-password"/>
+      </div>
+      <button class="auth-btn" onclick="handleLogin()">Sign In →</button>
+      <p class="auth-hint">Your patient data is encrypted and synced securely.</p>
+    </div>
+
+    <!-- Signup Form -->
+    <div id="signupForm" style="display:none">
+      <div class="auth-field">
+        <label>Full Name</label>
+        <input id="signup-name" type="text" placeholder="Dr. Jane Smith" autocomplete="name"/>
+      </div>
+      <div class="auth-field">
+        <label>Email</label>
+        <input id="signup-email" type="email" placeholder="doctor@hospital.com" inputmode="email" autocomplete="email"/>
+      </div>
+      <div class="auth-field">
+        <label>Password</label>
+        <input id="signup-password" type="password" placeholder="Min 6 characters" autocomplete="new-password"/>
+      </div>
+      <div class="auth-field">
+        <label>Hospital / Institution</label>
+        <input id="signup-hospital" type="text" placeholder="City General Hospital"/>
+      </div>
+      <button class="auth-btn" onclick="handleSignup()">Create Account →</button>
+      <p class="auth-hint">Free forever. No credit card required.</p>
+    </div>
+  </div>
+</div>
+
+<!-- HOME SCREEN -->
+<div id="homeScreen" class="screen">
   <div class="topbar">
-    <h1>
-      <div class="topbar-logo">🏥</div>
-      RoundNotes
-    </h1>
-    <div><span id="topDrName" class="topbar-sub"></span></div>
+    <h1><div class="topbar-logo">🏥</div>RoundNotes</h1>
+    <div class="sync-bar" id="syncBar">
+      <div class="sync-dot" id="syncDot"></div>
+      <span id="syncLabel">Synced</span>
+    </div>
     <button class="icon-btn" onclick="openSettings()" title="Settings">⚙️</button>
   </div>
   <div id="homeBody">
@@ -196,12 +220,12 @@ html,body{height:100%;font-family:'Inter',system-ui,-apple-system,sans-serif;bac
   </div>
 </div>
 
-<!-- ══════════ SETTINGS MODAL ══════════ -->
+<!-- SETTINGS MODAL -->
 <div id="settingsModal">
   <div class="ovl" onclick="closeSettings()"></div>
   <div class="sheet">
     <h3>👨‍⚕️ Doctor Profile</h3>
-    <p class="sh-sub">This appears as your signature on PDF reports</p>
+    <p class="sh-sub">Appears as your signature on PDF reports</p>
     <div class="setting-field">
       <label>Full Name</label>
       <input id="s-drname" placeholder="Dr. Jane Smith"/>
@@ -220,89 +244,267 @@ html,body{height:100%;font-family:'Inter',system-ui,-apple-system,sans-serif;bac
     </div>
     <div class="setting-field">
       <label>Phone / Contact No.</label>
-      <input id="s-phone" placeholder="+91 98765 43210" type="tel" inputmode="tel"/>
-    </div>
-    <div class="setting-field" style="margin-top:6px;border-top:1px solid #e2e8f0;padding-top:14px">
-      <label style="display:flex;align-items:center;gap:6px">
-        <svg width="14" height="14" viewBox="0 0 87.3 78" xmlns="http://www.w3.org/2000/svg"><path d="m6.6 66.85 3.85 6.65c.8 1.4 1.95 2.5 3.3 3.3l13.75-23.8h-27.5c0 1.55.4 3.1 1.2 4.5z" fill="#0066da"/><path d="m43.65 25-13.75-23.8c-1.35.8-2.5 1.9-3.3 3.3l-25.4 44a9.06 9.06 0 0 0 -1.2 4.5h27.5z" fill="#00ac47"/><path d="m73.55 76.8c1.35-.8 2.5-1.9 3.3-3.3l1.6-2.75 7.65-13.25c.8-1.4 1.2-2.95 1.2-4.5h-27.502l5.852 11.5z" fill="#ea4335"/><path d="m43.65 25 13.75-23.8c-1.35-.8-2.9-1.2-4.5-1.2h-18.5c-1.6 0-3.15.45-4.5 1.2z" fill="#00832d"/><path d="m59.8 53h-32.3l-13.75 23.8c1.35.8 2.9 1.2 4.5 1.2h50.8c1.6 0 3.15-.45 4.5-1.2z" fill="#2684fc"/><path d="m73.4 26.5-12.7-22c-.8-1.4-1.95-2.5-3.3-3.3l-13.75 23.8 16.15 28h27.45c0-1.55-.4-3.1-1.2-4.5z" fill="#ffba00"/></svg>
-        Google Drive — Client ID <small style="color:#94a3b8;font-weight:400;text-transform:none">(optional)</small>
-      </label>
-      <input id="s-googleClientId" placeholder="Paste your Google OAuth Client ID here"/>
-      <div style="font-size:10px;color:#94a3b8;margin-top:4px;line-height:1.5">Enable "Save to Google Drive" in the share sheet. <a href="https://console.cloud.google.com/apis/credentials" target="_blank" style="color:#0A4F6E">Get Client ID →</a></div>
+      <input id="s-phone" type="tel" placeholder="+91 98765 43210" inputmode="tel"/>
     </div>
     <button class="btn-save-settings" onclick="saveSettings()">Save Profile</button>
-    <p class="settings-hint">Your profile is stored only on this device and never sent anywhere.</p>
+    <div class="settings-section-title">☁️ Google Drive Backup</div>
+    <div class="setting-field">
+      <label>Google OAuth Client ID <small style="color:#94a3b8;font-weight:400;text-transform:none">(optional)</small></label>
+      <input id="s-googleClientId" placeholder="Paste your Google OAuth Client ID"/>
+      <div style="font-size:10px;color:#94a3b8;margin-top:4px;line-height:1.5">Enables direct PDF backup to each doctor's Google Drive. <a href="https://console.cloud.google.com/apis/credentials" target="_blank" style="color:#0A4F6E">Get Client ID →</a></div>
+    </div>
+    <button class="btn-save-settings" onclick="saveGoogleSettings()" style="background:#15803d">Save Drive Settings</button>
+    <div class="settings-section-title">🔐 Account</div>
+    <div style="font-size:13px;color:var(--slate);margin-bottom:10px">Signed in as <strong id="userEmailDisplay"></strong></div>
+    <button class="btn-logout" onclick="handleLogout()">Sign Out</button>
+    <p class="settings-hint">Patient data is stored securely in the cloud and synced across your devices.</p>
   </div>
 </div>
 
 <div id="toast"></div>
+<div id="loadingOverlay"><div class="spinner"></div><span id="loadingMsg">Loading…</span></div>
 
 <script>
-// ══ STORAGE KEY ══
-const KEY = 'rn_patients_v2';
-const DR_KEY = 'rn_doctor';
-const ORDER_KEY = 'rn_order_v2';
+// ══ SUPABASE CONFIG ══
+const SUPABASE_URL = 'https://mkpvsbysngnuqtbkuzzt.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1rcHZzYnlzbmdudXF0Ymt1enp0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEzNzkxNzAsImV4cCI6MjA5Njk1NTE3MH0.ug0nnioSrYoCqQ_ZQfduBUbwSO7MnryVFlFjXtWe6SY';
 
-let patients = [];
+// ══ STATE ══
+let currentUser = null;
 let doctor = {};
-let patientOrder = []; // Array of IDs in display order
+let patients = [];
+let patientOrder = [];
+let isOnline = navigator.onLine;
 
-function loadAll(){
-  try{ patients = JSON.parse(localStorage.getItem(KEY)||'[]'); } catch(e){ patients=[]; }
-  try{ doctor = JSON.parse(localStorage.getItem(DR_KEY)||'{}'); } catch(e){ doctor={}; }
-  try{ patientOrder = JSON.parse(localStorage.getItem(ORDER_KEY)||'[]'); } catch(e){ patientOrder=[]; }
+// ══ SUPABASE HELPERS ══
+async function sbFetch(path, options={}){
+  const token = localStorage.getItem('rn_token');
+  const headers = {
+    'Content-Type':'application/json',
+    'apikey': SUPABASE_ANON_KEY,
+    'Authorization': `Bearer ${token || SUPABASE_ANON_KEY}`,
+    ...options.headers
+  };
+  const res = await fetch(`${SUPABASE_URL}${path}`, {...options, headers});
+  return res;
 }
-function savePatients(){ localStorage.setItem(KEY, JSON.stringify(patients)); }
-function saveDoctor(){ localStorage.setItem(DR_KEY, JSON.stringify(doctor)); }
-function saveOrder(){ localStorage.setItem(ORDER_KEY, JSON.stringify(patientOrder)); }
 
-// ── Get sorted patients respecting custom order ──
-function getSortedPatients(){
-  // Add any new patients not in order to front
-  const knownIds = new Set(patientOrder);
-  const newIds = patients.filter(p=>!knownIds.has(p.id)).map(p=>p.id);
-  if(newIds.length){
-    patientOrder = [...newIds, ...patientOrder];
-    saveOrder();
+async function sbAuth(endpoint, body){
+  const res = await fetch(`${SUPABASE_URL}/auth/v1/${endpoint}`, {
+    method:'POST',
+    headers:{'Content-Type':'application/json','apikey':SUPABASE_ANON_KEY},
+    body: JSON.stringify(body)
+  });
+  return res.json();
+}
+
+// ══ AUTH ══
+async function handleLogin(){
+  const email = document.getElementById('login-email').value.trim();
+  const password = document.getElementById('login-password').value;
+  if(!email || !password){ showAuthError('Please enter email and password'); return; }
+  showLoading('Signing in…');
+  try {
+    const data = await sbAuth('token?grant_type=password', {email, password});
+    if(data.error){ hideLoading(); showAuthError(data.error_description || data.error); return; }
+    await onAuthSuccess(data);
+  } catch(e){ hideLoading(); showAuthError('Connection error. Check your internet.'); }
+}
+
+async function handleSignup(){
+  const name = document.getElementById('signup-name').value.trim();
+  const email = document.getElementById('signup-email').value.trim();
+  const password = document.getElementById('signup-password').value;
+  const hospital = document.getElementById('signup-hospital').value.trim();
+  if(!name || !email || !password){ showAuthError('Please fill all required fields'); return; }
+  if(password.length < 6){ showAuthError('Password must be at least 6 characters'); return; }
+  showLoading('Creating account…');
+  try {
+    const data = await sbAuth('signup', {email, password, data:{full_name:name, hospital}});
+    if(data.error){ hideLoading(); showAuthError(data.error_description || data.error); return; }
+    if(data.access_token){
+      await onAuthSuccess(data);
+      // Save initial doctor profile
+      doctor = {name, hospital, desig:'', dept:'', phone:''};
+      await saveDoctorProfile();
+    } else {
+      hideLoading();
+      showAuthError('Check your email to confirm your account, then sign in.');
+    }
+  } catch(e){ hideLoading(); showAuthError('Connection error. Check your internet.'); }
+}
+
+async function onAuthSuccess(data){
+  localStorage.setItem('rn_token', data.access_token);
+  localStorage.setItem('rn_refresh', data.refresh_token);
+  currentUser = data.user;
+  await loadDoctorProfile();
+  await loadPatients();
+  hideLoading();
+  showScreen('homeScreen');
+}
+
+async function handleLogout(){
+  if(!confirm('Sign out of RoundNotes?')) return;
+  localStorage.removeItem('rn_token');
+  localStorage.removeItem('rn_refresh');
+  currentUser = null; doctor = {}; patients = []; patientOrder = [];
+  closeSettings();
+  showScreen('authScreen');
+  showToast('Signed out','info');
+}
+
+async function checkSession(){
+  const token = localStorage.getItem('rn_token');
+  const refresh = localStorage.getItem('rn_refresh');
+  if(!token){ return false; }
+  // Verify token
+  try {
+    const res = await fetch(`${SUPABASE_URL}/auth/v1/user`, {
+      headers:{'apikey':SUPABASE_ANON_KEY,'Authorization':`Bearer ${token}`}
+    });
+    if(res.ok){
+      const user = await res.json();
+      currentUser = user;
+      return true;
+    }
+    // Try refresh
+    if(refresh){
+      const data = await sbAuth('token?grant_type=refresh_token', {refresh_token:refresh});
+      if(data.access_token){
+        localStorage.setItem('rn_token', data.access_token);
+        localStorage.setItem('rn_refresh', data.refresh_token);
+        currentUser = data.user;
+        return true;
+      }
+    }
+  } catch(e){}
+  return false;
+}
+
+// ══ DOCTOR PROFILE ══
+async function loadDoctorProfile(){
+  try {
+    const res = await sbFetch(`/rest/v1/doctor_profiles?user_id=eq.${currentUser.id}&select=*`);
+    if(res.ok){
+      const rows = await res.json();
+      if(rows.length) doctor = rows[0];
+    }
+  } catch(e){}
+  // Fallback to localStorage
+  if(!doctor.name){
+    try{ const d = JSON.parse(localStorage.getItem('rn_doctor')||'{}'); if(d.name) doctor = d; }catch(e){}
   }
-  // Remove deleted patients from order
-  const existingIds = new Set(patients.map(p=>p.id));
-  patientOrder = patientOrder.filter(id=>existingIds.has(id));
+}
 
-  const map = {};
-  patients.forEach(p=>map[p.id]=p);
-  return patientOrder.map(id=>map[id]).filter(Boolean);
+async function saveDoctorProfile(){
+  try {
+    const payload = {...doctor, user_id: currentUser.id};
+    await sbFetch('/rest/v1/doctor_profiles', {
+      method:'POST',
+      headers:{'Prefer':'resolution=merge-duplicates'},
+      body: JSON.stringify(payload)
+    });
+    localStorage.setItem('rn_doctor', JSON.stringify(doctor));
+  } catch(e){ localStorage.setItem('rn_doctor', JSON.stringify(doctor)); }
+}
+
+// ══ PATIENTS ══
+async function loadPatients(){
+  setSyncState('syncing');
+  try {
+    const res = await sbFetch(`/rest/v1/patients?user_id=eq.${currentUser.id}&order=sort_order.asc,created_at.desc&select=*`);
+    if(res.ok){
+      patients = await res.json();
+      patientOrder = patients.map(p=>p.id);
+      setSyncState('synced');
+      // Cache locally
+      localStorage.setItem('rn_patients_cache', JSON.stringify(patients));
+    } else { loadPatientsFromCache(); }
+  } catch(e){ loadPatientsFromCache(); setSyncState('offline'); }
+  renderHome();
+}
+
+function loadPatientsFromCache(){
+  try{ patients = JSON.parse(localStorage.getItem('rn_patients_cache')||'[]'); } catch(e){ patients=[]; }
+  patientOrder = patients.map(p=>p.id);
+  setSyncState('offline');
+}
+
+async function savePatient(data){
+  setSyncState('syncing');
+  try {
+    const payload = {...data, user_id: currentUser.id};
+    const res = await sbFetch('/rest/v1/patients', {
+      method:'POST',
+      headers:{'Prefer':'resolution=merge-duplicates'},
+      body: JSON.stringify(payload)
+    });
+    if(res.ok){
+      setSyncState('synced');
+      localStorage.setItem('rn_patients_cache', JSON.stringify(patients));
+      return true;
+    }
+  } catch(e){}
+  // Offline fallback — save to cache
+  setSyncState('offline');
+  localStorage.setItem('rn_patients_cache', JSON.stringify(patients));
+  return false;
+}
+
+async function deletePatientFromDB(id){
+  try {
+    await sbFetch(`/rest/v1/patients?id=eq.${id}&user_id=eq.${currentUser.id}`, {method:'DELETE'});
+  } catch(e){}
 }
 
 // ══ SETTINGS ══
 function openSettings(){
-  loadAll();
   document.getElementById('s-drname').value = doctor.name||'';
   document.getElementById('s-desig').value = doctor.desig||'';
   document.getElementById('s-dept').value = doctor.dept||'';
   document.getElementById('s-hospital').value = doctor.hospital||'';
   document.getElementById('s-phone').value = doctor.phone||'';
   document.getElementById('s-googleClientId').value = doctor.googleClientId||'';
+  document.getElementById('userEmailDisplay').textContent = currentUser?.email||'';
   document.getElementById('settingsModal').classList.add('open');
 }
 function closeSettings(){ document.getElementById('settingsModal').classList.remove('open'); }
-function saveSettings(){
+
+async function saveSettings(){
   doctor = {
+    ...doctor,
     name: document.getElementById('s-drname').value.trim(),
     desig: document.getElementById('s-desig').value.trim(),
     dept: document.getElementById('s-dept').value.trim(),
     hospital: document.getElementById('s-hospital').value.trim(),
     phone: document.getElementById('s-phone').value.trim(),
-    googleClientId: document.getElementById('s-googleClientId').value.trim()
   };
-  saveDoctor();
+  await saveDoctorProfile();
   closeSettings();
-  renderTopBar();
   showToast('Profile saved ✓','success');
 }
-function renderTopBar(){
-  const el = document.getElementById('topDrName');
-  el.textContent = doctor.name ? doctor.name : '';
+
+async function saveGoogleSettings(){
+  doctor = {...doctor, googleClientId: document.getElementById('s-googleClientId').value.trim()};
+  await saveDoctorProfile();
+  showToast('Drive settings saved ✓','success');
+}
+
+// ══ AUTH UI ══
+function switchTab(tab){
+  document.querySelectorAll('.auth-tab').forEach((t,i)=>t.classList.toggle('active', (i===0&&tab==='login')||(i===1&&tab==='signup')));
+  document.getElementById('loginForm').style.display = tab==='login'?'block':'none';
+  document.getElementById('signupForm').style.display = tab==='signup'?'block':'none';
+  hideAuthError();
+}
+function showAuthError(msg){ const el=document.getElementById('authError'); el.textContent=msg; el.classList.add('show'); }
+function hideAuthError(){ document.getElementById('authError').classList.remove('show'); }
+
+// ══ SCREENS ══
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
 }
 
 // ══ NAVIGATION ══
@@ -315,179 +517,120 @@ function goToForm(id){
 // ══ HOME RENDER ══
 function renderHome(){
   const list = document.getElementById('patientList');
-  const sorted = getSortedPatients();
-  if(!sorted.length){
+  if(!patients.length){
     list.innerHTML=`<div class="empty-state"><div class="empty-icon">🏥</div><p>No patients yet.<br>Tap <strong>Add New Patient</strong> to begin.</p></div>`;
     return;
   }
-  list.innerHTML = sorted.map(p=>`
+  list.innerHTML = patients.map(p=>`
     <div class="patient-card" id="card-${p.id}" data-id="${p.id}">
       <div class="drag-handle" title="Hold to reorder">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
           <line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/>
         </svg>
       </div>
-      <div class="p-avatar" onclick="goToForm(${p.id})">${(p.name||'?')[0].toUpperCase()}</div>
-      <div class="p-info" onclick="goToForm(${p.id})">
+      <div class="p-avatar" onclick="goToForm('${p.id}')">${(p.name||'?')[0].toUpperCase()}</div>
+      <div class="p-info" onclick="goToForm('${p.id}')">
         <div class="p-name">${esc(p.name||'Unnamed')}</div>
         <div class="p-sub">${p.ward?'Ward: '+esc(p.ward):''}${p.ward&&p.bed?' · ':''}${p.bed?'Bed '+esc(p.bed):''}</div>
-        <div class="p-time">${p.savedAt ? 'Updated '+timeAgo(p.savedAt) : ''}</div>
+        <div class="p-time">${p.updated_at ? 'Updated '+timeAgo(new Date(p.updated_at).getTime()) : ''}</div>
       </div>
-      <span class="pill pill-${p.status||'stable'}" onclick="goToForm(${p.id})">${(p.status||'stable').replace('_',' ')}</span>
-      <button class="p-del" onclick="event.stopPropagation();deletePatient(${p.id})" title="Delete">🗑</button>
+      <span class="pill pill-${p.status||'stable'}" onclick="goToForm('${p.id}')">${(p.status||'stable').replace('_',' ')}</span>
+      <button class="p-del" onclick="event.stopPropagation();deletePatient('${p.id}')" title="Delete">🗑</button>
     </div>
   `).join('');
-
   initDragAndDrop();
 }
 
-function deletePatient(id){
+async function deletePatient(id){
   if(!confirm('Delete this patient record?')) return;
   patients = patients.filter(p=>p.id!==id);
-  patientOrder = patientOrder.filter(oid=>oid!==id);
-  savePatients();
-  saveOrder();
   renderHome();
+  await deletePatientFromDB(id);
+  localStorage.setItem('rn_patients_cache', JSON.stringify(patients));
 }
 
-// ══ DRAG AND DROP (touch + mouse) ══
+// ══ DRAG AND DROP ══
 function initDragAndDrop(){
   const list = document.getElementById('patientList');
-  let dragEl = null, dragId = null;
-  let startY = 0, startX = 0;
-  let placeholder = null;
-  let isDragging = false;
-  let longPressTimer = null;
-
+  let dragEl=null, startY=0, placeholder=null, isDragging=false, longPressTimer=null;
   function getCards(){ return Array.from(list.querySelectorAll('.patient-card')); }
-
-  function startDrag(el, clientY, clientX){
-    dragEl = el;
-    dragId = parseInt(el.dataset.id);
-    isDragging = true;
-
-    // Create placeholder
-    placeholder = document.createElement('div');
-    placeholder.style.cssText = `height:${el.offsetHeight}px;margin-bottom:10px;border-radius:14px;background:var(--teal-xlight);border:2px dashed #0A4F6E;transition:none;`;
-    el.parentNode.insertBefore(placeholder, el);
-
+  function startDrag(el, clientY){
+    dragEl=el; isDragging=true;
+    placeholder=document.createElement('div');
+    placeholder.style.cssText=`height:${el.offsetHeight}px;margin-bottom:10px;border-radius:14px;background:var(--teal-xlight);border:2px dashed #0A4F6E`;
+    el.parentNode.insertBefore(placeholder,el);
     el.classList.add('dragging');
-    el.style.cssText = `
-      position:fixed;width:${el.offsetWidth}px;z-index:500;
-      left:${el.getBoundingClientRect().left}px;
-      top:${el.getBoundingClientRect().top}px;
-      box-shadow:0 8px 30px rgba(0,0,0,.18);
-      pointer-events:none;transition:none;
-    `;
-    startY = clientY - el.getBoundingClientRect().top;
-    startX = clientX - el.getBoundingClientRect().left;
-    // Haptic if available
+    el.style.cssText=`position:fixed;width:${el.offsetWidth}px;z-index:500;left:${el.getBoundingClientRect().left}px;top:${el.getBoundingClientRect().top}px;box-shadow:0 8px 30px rgba(0,0,0,.18);pointer-events:none`;
+    startY=clientY-el.getBoundingClientRect().top;
     if(navigator.vibrate) navigator.vibrate(30);
   }
-
-  function onMove(clientY, clientX){
-    if(!isDragging || !dragEl) return;
-    const newTop = clientY - startY;
-    dragEl.style.top = newTop + 'px';
-
-    // Find which card to insert before
-    const cards = getCards().filter(c=>c!==dragEl);
-    let insertBefore = null;
-    for(const card of cards){
-      const rect = card.getBoundingClientRect();
-      const mid = rect.top + rect.height/2;
-      if(clientY < mid){ insertBefore = card; break; }
-    }
-    if(insertBefore){
-      list.insertBefore(placeholder, insertBefore);
-    } else {
-      list.appendChild(placeholder);
-    }
+  function onMove(clientY){
+    if(!isDragging||!dragEl) return;
+    dragEl.style.top=(clientY-startY)+'px';
+    const cards=getCards().filter(c=>c!==dragEl);
+    let ins=null;
+    for(const c of cards){ const r=c.getBoundingClientRect(); if(clientY<r.top+r.height/2){ins=c;break;} }
+    ins ? list.insertBefore(placeholder,ins) : list.appendChild(placeholder);
   }
-
   function endDrag(){
-    if(!isDragging || !dragEl) return;
-    isDragging = false;
-
-    // Insert el where placeholder is
-    list.insertBefore(dragEl, placeholder);
-    placeholder.remove();
-    dragEl.removeAttribute('style');
-    dragEl.classList.remove('dragging');
-
-    // Save new order
-    patientOrder = getCards().map(c=>parseInt(c.dataset.id));
-    saveOrder();
-    dragEl = null;
-    placeholder = null;
+    if(!isDragging||!dragEl) return;
+    isDragging=false;
+    list.insertBefore(dragEl,placeholder); placeholder.remove();
+    dragEl.removeAttribute('style'); dragEl.classList.remove('dragging');
+    patientOrder=getCards().map(c=>c.dataset.id);
+    // Reorder patients array
+    const map={}; patients.forEach(p=>map[p.id]=p);
+    patients=patientOrder.map(id=>map[id]).filter(Boolean);
+    dragEl=null; placeholder=null;
   }
-
-  // ── Touch events on drag handles ──
-  list.querySelectorAll('.drag-handle').forEach(handle=>{
-    handle.addEventListener('touchstart', e=>{
-      const card = handle.closest('.patient-card');
-      longPressTimer = setTimeout(()=>{
-        startDrag(card, e.touches[0].clientY, e.touches[0].clientX);
-      }, 200);
-    }, {passive:true});
-
-    handle.addEventListener('touchmove', e=>{
-      clearTimeout(longPressTimer);
-      if(!isDragging) return;
-      e.preventDefault();
-      onMove(e.touches[0].clientY, e.touches[0].clientX);
-    }, {passive:false});
-
-    handle.addEventListener('touchend', e=>{
-      clearTimeout(longPressTimer);
-      endDrag();
-    });
-  });
-
-  // ── Mouse events on drag handles (desktop) ──
-  list.querySelectorAll('.drag-handle').forEach(handle=>{
-    handle.addEventListener('mousedown', e=>{
-      e.preventDefault();
-      const card = handle.closest('.patient-card');
-      startDrag(card, e.clientY, e.clientX);
-      const onMouseMove = ev=>onMove(ev.clientY, ev.clientX);
-      const onMouseUp = ()=>{ endDrag(); document.removeEventListener('mousemove', onMouseMove); document.removeEventListener('mouseup', onMouseUp); };
-      document.addEventListener('mousemove', onMouseMove);
-      document.addEventListener('mouseup', onMouseUp);
-    });
+  list.querySelectorAll('.drag-handle').forEach(h=>{
+    h.addEventListener('touchstart',e=>{ const card=h.closest('.patient-card'); longPressTimer=setTimeout(()=>startDrag(card,e.touches[0].clientY),200); },{passive:true});
+    h.addEventListener('touchmove',e=>{ clearTimeout(longPressTimer); if(!isDragging)return; e.preventDefault(); onMove(e.touches[0].clientY); },{passive:false});
+    h.addEventListener('touchend',()=>{ clearTimeout(longPressTimer); endDrag(); });
+    h.addEventListener('mousedown',e=>{ e.preventDefault(); const card=h.closest('.patient-card'); startDrag(card,e.clientY); const mm=ev=>onMove(ev.clientY); const mu=()=>{ endDrag(); document.removeEventListener('mousemove',mm); document.removeEventListener('mouseup',mu); }; document.addEventListener('mousemove',mm); document.addEventListener('mouseup',mu); });
   });
 }
 
-function esc(s){ return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
-function timeAgo(ts){
-  const s=Math.floor((Date.now()-ts)/1000);
-  if(s<60) return 'just now';
-  if(s<3600) return Math.floor(s/60)+'m ago';
-  if(s<86400) return Math.floor(s/3600)+'h ago';
-  return Math.floor(s/86400)+'d ago';
+// ══ SYNC UI ══
+function setSyncState(state){
+  const dot=document.getElementById('syncDot');
+  const label=document.getElementById('syncLabel');
+  if(!dot) return;
+  dot.className='sync-dot'+(state==='syncing'?' syncing':state==='offline'?' offline':'');
+  label.textContent=state==='syncing'?'Syncing…':state==='offline'?'Offline':'Synced';
 }
 
-// ══ TOAST ══
+// ══ UTILS ══
+function esc(s){ return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function timeAgo(ts){ const s=Math.floor((Date.now()-ts)/1000); if(s<60)return 'just now'; if(s<3600)return Math.floor(s/60)+'m ago'; if(s<86400)return Math.floor(s/3600)+'h ago'; return Math.floor(s/86400)+'d ago'; }
 let _tt;
-function showToast(msg,type='info'){
-  const t=document.getElementById('toast');
-  t.textContent=msg; t.className='show-'+type;
-  clearTimeout(_tt); _tt=setTimeout(()=>t.className='',2800);
-}
+function showToast(msg,type='info'){ const t=document.getElementById('toast'); t.textContent=msg; t.className='show-'+type; clearTimeout(_tt); _tt=setTimeout(()=>t.className='',2800); }
+function showLoading(msg='Loading…'){ document.getElementById('loadingMsg').textContent=msg; document.getElementById('loadingOverlay').classList.add('show'); }
+function hideLoading(){ document.getElementById('loadingOverlay').classList.remove('show'); }
 
-// ══ SPLASH ══
-function hideSplash(){
-  document.getElementById('splash').classList.add('hide');
-}
+// ══ ONLINE/OFFLINE ══
+window.addEventListener('online', ()=>{ isOnline=true; if(currentUser) loadPatients(); });
+window.addEventListener('offline', ()=>{ isOnline=false; setSyncState('offline'); });
 
 // ══ INIT ══
-loadAll();
-renderTopBar();
-renderHome();
-if('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(()=>{});
+async function init(){
+  // Expose state for patient.html
+  window._rn = { getUser:()=>currentUser, getDoctor:()=>doctor, getPatients:()=>patients,
+    savePatient, loadPatients, SUPABASE_URL, SUPABASE_ANON_KEY };
 
-// Hide splash after 1.6s
-setTimeout(hideSplash, 1600);
+  const valid = await checkSession();
+  document.getElementById('splash').classList.add('hide');
+  if(valid){
+    await loadDoctorProfile();
+    await loadPatients();
+    showScreen('homeScreen');
+  } else {
+    showScreen('authScreen');
+  }
+}
+
+if('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(()=>{});
+init();
 </script>
 </body>
 </html>
