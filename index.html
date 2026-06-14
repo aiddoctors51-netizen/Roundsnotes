@@ -21,13 +21,54 @@
 }
 html,body{height:100%;font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg);color:#0f172a;overflow:hidden}
 
+/* ── SPLASH ── */
+#splash{
+  position:fixed;inset:0;z-index:9999;
+  background:var(--teal);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;
+  transition:opacity .5s ease, visibility .5s ease;
+}
+#splash.hide{opacity:0;visibility:hidden}
+.splash-logo{
+  width:90px;height:90px;border-radius:22px;
+  background:#fff;display:flex;align-items:center;justify-content:center;
+  font-size:44px;
+  box-shadow:0 8px 32px rgba(0,0,0,.2);
+  animation:splashPop .5s cubic-bezier(.34,1.56,.64,1) both;
+}
+@keyframes splashPop{
+  from{transform:scale(.4);opacity:0}
+  to{transform:scale(1);opacity:1}
+}
+.splash-name{
+  color:#fff;font-size:26px;font-weight:900;letter-spacing:-.5px;
+  animation:splashFade .5s .25s ease both;
+}
+.splash-tagline{
+  color:rgba(255,255,255,.7);font-size:13px;font-weight:500;
+  animation:splashFade .5s .35s ease both;
+}
+@keyframes splashFade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.splash-dots{
+  display:flex;gap:7px;margin-top:8px;
+  animation:splashFade .5s .5s ease both;
+}
+.splash-dots span{
+  width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.4);
+  animation:dotPulse 1.2s .7s ease-in-out infinite;
+}
+.splash-dots span:nth-child(2){animation-delay:.85s}
+.splash-dots span:nth-child(3){animation-delay:1s}
+@keyframes dotPulse{0%,100%{opacity:.4;transform:scale(1)}50%{opacity:1;transform:scale(1.3)}}
+
 /* ── TOPBAR ── */
 .topbar{
   background:var(--teal);
   padding:calc(12px + var(--safe-top)) 16px 14px;
   display:flex;align-items:center;gap:10px;flex-shrink:0;
 }
-.topbar h1{color:#fff;font-size:18px;font-weight:800;flex:1;letter-spacing:-.3px}
+.topbar h1{color:#fff;font-size:18px;font-weight:800;flex:1;letter-spacing:-.3px;display:flex;align-items:center;gap:8px}
+.topbar-logo{width:28px;height:28px;border-radius:7px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
 .topbar-sub{color:rgba(255,255,255,.75);font-size:12px;font-weight:500}
 .icon-btn{
   background:rgba(255,255,255,.18);border:none;color:#fff;
@@ -51,13 +92,25 @@ html,body{height:100%;font-family:'Inter',system-ui,-apple-system,sans-serif;bac
 }
 .add-btn:active{background:var(--teal-2);transform:scale(.98)}
 .section-label{font-size:11px;font-weight:800;color:var(--slate);letter-spacing:.09em;text-transform:uppercase;margin-bottom:10px;padding-left:2px}
+.section-hint{font-size:10px;color:#94a3b8;font-weight:500;float:right;text-transform:none;letter-spacing:0}
+
+/* ── PATIENT CARD + DRAG ── */
 .patient-card{
   background:var(--white);border-radius:var(--radius);padding:14px 14px;
   margin-bottom:10px;box-shadow:var(--shadow);display:flex;align-items:center;
-  gap:12px;cursor:pointer;border:2px solid transparent;transition:border-color .12s;
-  -webkit-appearance:none;
+  gap:12px;cursor:pointer;border:2px solid transparent;transition:border-color .12s, opacity .15s, transform .15s;
+  -webkit-appearance:none;position:relative;
 }
 .patient-card:active{border-color:var(--teal);background:#fafafa}
+.patient-card.drag-over{border-color:var(--teal);background:var(--teal-xlight)}
+.patient-card.dragging{opacity:.4;transform:scale(.97)}
+.drag-handle{
+  color:#cbd5e1;font-size:17px;cursor:grab;padding:4px 2px 4px 0;
+  flex-shrink:0;touch-action:none;user-select:none;
+  display:flex;flex-direction:column;gap:3px;align-items:center;
+}
+.drag-handle:active{cursor:grabbing}
+.drag-handle svg{pointer-events:none}
 .p-avatar{width:46px;height:46px;border-radius:50%;background:var(--teal-xlight);display:flex;align-items:center;justify-content:center;font-size:19px;font-weight:800;color:var(--teal);flex-shrink:0}
 .p-info{flex:1;min-width:0}
 .p-name{font-weight:700;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -115,13 +168,22 @@ html,body{height:100%;font-family:'Inter',system-ui,-apple-system,sans-serif;bac
 </head>
 <body>
 
+<!-- ══ SPLASH SCREEN ══ -->
+<div id="splash">
+  <div class="splash-logo">🏥</div>
+  <div class="splash-name">RoundNotes</div>
+  <div class="splash-tagline">Doctor's Round Assistant</div>
+  <div class="splash-dots"><span></span><span></span><span></span></div>
+</div>
+
 <!-- ══════════ HOME SCREEN ══════════ -->
 <div id="homeScreen" class="screen active">
   <div class="topbar">
-    <h1>🏥 RoundNotes</h1>
-    <div>
-      <span id="topDrName" class="topbar-sub"></span>
-    </div>
+    <h1>
+      <div class="topbar-logo">🏥</div>
+      RoundNotes
+    </h1>
+    <div><span id="topDrName" class="topbar-sub"></span></div>
     <button class="icon-btn" onclick="openSettings()" title="Settings">⚙️</button>
   </div>
   <div id="homeBody">
@@ -129,7 +191,7 @@ html,body{height:100%;font-family:'Inter',system-ui,-apple-system,sans-serif;bac
       <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.8" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
       Add New Patient
     </button>
-    <div class="section-label">Your Patients</div>
+    <div class="section-label">Your Patients <span class="section-hint">Hold &amp; drag to reorder</span></div>
     <div id="patientList"></div>
   </div>
 </div>
@@ -167,16 +229,38 @@ html,body{height:100%;font-family:'Inter',system-ui,-apple-system,sans-serif;bac
 // ══ STORAGE KEY ══
 const KEY = 'rn_patients_v2';
 const DR_KEY = 'rn_doctor';
+const ORDER_KEY = 'rn_order_v2';
 
 let patients = [];
 let doctor = {};
+let patientOrder = []; // Array of IDs in display order
 
 function loadAll(){
   try{ patients = JSON.parse(localStorage.getItem(KEY)||'[]'); } catch(e){ patients=[]; }
   try{ doctor = JSON.parse(localStorage.getItem(DR_KEY)||'{}'); } catch(e){ doctor={}; }
+  try{ patientOrder = JSON.parse(localStorage.getItem(ORDER_KEY)||'[]'); } catch(e){ patientOrder=[]; }
 }
 function savePatients(){ localStorage.setItem(KEY, JSON.stringify(patients)); }
 function saveDoctor(){ localStorage.setItem(DR_KEY, JSON.stringify(doctor)); }
+function saveOrder(){ localStorage.setItem(ORDER_KEY, JSON.stringify(patientOrder)); }
+
+// ── Get sorted patients respecting custom order ──
+function getSortedPatients(){
+  // Add any new patients not in order to front
+  const knownIds = new Set(patientOrder);
+  const newIds = patients.filter(p=>!knownIds.has(p.id)).map(p=>p.id);
+  if(newIds.length){
+    patientOrder = [...newIds, ...patientOrder];
+    saveOrder();
+  }
+  // Remove deleted patients from order
+  const existingIds = new Set(patients.map(p=>p.id));
+  patientOrder = patientOrder.filter(id=>existingIds.has(id));
+
+  const map = {};
+  patients.forEach(p=>map[p.id]=p);
+  return patientOrder.map(id=>map[id]).filter(Boolean);
+}
 
 // ══ SETTINGS ══
 function openSettings(){
@@ -207,7 +291,6 @@ function renderTopBar(){
 
 // ══ NAVIGATION ══
 function goToForm(id){
-  // Pass id via sessionStorage so patient.html can read it
   if(id) sessionStorage.setItem('rn_edit_id', id);
   else sessionStorage.removeItem('rn_edit_id');
   window.location.href = 'patient.html';
@@ -216,30 +299,147 @@ function goToForm(id){
 // ══ HOME RENDER ══
 function renderHome(){
   const list = document.getElementById('patientList');
-  const sorted = [...patients].sort((a,b)=> (b.savedAt||0)-(a.savedAt||0));
+  const sorted = getSortedPatients();
   if(!sorted.length){
     list.innerHTML=`<div class="empty-state"><div class="empty-icon">🏥</div><p>No patients yet.<br>Tap <strong>Add New Patient</strong> to begin.</p></div>`;
     return;
   }
   list.innerHTML = sorted.map(p=>`
-    <div class="patient-card" onclick="goToForm(${p.id})">
-      <div class="p-avatar">${(p.name||'?')[0].toUpperCase()}</div>
-      <div class="p-info">
+    <div class="patient-card" id="card-${p.id}" data-id="${p.id}">
+      <div class="drag-handle" title="Hold to reorder">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/>
+        </svg>
+      </div>
+      <div class="p-avatar" onclick="goToForm(${p.id})">${(p.name||'?')[0].toUpperCase()}</div>
+      <div class="p-info" onclick="goToForm(${p.id})">
         <div class="p-name">${esc(p.name||'Unnamed')}</div>
         <div class="p-sub">${p.ward?'Ward: '+esc(p.ward):''}${p.ward&&p.bed?' · ':''}${p.bed?'Bed '+esc(p.bed):''}</div>
         <div class="p-time">${p.savedAt ? 'Updated '+timeAgo(p.savedAt) : ''}</div>
       </div>
-      <span class="pill pill-${p.status||'stable'}">${(p.status||'stable').replace('_',' ')}</span>
+      <span class="pill pill-${p.status||'stable'}" onclick="goToForm(${p.id})">${(p.status||'stable').replace('_',' ')}</span>
       <button class="p-del" onclick="event.stopPropagation();deletePatient(${p.id})" title="Delete">🗑</button>
     </div>
   `).join('');
+
+  initDragAndDrop();
 }
 
 function deletePatient(id){
   if(!confirm('Delete this patient record?')) return;
   patients = patients.filter(p=>p.id!==id);
+  patientOrder = patientOrder.filter(oid=>oid!==id);
   savePatients();
+  saveOrder();
   renderHome();
+}
+
+// ══ DRAG AND DROP (touch + mouse) ══
+function initDragAndDrop(){
+  const list = document.getElementById('patientList');
+  let dragEl = null, dragId = null;
+  let startY = 0, startX = 0;
+  let placeholder = null;
+  let isDragging = false;
+  let longPressTimer = null;
+
+  function getCards(){ return Array.from(list.querySelectorAll('.patient-card')); }
+
+  function startDrag(el, clientY, clientX){
+    dragEl = el;
+    dragId = parseInt(el.dataset.id);
+    isDragging = true;
+
+    // Create placeholder
+    placeholder = document.createElement('div');
+    placeholder.style.cssText = `height:${el.offsetHeight}px;margin-bottom:10px;border-radius:14px;background:var(--teal-xlight);border:2px dashed #0A4F6E;transition:none;`;
+    el.parentNode.insertBefore(placeholder, el);
+
+    el.classList.add('dragging');
+    el.style.cssText = `
+      position:fixed;width:${el.offsetWidth}px;z-index:500;
+      left:${el.getBoundingClientRect().left}px;
+      top:${el.getBoundingClientRect().top}px;
+      box-shadow:0 8px 30px rgba(0,0,0,.18);
+      pointer-events:none;transition:none;
+    `;
+    startY = clientY - el.getBoundingClientRect().top;
+    startX = clientX - el.getBoundingClientRect().left;
+    // Haptic if available
+    if(navigator.vibrate) navigator.vibrate(30);
+  }
+
+  function onMove(clientY, clientX){
+    if(!isDragging || !dragEl) return;
+    const newTop = clientY - startY;
+    dragEl.style.top = newTop + 'px';
+
+    // Find which card to insert before
+    const cards = getCards().filter(c=>c!==dragEl);
+    let insertBefore = null;
+    for(const card of cards){
+      const rect = card.getBoundingClientRect();
+      const mid = rect.top + rect.height/2;
+      if(clientY < mid){ insertBefore = card; break; }
+    }
+    if(insertBefore){
+      list.insertBefore(placeholder, insertBefore);
+    } else {
+      list.appendChild(placeholder);
+    }
+  }
+
+  function endDrag(){
+    if(!isDragging || !dragEl) return;
+    isDragging = false;
+
+    // Insert el where placeholder is
+    list.insertBefore(dragEl, placeholder);
+    placeholder.remove();
+    dragEl.removeAttribute('style');
+    dragEl.classList.remove('dragging');
+
+    // Save new order
+    patientOrder = getCards().map(c=>parseInt(c.dataset.id));
+    saveOrder();
+    dragEl = null;
+    placeholder = null;
+  }
+
+  // ── Touch events on drag handles ──
+  list.querySelectorAll('.drag-handle').forEach(handle=>{
+    handle.addEventListener('touchstart', e=>{
+      const card = handle.closest('.patient-card');
+      longPressTimer = setTimeout(()=>{
+        startDrag(card, e.touches[0].clientY, e.touches[0].clientX);
+      }, 200);
+    }, {passive:true});
+
+    handle.addEventListener('touchmove', e=>{
+      clearTimeout(longPressTimer);
+      if(!isDragging) return;
+      e.preventDefault();
+      onMove(e.touches[0].clientY, e.touches[0].clientX);
+    }, {passive:false});
+
+    handle.addEventListener('touchend', e=>{
+      clearTimeout(longPressTimer);
+      endDrag();
+    });
+  });
+
+  // ── Mouse events on drag handles (desktop) ──
+  list.querySelectorAll('.drag-handle').forEach(handle=>{
+    handle.addEventListener('mousedown', e=>{
+      e.preventDefault();
+      const card = handle.closest('.patient-card');
+      startDrag(card, e.clientY, e.clientX);
+      const onMouseMove = ev=>onMove(ev.clientY, ev.clientX);
+      const onMouseUp = ()=>{ endDrag(); document.removeEventListener('mousemove', onMouseMove); document.removeEventListener('mouseup', onMouseUp); };
+      document.addEventListener('mousemove', onMouseMove);
+      document.addEventListener('mouseup', onMouseUp);
+    });
+  });
 }
 
 function esc(s){ return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
@@ -259,11 +459,19 @@ function showToast(msg,type='info'){
   clearTimeout(_tt); _tt=setTimeout(()=>t.className='',2800);
 }
 
+// ══ SPLASH ══
+function hideSplash(){
+  document.getElementById('splash').classList.add('hide');
+}
+
 // ══ INIT ══
 loadAll();
 renderTopBar();
 renderHome();
 if('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(()=>{});
+
+// Hide splash after 1.6s
+setTimeout(hideSplash, 1600);
 </script>
 </body>
 </html>
