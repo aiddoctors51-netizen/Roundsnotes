@@ -87,25 +87,33 @@
     .welcome h2{font-size:1.4rem;color:var(--slate-700);font-weight:700}
     .welcome p{font-size:.95rem;max-width:320px;line-height:1.6}
 
-    /* ── Setup / Config Overlay ── */
-    .setup-overlay{position:fixed;inset:0;background:rgba(10,20,40,.65);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;z-index:200;padding:20px}
-    .setup-card{background:var(--white);border-radius:20px;padding:36px;width:100%;max-width:460px;box-shadow:0 24px 80px rgba(10,79,110,.25);max-height:90dvh;overflow-y:auto}
-    .setup-logo{width:56px;height:56px;background:linear-gradient(135deg,var(--navy),var(--teal));border-radius:16px;display:grid;place-items:center;margin-bottom:20px}
-    .setup-logo svg{width:28px;height:28px;color:white}
-    .setup-card h2{font-size:1.4rem;font-weight:800;color:var(--slate-900);margin-bottom:6px}
-    .setup-card p{font-size:.88rem;color:var(--slate-500);margin-bottom:22px;line-height:1.6}
-    .setup-step{display:flex;align-items:center;gap:8px;background:var(--slate-50);border-radius:var(--radius-sm);padding:10px 14px;margin-bottom:18px;font-size:.82rem;color:var(--slate-600);line-height:1.5}
-    .setup-step-num{min-width:22px;height:22px;background:var(--navy);color:white;border-radius:50%;display:grid;place-items:center;font-size:.72rem;font-weight:700}
+    /* ── Settings Panel ── */
+    .settings-overlay{position:fixed;inset:0;background:rgba(10,20,40,.55);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;z-index:200;padding:20px}
+    .settings-overlay.open{display:flex}
+    .settings-card{background:var(--white);border-radius:20px;padding:36px;width:100%;max-width:420px;box-shadow:0 24px 80px rgba(10,79,110,.25)}
+    .settings-card h2{font-size:1.25rem;font-weight:800;color:var(--slate-900);margin-bottom:4px;display:flex;align-items:center;gap:10px}
+    .settings-card h2 svg{width:22px;height:22px;color:var(--teal)}
+    .settings-card .sub{font-size:.84rem;color:var(--slate-400);margin-bottom:24px}
     .field-group{margin-bottom:16px}
     .field-label{font-size:.8rem;font-weight:600;color:var(--slate-600);margin-bottom:7px;display:block}
-    .field-label a{color:var(--teal);text-decoration:none}
     .field-input{width:100%;background:var(--slate-50);border:1.5px solid var(--slate-200);border-radius:var(--radius-sm);padding:11px 14px;font-size:.93rem;color:var(--slate-900);transition:border-color .15s}
-    .field-input:focus{border-color:var(--teal);background:var(--white)}
-    .field-hint{font-size:.75rem;color:var(--slate-400);margin-top:5px}
-    .btn-primary{width:100%;background:linear-gradient(135deg,var(--navy),var(--teal));color:var(--white);border-radius:var(--radius-sm);padding:13px;font-size:1rem;font-weight:700;transition:opacity .15s,transform .12s}
+    .field-input:focus{border-color:var(--teal);background:var(--white);outline:none}
+    .settings-actions{display:flex;gap:10px;margin-top:6px}
+    .btn-primary{flex:1;background:linear-gradient(135deg,var(--navy),var(--teal));color:var(--white);border-radius:var(--radius-sm);padding:13px;font-size:1rem;font-weight:700;transition:opacity .15s,transform .12s;border:none;cursor:pointer}
     .btn-primary:hover{opacity:.92;transform:translateY(-1px)}
+    .btn-secondary{padding:13px 18px;border-radius:var(--radius-sm);font-size:.93rem;font-weight:600;border:1.5px solid var(--slate-200);color:var(--slate-600);background:var(--white);cursor:pointer}
+    .btn-secondary:hover{border-color:var(--slate-400)}
     .divider{height:1px;background:var(--slate-100);margin:18px 0}
     .section-label{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--slate-400);margin-bottom:10px}
+
+    /* ── First-launch Profile Screen ── */
+    .profile-overlay{position:fixed;inset:0;background:linear-gradient(135deg,var(--navy) 0%,var(--teal) 100%);display:none;align-items:center;justify-content:center;z-index:300;padding:20px}
+    .profile-overlay.open{display:flex}
+    .profile-card{background:var(--white);border-radius:24px;padding:40px;width:100%;max-width:420px;box-shadow:0 32px 80px rgba(10,79,110,.35)}
+    .profile-logo{width:60px;height:60px;background:linear-gradient(135deg,var(--navy),var(--teal));border-radius:18px;display:grid;place-items:center;margin-bottom:22px}
+    .profile-logo svg{width:30px;height:30px;color:white}
+    .profile-card h2{font-size:1.5rem;font-weight:800;color:var(--slate-900);margin-bottom:6px}
+    .profile-card .sub{font-size:.9rem;color:var(--slate-500);margin-bottom:28px;line-height:1.6}
 
     /* ── Form Cards ── */
     .view-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:28px;gap:16px}
@@ -127,7 +135,7 @@
     .form-card-header-icon.teal{background:rgba(14,116,144,.10);color:var(--teal)}
     .form-card-header-icon.green{background:rgba(16,185,129,.10);color:var(--green)}
     .form-card-header-icon.amber{background:rgba(245,158,11,.10);color:var(--amber)}
-    .form-card-header-icon svg{width:18px;height:18px}
+    .form-card-header svg{width:18px;height:18px}
     .form-card-header h3{font-size:.95rem;font-weight:700;color:var(--slate-900)}
     .form-card-body{padding:20px}
     .form-grid{display:grid;gap:16px}
@@ -168,7 +176,6 @@
     .doc-thumb .doc-remove{position:absolute;top:4px;right:4px;width:22px;height:22px;background:rgba(239,68,68,.85);color:white;border-radius:50%;display:none;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;cursor:pointer}
     .doc-thumb:hover .doc-remove{display:flex}
     .doc-file-icon{width:36px;height:36px;color:var(--slate-300)}
-    .uploading-badge{font-size:.72rem;background:rgba(14,116,144,.1);color:var(--teal);border-radius:20px;padding:3px 10px;display:inline-flex;align-items:center;gap:5px}
 
     /* ── Save Bar ── */
     .save-bar{background:var(--white);border-top:1px solid var(--slate-200);padding:14px 32px;display:flex;justify-content:flex-end;gap:10px;position:sticky;bottom:0}
@@ -191,6 +198,11 @@
     .btn-modal-cancel{padding:9px 18px;border-radius:var(--radius-sm);font-size:.9rem;font-weight:600;border:1.5px solid var(--slate-200);color:var(--slate-600);background:var(--white)}
     .btn-modal-confirm{padding:9px 18px;border-radius:var(--radius-sm);font-size:.9rem;font-weight:600;background:var(--red);color:white}
 
+    /* ── Settings btn in topbar ── */
+    .btn-topbar{display:flex;align-items:center;gap:6px;padding:7px 14px;border-radius:20px;font-size:.82rem;font-weight:600;color:white;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.18);transition:background .15s;cursor:pointer}
+    .btn-topbar:hover{background:rgba(255,255,255,.22)}
+    .btn-topbar svg{width:15px;height:15px}
+
     /* ── Loading spinner ── */
     .spinner{width:20px;height:20px;border:2.5px solid rgba(255,255,255,.3);border-top-color:white;border-radius:50%;animation:spin .6s linear infinite;display:inline-block}
     @keyframes spin{to{transform:rotate(360deg)}}
@@ -212,55 +224,66 @@
 </head>
 <body>
 
-<!-- Setup Overlay -->
-<div class="setup-overlay" id="setupOverlay">
-  <div class="setup-card">
-    <div class="setup-logo">
+<!-- First-launch Profile Setup (only shown when no doctor profile saved) -->
+<div class="profile-overlay" id="profileOverlay">
+  <div class="profile-card">
+    <div class="profile-logo">
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 0 0 2.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 0 0-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75 2.25 2.25 0 0 0-.1-.664m-5.8 0A2.251 2.251 0 0 1 13.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25ZM6.75 12h.008v.008H6.75V12Zm0 3h.008v.008H6.75V15Zm0 3h.008v.008H6.75V18Z"/>
       </svg>
     </div>
-    <h2 id="setupTitle">Welcome to RoundNotes</h2>
-    <p id="setupDesc">Set up your profile and connect to Supabase so your patient data is securely stored in the cloud.</p>
+    <h2>Welcome to RoundNotes</h2>
+    <p class="sub">Tell us a bit about yourself. This appears on your exported PDF reports.</p>
 
-    <div class="section-label">Your Profile</div>
     <div class="field-group">
       <label class="field-label">Full Name</label>
-      <input class="field-input" id="setupName" type="text" placeholder="Dr. Sarah Johnson" />
+      <input class="field-input" id="profileName" type="text" placeholder="Dr. Sarah Johnson" />
     </div>
     <div class="field-group">
       <label class="field-label">Department / Specialisation</label>
-      <input class="field-input" id="setupDept" type="text" placeholder="Internal Medicine" />
+      <input class="field-input" id="profileDept" type="text" placeholder="Internal Medicine" />
     </div>
     <div class="field-group">
       <label class="field-label">Hospital / Institution</label>
-      <input class="field-input" id="setupHospital" type="text" placeholder="City General Hospital" />
+      <input class="field-input" id="profileHospital" type="text" placeholder="City General Hospital" />
+    </div>
+    <button class="btn-primary" id="profileSaveBtn" onclick="saveProfile()">Start Using RoundNotes →</button>
+    <div id="profileError" style="color:var(--red);font-size:.82rem;margin-top:10px;display:none">Please enter your name to continue.</div>
+  </div>
+</div>
+
+<!-- Settings Overlay -->
+<div class="settings-overlay" id="settingsOverlay">
+  <div class="settings-card">
+    <h2>
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"/>
+      </svg>
+      My Profile
+    </h2>
+    <p class="sub">Your details appear in exported PDF reports.</p>
+
+    <div class="field-group">
+      <label class="field-label">Full Name</label>
+      <input class="field-input" id="settingsName" type="text" placeholder="Dr. Sarah Johnson" />
+    </div>
+    <div class="field-group">
+      <label class="field-label">Department / Specialisation</label>
+      <input class="field-input" id="settingsDept" type="text" placeholder="Internal Medicine" />
+    </div>
+    <div class="field-group">
+      <label class="field-label">Hospital / Institution</label>
+      <input class="field-input" id="settingsHospital" type="text" placeholder="City General Hospital" />
     </div>
 
     <div class="divider"></div>
-    <div class="section-label">Supabase Connection</div>
+    <div class="section-label" style="margin-bottom:8px">Connection Status</div>
+    <div id="settingsConnStatus" style="font-size:.85rem;color:var(--slate-600);background:var(--slate-50);border-radius:var(--radius-sm);padding:10px 14px;margin-bottom:18px">Checking…</div>
 
-    <div class="setup-step">
-      <div class="setup-step-num">1</div>
-      Go to <strong style="margin:0 4px">supabase.com</strong> → New Project → Settings → API. Copy your Project URL and anon key below.
+    <div class="settings-actions">
+      <button class="btn-secondary" onclick="closeSettings()">Cancel</button>
+      <button class="btn-primary" onclick="saveSettings()">Save Changes</button>
     </div>
-    <div class="setup-step">
-      <div class="setup-step-num">2</div>
-      In Supabase, run the SQL setup script (see SETUP_GUIDE.md) to create the <strong style="margin:0 4px">patients</strong> table and <strong style="margin:0 4px">documents</strong> storage bucket.
-    </div>
-
-    <div class="field-group">
-      <label class="field-label">Supabase Project URL</label>
-      <input class="field-input" id="setupUrl" type="url" placeholder="https://xyzabc.supabase.co" />
-      <div class="field-hint">Found in: Supabase Dashboard → Settings → API → Project URL</div>
-    </div>
-    <div class="field-group">
-      <label class="field-label">Supabase Anon Key</label>
-      <input class="field-input" id="setupKey" type="text" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." />
-      <div class="field-hint">Found in: Supabase Dashboard → Settings → API → Project API Keys → anon public</div>
-    </div>
-    <button class="btn-primary" id="setupSave">Connect & Begin Rounds →</button>
-    <div id="setupError" style="color:var(--red);font-size:.82rem;margin-top:10px;display:none"></div>
   </div>
 </div>
 
@@ -268,7 +291,7 @@
 <div class="modal-overlay hidden" id="deleteModal">
   <div class="modal">
     <h3>Delete Patient Record?</h3>
-    <p>This will permanently remove this patient's round notes and all uploaded documents from Supabase. This cannot be undone.</p>
+    <p>This will permanently remove this patient's round notes and all uploaded documents. This cannot be undone.</p>
     <div class="modal-actions">
       <button class="btn-modal-cancel" id="deleteCancel">Cancel</button>
       <button class="btn-modal-confirm" id="deleteConfirm">Delete Record</button>
@@ -294,10 +317,12 @@
         <div class="doctor-avatar"><span id="doctorInitials">DR</span></div>
         <span id="doctorNameBadge">Doctor</span>
       </div>
-      <button class="btn-action outline" onclick="editProfile()" title="Edit profile" style="padding:8px 10px;">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="width:16px;height:16px;">
-          <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125"/>
+      <button class="btn-topbar" onclick="openSettings()" title="Profile & Settings">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.325.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 0 1 1.37.49l1.296 2.247a1.125 1.125 0 0 1-.26 1.431l-1.003.827c-.293.241-.438.613-.43.992a7.723 7.723 0 0 1 0 .255c-.008.378.137.75.43.991l1.004.827c.424.35.534.955.26 1.43l-1.298 2.247a1.125 1.125 0 0 1-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.47 6.47 0 0 1-.22.128c-.331.183-.581.495-.644.869l-.213 1.281c-.09.543-.56.94-1.11.94h-2.594c-.55 0-1.019-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 0 1-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 0 1-1.369-.49l-1.297-2.247a1.125 1.125 0 0 1 .26-1.431l1.004-.827c.292-.24.437-.613.43-.991a6.932 6.932 0 0 1 0-.255c.007-.38-.138-.751-.43-.992l-1.004-.827a1.125 1.125 0 0 1-.26-1.43l1.297-2.247a1.125 1.125 0 0 1 1.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.086.22-.128.332-.183.582-.495.644-.869l.214-1.28Z"/>
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/>
         </svg>
+        Settings
       </button>
     </div>
   </header>
@@ -341,7 +366,11 @@
 </div>
 
 <script>
-// ── Supabase + State ─────────────────────────────────────────────
+// ── Hardcoded Supabase Credentials ───────────────────────────────
+const SUPABASE_URL = 'https://mkpvsbysngnuqtbkuzzt.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1rcHZzYnlzbmdudXF0Ymt1enp0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEzNzkxNzAsImV4cCI6MjA5Njk1NTE3MH0.ug0nnioSrYoCqQ_ZQfduBUbwSO7MnryVFlFjXtWe6SY';
+
+// ── State ────────────────────────────────────────────────────────
 let sb = null;
 let doctor = null;
 let patients = [];
@@ -351,95 +380,113 @@ let currentStatus = 'stable';
 
 // ── Boot ─────────────────────────────────────────────────────────
 window.addEventListener('DOMContentLoaded', async () => {
-  const cfg = getSavedConfig();
-  if (!cfg) {
-    showSetup();
-    setSyncStatus('err','Not connected');
-    return;
-  }
-  doctor = cfg.doctor;
-  refreshDoctorUI();
-  try {
-    await initSupabase(cfg.url, cfg.key);
-    await loadPatients();
-    document.getElementById('setupOverlay').style.display = 'none';
-  } catch(e) {
-    setSyncStatus('err','Connection failed');
-    showToast('⚠ Cannot reach Supabase. Check your connection.');
+  // Load saved doctor profile (no Supabase details needed from user)
+  const savedDoctor = getSavedDoctor();
+  if (!savedDoctor) {
+    // First launch — ask for doctor name only
+    document.getElementById('profileOverlay').classList.add('open');
+  } else {
+    doctor = savedDoctor;
+    refreshDoctorUI();
   }
 
-  document.getElementById('setupSave').addEventListener('click', handleSetupSave);
+  // Always connect to Supabase with hardcoded credentials
+  try {
+    await initSupabase();
+    await loadPatients();
+  } catch(e) {
+    setSyncStatus('err', 'Connection failed');
+    showToast('⚠ Cannot reach server. Check your internet connection.');
+  }
+
   document.getElementById('deleteCancel').onclick = () => document.getElementById('deleteModal').classList.add('hidden');
   document.getElementById('deleteConfirm').onclick = confirmDeleteExec;
 });
 
-function getSavedConfig() {
+function getSavedDoctor() {
   try {
-    const c = localStorage.getItem('rn_config');
-    return c ? JSON.parse(c) : null;
+    const d = localStorage.getItem('rn_doctor');
+    return d ? JSON.parse(d) : null;
   } catch { return null; }
 }
 
-async function initSupabase(url, key) {
+function saveDoctorToStorage(doc) {
+  localStorage.setItem('rn_doctor', JSON.stringify(doc));
+}
+
+async function initSupabase() {
   const { createClient } = supabase;
-  sb = createClient(url, key);
-  // Quick connectivity test
+  sb = createClient(SUPABASE_URL, SUPABASE_KEY);
   const { error } = await sb.from('patients').select('id').limit(1);
   if (error && error.code !== 'PGRST116') throw error;
-  setSyncStatus('ok','Synced');
+  setSyncStatus('ok', 'Synced');
 }
 
-async function handleSetupSave() {
-  const name    = document.getElementById('setupName').value.trim();
-  const dept    = document.getElementById('setupDept').value.trim();
-  const hospital= document.getElementById('setupHospital').value.trim();
-  const url     = document.getElementById('setupUrl').value.trim();
-  const key     = document.getElementById('setupKey').value.trim();
-  const errEl   = document.getElementById('setupError');
-  errEl.style.display = 'none';
+// ── First-launch profile save ────────────────────────────────────
+function saveProfile() {
+  const name     = document.getElementById('profileName').value.trim();
+  const dept     = document.getElementById('profileDept').value.trim();
+  const hospital = document.getElementById('profileHospital').value.trim();
+  const errEl    = document.getElementById('profileError');
 
-  if (!name) { document.getElementById('setupName').focus(); return; }
-  if (!url || !key) { errEl.textContent = 'Please enter your Supabase URL and anon key.'; errEl.style.display='block'; return; }
-
-  const btn = document.getElementById('setupSave');
-  btn.textContent = 'Connecting…';
-  btn.disabled = true;
-
-  try {
-    await initSupabase(url, key);
-    const cfg = { doctor:{name,dept,hospital}, url, key };
-    localStorage.setItem('rn_config', JSON.stringify(cfg));
-    doctor = cfg.doctor;
-    refreshDoctorUI();
-    document.getElementById('setupOverlay').style.display = 'none';
-    await loadPatients();
-  } catch(e) {
-    errEl.textContent = 'Could not connect to Supabase. Check your URL and key, and make sure the patients table exists.';
+  if (!name) {
     errEl.style.display = 'block';
-    setSyncStatus('err','Not connected');
-  } finally {
-    btn.textContent = 'Connect & Begin Rounds →';
-    btn.disabled = false;
+    document.getElementById('profileName').focus();
+    return;
   }
+  errEl.style.display = 'none';
+  doctor = { name, dept, hospital };
+  saveDoctorToStorage(doctor);
+  refreshDoctorUI();
+  document.getElementById('profileOverlay').classList.remove('open');
+  showToast('✓ Profile saved — welcome, ' + name + '!');
 }
 
-function showSetup() {
-  const cfg = getSavedConfig();
-  if (cfg) {
-    document.getElementById('setupName').value    = cfg.doctor?.name    || '';
-    document.getElementById('setupDept').value    = cfg.doctor?.dept    || '';
-    document.getElementById('setupHospital').value= cfg.doctor?.hospital|| '';
-    document.getElementById('setupUrl').value     = cfg.url  || '';
-    document.getElementById('setupKey').value     = cfg.key  || '';
+// ── Settings panel ───────────────────────────────────────────────
+function openSettings() {
+  const d = doctor || {};
+  document.getElementById('settingsName').value     = d.name     || '';
+  document.getElementById('settingsDept').value     = d.dept     || '';
+  document.getElementById('settingsHospital').value = d.hospital || '';
+
+  // Show connection status
+  const statusEl = document.getElementById('settingsConnStatus');
+  if (sb) {
+    statusEl.innerHTML = '<span style="color:var(--green);font-weight:600">● Connected</span> — patient data is securely synced to the cloud.';
+  } else {
+    statusEl.innerHTML = '<span style="color:var(--red);font-weight:600">● Disconnected</span> — check your internet connection.';
   }
-  document.getElementById('setupOverlay').style.display = 'flex';
+
+  document.getElementById('settingsOverlay').classList.add('open');
 }
 
-function editProfile() { showSetup(); }
+function closeSettings() {
+  document.getElementById('settingsOverlay').classList.remove('open');
+}
+
+function saveSettings() {
+  const name     = document.getElementById('settingsName').value.trim();
+  const dept     = document.getElementById('settingsDept').value.trim();
+  const hospital = document.getElementById('settingsHospital').value.trim();
+  if (!name) {
+    document.getElementById('settingsName').focus();
+    return;
+  }
+  doctor = { name, dept, hospital };
+  saveDoctorToStorage(doctor);
+  refreshDoctorUI();
+  closeSettings();
+  showToast('✓ Profile updated');
+}
+
+// Close settings overlay on backdrop click
+document.getElementById('settingsOverlay').addEventListener('click', function(e) {
+  if (e.target === this) closeSettings();
+});
 
 function refreshDoctorUI() {
   if (!doctor) return;
-  const initials = doctor.name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+  const initials = doctor.name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
   document.getElementById('doctorInitials').textContent = initials;
   document.getElementById('doctorNameBadge').textContent = doctor.name;
 }
@@ -452,11 +499,11 @@ function setSyncStatus(type, text) {
 
 // ── Load Patients ────────────────────────────────────────────────
 async function loadPatients() {
-  setSyncStatus('loading','Loading…');
+  setSyncStatus('loading', 'Loading…');
   const { data, error } = await sb.from('patients').select('*').order('created_at', { ascending: false });
-  if (error) { setSyncStatus('err','Sync error'); throw error; }
+  if (error) { setSyncStatus('err', 'Sync error'); throw error; }
   patients = data || [];
-  setSyncStatus('ok','Synced');
+  setSyncStatus('ok', 'Synced');
   renderPatientList();
 }
 
@@ -468,11 +515,11 @@ async function newPatient() {
     diagnosis:'', current_meds:'', notes:'', plan:'',
     doctor_name: doctor?.name || '', doctor_dept: doctor?.dept || '', doctor_hospital: doctor?.hospital || ''
   };
-  setSyncStatus('loading','Saving…');
+  setSyncStatus('loading', 'Saving…');
   const { data, error } = await sb.from('patients').insert([row]).select().single();
-  if (error) { setSyncStatus('err','Save failed'); showToast('⚠ Could not create patient.'); return; }
+  if (error) { setSyncStatus('err', 'Save failed'); showToast('⚠ Could not create patient.'); return; }
   patients.unshift(data);
-  setSyncStatus('ok','Synced');
+  setSyncStatus('ok', 'Synced');
   renderPatientList();
   openPatient(data.id);
 }
@@ -483,7 +530,6 @@ async function openPatient(id) {
   renderPatientList();
   const p = patients.find(x => x.id === id);
   if (!p) return;
-  // Load documents list from storage
   p.docList = await fetchDocList(id);
   showPatientView(p);
 }
@@ -525,16 +571,14 @@ async function saveCurrentPatient() {
     updated_at:   new Date().toISOString()
   };
 
-  setSyncStatus('loading','Saving…');
+  setSyncStatus('loading', 'Saving…');
   const { error } = await sb.from('patients').update(updates).eq('id', activeId);
   if (btn) { btn.disabled = false; btn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5"/></svg> Save Record'; }
-
-  if (error) { setSyncStatus('err','Save failed'); showToast('⚠ Save failed. Check connection.'); return; }
+  if (error) { setSyncStatus('err', 'Save failed'); showToast('⚠ Save failed. Check connection.'); return; }
   Object.assign(p, updates);
-  setSyncStatus('ok','Synced');
+  setSyncStatus('ok', 'Synced');
   renderPatientList();
-  showToast('✓ Patient record saved to Supabase');
-  // Update header name live
+  showToast('✓ Patient record saved');
   const h2 = document.querySelector('.view-header-left h2');
   if (h2) h2.textContent = updates.name || 'New Patient';
 }
@@ -547,7 +591,6 @@ function confirmDelete(id) {
 async function confirmDeleteExec() {
   document.getElementById('deleteModal').classList.add('hidden');
   if (!pendingDeleteId) return;
-  // Delete storage folder
   const { data: files } = await sb.storage.from('documents').list(String(pendingDeleteId));
   if (files?.length) {
     const paths = files.map(f => `${pendingDeleteId}/${f.name}`);
@@ -585,7 +628,7 @@ async function handleFiles(files, p) {
     p.docList.push({ name: safeName, path, url });
   }
   renderDocThumbs(p);
-  showToast(`✓ ${files.length} file(s) uploaded to Supabase Storage`);
+  showToast(`✓ ${files.length} file(s) uploaded`);
 }
 
 async function removeDoc(idx, p) {
@@ -762,14 +805,14 @@ function buildPatientForm(p) {
       <div class="form-card-header-icon amber">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z"/></svg>
       </div>
-      <h3>Documents & Images <span style="font-size:.75rem;font-weight:400;color:var(--slate-400)">— stored in Supabase Storage</span></h3>
+      <h3>Documents & Images</h3>
     </div>
     <div class="form-card-body">
       <label class="upload-zone" id="uploadZone" for="fileInput">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5m-13.5-9L12 3m0 0 4.5 4.5M12 3v13.5"/>
         </svg>
-        <p><strong>Tap to upload</strong> or drag & drop<br/>X-rays, lab reports, prescriptions, photos — no size limit</p>
+        <p><strong>Tap to upload</strong> or drag & drop<br/>X-rays, lab reports, prescriptions, photos</p>
         <input type="file" id="fileInput" accept="image/*,.pdf" multiple />
       </label>
       <div class="docs-grid" id="docsGrid"></div>
@@ -808,7 +851,6 @@ async function exportPDF(id) {
 
   function checkPage(n=10) { if(y+n>272){doc.addPage();y=20;} }
 
-  // Header
   doc.setFillColor(10,79,110);
   doc.rect(0,0,W,40,'F');
   doc.setFont('helvetica','bold').setFontSize(22).setTextColor(255,255,255);
@@ -878,7 +920,6 @@ async function exportPDF(id) {
   block('Examination Findings', p.notes);
   block('Plan / Instructions', p.plan);
 
-  // Attached images from Supabase URLs
   const imgDocs = (p.docList||[]).filter(d => /\.(jpg|jpeg|png|gif|webp)$/i.test(d.name));
   if(imgDocs.length) {
     y+=4; secTitle('ATTACHED DOCUMENTS',245,158,11); y+=2;
@@ -900,7 +941,6 @@ async function exportPDF(id) {
     y+=sz+14;
   }
 
-  // Footer
   y=278;
   doc.setDrawColor(220,230,240).setLineWidth(0.3).line(M,y,W-M,y); y+=5;
   doc.setFont('helvetica','italic').setFontSize(7.5).setTextColor(140,160,180);
