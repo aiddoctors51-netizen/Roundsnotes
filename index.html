@@ -2,354 +2,268 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>RoundNotes — Doctor</title>
-<link rel="manifest" href="/manifest.json"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="mobile-web-app-capable" content="yes"/>
+<title>RoundNotes</title>
+<link rel="manifest" href="manifest.json"/>
 <style>
-  *{box-sizing:border-box;margin:0;padding:0}
-  body{font-family:'Inter',system-ui,sans-serif;background:#f1f5f9;height:100vh;display:flex;overflow:hidden;font-size:14px}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+  --teal:#0A4F6E;--teal-2:#0f5f73;--teal-light:#e0f2fe;--teal-xlight:#f0f9ff;
+  --green:#16a34a;--green-bg:#dcfce7;--amber:#d97706;--amber-bg:#fef3c7;
+  --red:#dc2626;--red-bg:#fee2e2;
+  --slate:#64748b;--border:#e2e8f0;--bg:#f1f5f9;--white:#fff;
+  --radius:14px;--shadow:0 2px 8px rgba(0,0,0,.08);
+  --safe-top:env(safe-area-inset-top,0px);
+  --safe-bottom:env(safe-area-inset-bottom,0px);
+}
+html,body{height:100%;font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg);color:#0f172a;overflow:hidden}
 
-  /* ── Sidebar ── */
-  #sidebar{width:260px;background:#fff;border-right:1px solid #e2e8f0;display:flex;flex-direction:column;padding:16px 12px;gap:10px;flex-shrink:0}
-  #sidebar .label{font-size:11px;font-weight:700;color:#64748b;letter-spacing:.08em;text-transform:uppercase}
-  #search{padding:8px 12px;border-radius:8px;border:1px solid #e2e8f0;font-size:13px;outline:none;background:#f8fafc;width:100%}
-  #newPatientBtn{background:#0f5f73;color:#fff;border:none;border-radius:8px;padding:10px;font-weight:600;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;width:100%}
-  #newPatientBtn:hover{background:#0d4f61}
-  #patientList{display:flex;flex-direction:column;gap:8px;overflow-y:auto;flex:1}
-  .patient-card{padding:10px 12px;border-radius:10px;cursor:pointer;background:#f8fafc;border:1.5px solid transparent;transition:all .15s}
-  .patient-card:hover{border-color:#0f5f7366}
-  .patient-card.active{background:#e0f2fe;border-color:#0f5f73}
-  .patient-card .p-name{font-weight:600;font-size:13px;color:#0f172a}
-  .patient-card .p-meta{display:flex;align-items:center;gap:6px;margin-top:3px}
-  .patient-card .p-detail{font-size:11px;color:#64748b}
-  .status-pill{border-radius:20px;padding:1px 8px;font-size:10px;font-weight:600}
-  .pill-stable{background:#dcfce7;color:#15803d}
-  .pill-under_review{background:#fef3c7;color:#92400e}
-  .pill-critical{background:#fee2e2;color:#991b1b}
+/* ── TOPBAR ── */
+.topbar{
+  background:var(--teal);
+  padding:calc(12px + var(--safe-top)) 16px 14px;
+  display:flex;align-items:center;gap:10px;flex-shrink:0;
+}
+.topbar h1{color:#fff;font-size:18px;font-weight:800;flex:1;letter-spacing:-.3px}
+.topbar-sub{color:rgba(255,255,255,.75);font-size:12px;font-weight:500}
+.icon-btn{
+  background:rgba(255,255,255,.18);border:none;color:#fff;
+  width:38px;height:38px;border-radius:50%;font-size:19px;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.icon-btn:active{background:rgba(255,255,255,.3)}
 
-  /* ── Main ── */
-  #main{flex:1;overflow-y:auto;padding:24px 32px;display:flex;flex-direction:column;gap:20px}
+/* ── HOME BODY ── */
+#homeBody{
+  flex:1;overflow-y:auto;overflow-x:hidden;
+  padding:16px 16px calc(24px + var(--safe-bottom));
+  -webkit-overflow-scrolling:touch;
+}
+.add-btn{
+  width:100%;background:var(--teal);color:#fff;border:none;
+  border-radius:var(--radius);padding:17px;font-size:16px;font-weight:700;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;
+  box-shadow:0 4px 14px rgba(10,79,110,.35);margin-bottom:22px;
+  -webkit-appearance:none;
+}
+.add-btn:active{background:var(--teal-2);transform:scale(.98)}
+.section-label{font-size:11px;font-weight:800;color:var(--slate);letter-spacing:.09em;text-transform:uppercase;margin-bottom:10px;padding-left:2px}
+.patient-card{
+  background:var(--white);border-radius:var(--radius);padding:14px 14px;
+  margin-bottom:10px;box-shadow:var(--shadow);display:flex;align-items:center;
+  gap:12px;cursor:pointer;border:2px solid transparent;transition:border-color .12s;
+  -webkit-appearance:none;
+}
+.patient-card:active{border-color:var(--teal);background:#fafafa}
+.p-avatar{width:46px;height:46px;border-radius:50%;background:var(--teal-xlight);display:flex;align-items:center;justify-content:center;font-size:19px;font-weight:800;color:var(--teal);flex-shrink:0}
+.p-info{flex:1;min-width:0}
+.p-name{font-weight:700;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.p-sub{font-size:12px;color:var(--slate);margin-top:3px}
+.p-time{font-size:10px;color:#94a3b8;margin-top:2px}
+.pill{border-radius:20px;padding:4px 10px;font-size:10px;font-weight:800;flex-shrink:0;text-transform:uppercase;letter-spacing:.04em}
+.pill-stable{background:var(--green-bg);color:var(--green)}
+.pill-under_review{background:var(--amber-bg);color:var(--amber)}
+.pill-critical{background:var(--red-bg);color:var(--red)}
+.p-del{background:none;border:none;color:#cbd5e1;font-size:17px;padding:6px 3px;cursor:pointer;flex-shrink:0}
+.p-del:active{color:var(--red)}
+.empty-state{text-align:center;padding:52px 24px;color:var(--slate)}
+.empty-icon{font-size:52px;margin-bottom:14px}
+.empty-state p{font-size:14px;line-height:1.6}
 
-  /* Toast */
-  #toast{display:none;padding:10px 16px;border-radius:8px;font-weight:500;font-size:13px;border:1px solid}
-  #toast.success{background:#dcfce7;color:#15803d;border-color:#86efac;display:block}
-  #toast.error{background:#fee2e2;color:#dc2626;border-color:#fca5a5;display:block}
+/* ── SETTINGS MODAL ── */
+#settingsModal{position:fixed;inset:0;z-index:800;display:none}
+#settingsModal.open{display:flex;flex-direction:column;justify-content:flex-end}
+#settingsModal .ovl{position:absolute;inset:0;background:rgba(0,0,0,.45)}
+#settingsModal .sheet{
+  position:relative;background:#fff;border-radius:22px 22px 0 0;
+  padding:20px 18px calc(28px + var(--safe-bottom));z-index:1;max-height:85vh;overflow-y:auto;
+}
+#settingsModal h3{font-size:17px;font-weight:800;margin-bottom:4px;text-align:center}
+#settingsModal .sh-sub{font-size:12px;color:var(--slate);text-align:center;margin-bottom:20px}
+.setting-field{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
+.setting-field label{font-size:12px;font-weight:700;color:#374151;letter-spacing:.04em;text-transform:uppercase}
+.setting-field input{
+  padding:12px 13px;border-radius:10px;border:1.5px solid var(--border);
+  font-size:15px;outline:none;font-family:inherit;width:100%;background:#fff;
+  color:#0f172a;transition:border-color .15s;
+}
+.setting-field input:focus{border-color:var(--teal)}
+.btn-save-settings{
+  width:100%;background:var(--teal);color:#fff;border:none;border-radius:11px;
+  padding:14px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;margin-top:6px;
+}
+.btn-save-settings:active{background:var(--teal-2)}
+.settings-hint{font-size:11px;color:#94a3b8;text-align:center;margin-top:12px;line-height:1.5}
 
-  /* Cards */
-  .card{background:#fff;border-radius:14px;padding:24px;box-shadow:0 1px 4px #0001}
-  .section-header{display:flex;align-items:center;gap:10px;margin-bottom:16px}
-  .section-header span.icon{font-size:18px}
-  .section-header span.title{font-weight:700;font-size:16px;color:#0f172a}
+/* ── TOAST ── */
+#toast{
+  position:fixed;bottom:calc(28px + var(--safe-bottom));left:50%;
+  transform:translateX(-50%);padding:12px 22px;border-radius:10px;
+  font-weight:700;font-size:14px;z-index:999;display:none;
+  white-space:nowrap;box-shadow:0 4px 20px rgba(0,0,0,.18);pointer-events:none;
+}
+#toast.show-success{display:block;background:var(--green);color:#fff}
+#toast.show-error{display:block;background:var(--red);color:#fff}
+#toast.show-info{display:block;background:var(--teal);color:#fff}
 
-  /* Grid helpers */
-  .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-  .grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
-  .grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
-
-  /* Fields */
-  .field{display:flex;flex-direction:column;gap:6px}
-  .field label{font-size:12px;font-weight:600;color:#374151}
-  .field input,.field textarea{padding:9px 12px;border-radius:8px;border:1px solid #e2e8f0;font-size:13px;outline:none;font-family:inherit;width:100%;transition:border-color .15s}
-  .field input:focus,.field textarea:focus{border-color:#0f5f73}
-  .field textarea{resize:vertical}
-
-  /* Condition buttons */
-  #conditionGroup{display:flex;gap:10px;margin-top:20px}
-  .cond-btn{display:flex;align-items:center;gap:7px;padding:8px 18px;border-radius:999px;border:1.5px solid #d1d5db;background:#fff;color:#6b7280;font-weight:500;font-size:13px;cursor:pointer;transition:all .15s;outline:none;font-family:inherit}
-  .cond-btn .dot{width:9px;height:9px;border-radius:50%;background:#d1d5db;flex-shrink:0;transition:all .15s}
-  /* active states */
-  .cond-btn.active-stable{border-color:#16a34a;background:#f0fdf4;color:#16a34a;font-weight:700;box-shadow:0 0 0 3px #16a34a22}
-  .cond-btn.active-stable .dot{background:#16a34a;box-shadow:0 0 0 2px #16a34a44}
-  .cond-btn.active-under_review{border-color:#d97706;background:#fffbeb;color:#d97706;font-weight:700;box-shadow:0 0 0 3px #d9770622}
-  .cond-btn.active-under_review .dot{background:#d97706;box-shadow:0 0 0 2px #d9770644}
-  .cond-btn.active-critical{border-color:#dc2626;background:#fef2f2;color:#dc2626;font-weight:700;box-shadow:0 0 0 3px #dc262622}
-  .cond-btn.active-critical .dot{background:#dc2626;box-shadow:0 0 0 2px #dc262644}
-
-  /* Vitals */
-  .vital-card{border:1px solid #e2e8f0;border-radius:10px;padding:12px 14px;background:#f8fafc}
-  .vital-card .v-label{font-size:10px;font-weight:700;color:#64748b;letter-spacing:.07em;margin-bottom:6px}
-  .vital-card input{font-size:22px;font-weight:700;color:#0f172a;border:none;background:transparent;width:100%;outline:none;font-family:inherit}
-  .vital-card .v-unit{font-size:11px;color:#94a3b8;margin-top:2px}
-
-  /* Upload zone */
-  #dropZone{border:2px dashed #cbd5e1;border-radius:12px;padding:28px 20px;display:flex;flex-direction:column;align-items:center;gap:10px;cursor:pointer;background:#f8fafc;transition:border-color .15s}
-  #dropZone:hover{border-color:#0f5f73}
-  #dropZone .upload-icon-wrap{width:48px;height:48px;border-radius:12px;background:#e0f2fe;display:flex;align-items:center;justify-content:center}
-  #dropZone .upload-text{font-size:13px;color:#64748b}
-  #dropZone .upload-text strong{color:#0f5f73}
-  #dropZone .upload-hint{font-size:12px;color:#94a3b8}
-  #docGrid{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
-  .doc-thumb{position:relative;border-radius:10px;overflow:hidden;border:1px solid #e2e8f0;background:#f8fafc;width:90px;flex-shrink:0}
-  .doc-thumb img{width:90px;height:70px;object-fit:cover;display:block}
-  .doc-thumb .doc-icon{width:90px;height:70px;display:flex;align-items:center;justify-content:center;font-size:28px;background:#f1f5f9}
-  .doc-thumb .doc-name{padding:4px 6px;font-size:10px;color:#475569;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .doc-thumb .doc-remove{position:absolute;top:4px;right:4px;width:18px;height:18px;border-radius:50%;background:#dc2626;color:#fff;border:none;cursor:pointer;font-size:10px;display:flex;align-items:center;justify-content:center;line-height:1}
-
-  /* Save button */
-  #saveBar{display:flex;justify-content:flex-end;padding-bottom:32px}
-  #saveBtn{background:#0f5f73;color:#fff;border:none;border-radius:10px;padding:12px 28px;font-weight:700;font-size:14px;cursor:pointer;display:flex;align-items:center;gap:8px;box-shadow:0 2px 8px #0f5f7333;font-family:inherit}
-  #saveBtn:hover{background:#0d4f61}
+.screen{display:none;flex-direction:column;height:100dvh;height:100vh;overflow:hidden}
+.screen.active{display:flex}
 </style>
 </head>
 <body>
 
-<!-- ══ SIDEBAR ══ -->
-<div id="sidebar">
-  <div class="label">Patients This Round</div>
-  <input id="search" placeholder="Search patient..." oninput="filterPatients()"/>
-  <button id="newPatientBtn" onclick="addPatient()">
-    <span style="font-size:18px;line-height:1">+</span> New Patient
-  </button>
-  <div id="patientList"></div>
-</div>
-
-<!-- ══ MAIN ══ -->
-<div id="main">
-  <div id="toast"></div>
-
-  <!-- Patient Info -->
-  <div class="card">
-    <div class="grid-2">
-      <div class="field"><label>Full Name</label><input id="f-name" placeholder="Full name"/></div>
-      <div class="field"><label>Age</label><input id="f-age" placeholder="Age"/></div>
+<!-- ══════════ HOME SCREEN ══════════ -->
+<div id="homeScreen" class="screen active">
+  <div class="topbar">
+    <h1>🏥 RoundNotes</h1>
+    <div>
+      <span id="topDrName" class="topbar-sub"></span>
     </div>
-    <div class="grid-3" style="margin-top:16px">
-      <div class="field"><label>Gender</label><input id="f-gender" placeholder="Gender"/></div>
-      <div class="field"><label>Ward / Unit</label><input id="f-ward" placeholder="Ward / Unit"/></div>
-      <div class="field"><label>Bed No.</label><input id="f-bed" placeholder="Bed No."/></div>
-    </div>
-    <div class="grid-2" style="margin-top:16px">
-      <div class="field"><label>Contact <span style="color:#94a3b8;font-weight:400">(optional)</span></label><input id="f-contact" placeholder="Patient or guardian number"/></div>
-      <div class="field"><label>Address <span style="color:#94a3b8;font-weight:400">(optional)</span></label><input id="f-address" placeholder="City, State"/></div>
-    </div>
-
-    <!-- Condition Status -->
-    <div style="margin-top:8px">
-      <div style="font-size:12px;font-weight:600;color:#374151;margin-bottom:10px">Condition Status</div>
-      <div id="conditionGroup">
-        <button class="cond-btn" data-key="stable" onclick="setCondition('stable')">
-          <span class="dot"></span> Stable
-        </button>
-        <button class="cond-btn" data-key="under_review" onclick="setCondition('under_review')">
-          <span class="dot"></span> Under Review
-        </button>
-        <button class="cond-btn" data-key="critical" onclick="setCondition('critical')">
-          <span class="dot"></span> Critical
-        </button>
-      </div>
-    </div>
+    <button class="icon-btn" onclick="openSettings()" title="Settings">⚙️</button>
   </div>
-
-  <!-- Vital Signs -->
-  <div class="card">
-    <div class="section-header">
-      <span class="icon">❤️</span><span class="title">Vital Signs</span>
-    </div>
-    <div class="grid-4">
-      <div class="vital-card">
-        <div class="v-label">BLOOD PRESSURE</div>
-        <input id="v-bp" value="120/80"/>
-        <div class="v-unit">mmHg</div>
-      </div>
-      <div class="vital-card">
-        <div class="v-label">HEART RATE</div>
-        <input id="v-hr" value="72"/>
-        <div class="v-unit">bpm</div>
-      </div>
-      <div class="vital-card">
-        <div class="v-label">SPO₂</div>
-        <input id="v-spo2" value="98"/>
-        <div class="v-unit">%</div>
-      </div>
-      <div class="vital-card">
-        <div class="v-label">TEMPERATURE</div>
-        <input id="v-temp" value="98.6"/>
-        <div class="v-unit">°F</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Clinical Notes -->
-  <div class="card">
-    <div class="section-header">
-      <span class="icon">📋</span><span class="title">Clinical Notes</span>
-    </div>
-    <div style="display:flex;flex-direction:column;gap:14px">
-      <div class="field">
-        <label>Observations</label>
-        <textarea id="f-obs" rows="3" placeholder="Observations, symptoms, examination findings..."></textarea>
-      </div>
-      <div class="field">
-        <label>Plan / Instructions</label>
-        <textarea id="f-plan" rows="3" placeholder="Investigation orders, next steps, follow-up plan..."></textarea>
-      </div>
-    </div>
-  </div>
-
-  <!-- Documents & Images -->
-  <div class="card">
-    <div class="section-header">
-      <span class="icon">🖼️</span><span class="title">Documents & Images</span>
-    </div>
-    <input type="file" id="fileInput" multiple accept="image/*,.pdf" style="display:none" onchange="handleFiles(this.files)"/>
-    <div id="dropZone" onclick="document.getElementById('fileInput').click()"
-         ondragover="event.preventDefault();this.style.borderColor='#0f5f73'"
-         ondragleave="this.style.borderColor='#cbd5e1'"
-         ondrop="event.preventDefault();this.style.borderColor='#cbd5e1';handleFiles(event.dataTransfer.files)">
-      <div class="upload-icon-wrap">
-        <!-- Clean SVG upload icon -->
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#0f5f73" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-          <polyline points="17 8 12 3 7 8"/>
-          <line x1="12" y1="3" x2="12" y2="15"/>
-        </svg>
-      </div>
-      <div class="upload-text"><strong>Tap to upload</strong> or drag & drop</div>
-      <div class="upload-hint">X-rays, lab reports, prescriptions, photos</div>
-    </div>
-    <div id="docGrid"></div>
-  </div>
-
-  <div id="saveBar">
-    <button id="saveBtn" onclick="saveRecord()">✓ Save Record</button>
+  <div id="homeBody">
+    <button class="add-btn" onclick="goToForm()">
+      <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.8" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      Add New Patient
+    </button>
+    <div class="section-label">Your Patients</div>
+    <div id="patientList"></div>
   </div>
 </div>
+
+<!-- ══════════ SETTINGS MODAL ══════════ -->
+<div id="settingsModal">
+  <div class="ovl" onclick="closeSettings()"></div>
+  <div class="sheet">
+    <h3>👨‍⚕️ Doctor Profile</h3>
+    <p class="sh-sub">This appears as your signature on PDF reports</p>
+    <div class="setting-field">
+      <label>Full Name</label>
+      <input id="s-drname" placeholder="Dr. Jane Smith"/>
+    </div>
+    <div class="setting-field">
+      <label>Designation / Speciality</label>
+      <input id="s-desig" placeholder="MBBS, MD — Cardiology"/>
+    </div>
+    <div class="setting-field">
+      <label>Department</label>
+      <input id="s-dept" placeholder="Department of Cardiology"/>
+    </div>
+    <div class="setting-field">
+      <label>Hospital / Institution</label>
+      <input id="s-hospital" placeholder="City General Hospital"/>
+    </div>
+    <button class="btn-save-settings" onclick="saveSettings()">Save Profile</button>
+    <p class="settings-hint">Your profile is stored only on this device and never sent anywhere.</p>
+  </div>
+</div>
+
+<div id="toast"></div>
 
 <script>
-// ── State ──
-let patients = [
-  { id: 1, name: "Unnamed Patient", status: "stable", ward: "", saved: false }
-];
-let activeId = 1;
-let currentCondition = "stable";
-let docs = [];
+// ══ STORAGE KEY ══
+const KEY = 'rn_patients_v2';
+const DR_KEY = 'rn_doctor';
 
-// ── Init ──
-renderPatientList();
-setCondition("stable");
+let patients = [];
+let doctor = {};
 
-// ── Patient List ──
-function renderPatientList() {
-  const q = document.getElementById('search').value.toLowerCase();
+function loadAll(){
+  try{ patients = JSON.parse(localStorage.getItem(KEY)||'[]'); } catch(e){ patients=[]; }
+  try{ doctor = JSON.parse(localStorage.getItem(DR_KEY)||'{}'); } catch(e){ doctor={}; }
+}
+function savePatients(){ localStorage.setItem(KEY, JSON.stringify(patients)); }
+function saveDoctor(){ localStorage.setItem(DR_KEY, JSON.stringify(doctor)); }
+
+// ══ SETTINGS ══
+function openSettings(){
+  loadAll();
+  document.getElementById('s-drname').value = doctor.name||'';
+  document.getElementById('s-desig').value = doctor.desig||'';
+  document.getElementById('s-dept').value = doctor.dept||'';
+  document.getElementById('s-hospital').value = doctor.hospital||'';
+  document.getElementById('settingsModal').classList.add('open');
+}
+function closeSettings(){ document.getElementById('settingsModal').classList.remove('open'); }
+function saveSettings(){
+  doctor = {
+    name: document.getElementById('s-drname').value.trim(),
+    desig: document.getElementById('s-desig').value.trim(),
+    dept: document.getElementById('s-dept').value.trim(),
+    hospital: document.getElementById('s-hospital').value.trim()
+  };
+  saveDoctor();
+  closeSettings();
+  renderTopBar();
+  showToast('Profile saved ✓','success');
+}
+function renderTopBar(){
+  const el = document.getElementById('topDrName');
+  el.textContent = doctor.name ? doctor.name : '';
+}
+
+// ══ NAVIGATION ══
+function goToForm(id){
+  // Pass id via sessionStorage so patient.html can read it
+  if(id) sessionStorage.setItem('rn_edit_id', id);
+  else sessionStorage.removeItem('rn_edit_id');
+  window.location.href = 'patient.html';
+}
+
+// ══ HOME RENDER ══
+function renderHome(){
   const list = document.getElementById('patientList');
-  list.innerHTML = '';
-  patients
-    .filter(p => p.name.toLowerCase().includes(q))
-    .forEach(p => {
-      const div = document.createElement('div');
-      div.className = 'patient-card' + (p.id === activeId ? ' active' : '');
-      div.innerHTML = `
-        <div class="p-name">${p.name}</div>
-        <div class="p-meta">
-          <span class="p-detail">${p.ward ? 'Ward: ' + p.ward : 'Details pending'}</span>
-          <span class="status-pill pill-${p.status}">${p.status.replace('_',' ')}</span>
-        </div>`;
-      div.onclick = () => loadPatient(p.id);
-      list.appendChild(div);
-    });
-}
-
-function filterPatients() { renderPatientList(); }
-
-function addPatient() {
-  const id = Date.now();
-  patients.push({ id, name: "Unnamed Patient", status: "stable", ward: "", saved: false });
-  activeId = id;
-  clearForm();
-  renderPatientList();
-}
-
-function loadPatient(id) {
-  activeId = id;
-  renderPatientList();
-  // In a real app you'd restore saved form data here
-}
-
-// ── Condition Status (FIX #3) ──
-function setCondition(key) {
-  currentCondition = key;
-  document.querySelectorAll('.cond-btn').forEach(btn => {
-    btn.className = 'cond-btn'; // reset
-    if (btn.dataset.key === key) {
-      btn.classList.add('active-' + key);
-    }
-  });
-}
-
-// ── File Upload (FIX #1) ──
-function handleFiles(files) {
-  Array.from(files).forEach(file => {
-    const url = URL.createObjectURL(file);
-    docs.push({ name: file.name, url, isImage: file.type.startsWith('image/') });
-  });
-  renderDocs();
-}
-
-function renderDocs() {
-  const grid = document.getElementById('docGrid');
-  grid.innerHTML = '';
-  docs.forEach((doc, i) => {
-    const div = document.createElement('div');
-    div.className = 'doc-thumb';
-    div.innerHTML = doc.isImage
-      ? `<img src="${doc.url}" alt="${doc.name}"/>`
-      : `<div class="doc-icon">📄</div>`;
-    div.innerHTML += `
-      <div class="doc-name">${doc.name}</div>
-      <button class="doc-remove" onclick="removeDoc(${i})">✕</button>`;
-    grid.appendChild(div);
-  });
-}
-
-function removeDoc(i) {
-  docs.splice(i, 1);
-  renderDocs();
-}
-
-// ── Save Record (FIX #2) ──
-function saveRecord() {
-  const name = document.getElementById('f-name').value.trim();
-  if (!name) {
-    showToast('Please enter patient name before saving.', 'error');
+  const sorted = [...patients].sort((a,b)=> (b.savedAt||0)-(a.savedAt||0));
+  if(!sorted.length){
+    list.innerHTML=`<div class="empty-state"><div class="empty-icon">🏥</div><p>No patients yet.<br>Tap <strong>Add New Patient</strong> to begin.</p></div>`;
     return;
   }
-  const ward = document.getElementById('f-ward').value.trim();
-  // Update patient in sidebar
-  const p = patients.find(p => p.id === activeId);
-  if (p) {
-    p.name = name;
-    p.status = currentCondition;
-    p.ward = ward;
-    p.saved = true;
-  }
-  renderPatientList();
-  showToast('Record saved successfully!', 'success');
+  list.innerHTML = sorted.map(p=>`
+    <div class="patient-card" onclick="goToForm(${p.id})">
+      <div class="p-avatar">${(p.name||'?')[0].toUpperCase()}</div>
+      <div class="p-info">
+        <div class="p-name">${esc(p.name||'Unnamed')}</div>
+        <div class="p-sub">${p.ward?'Ward: '+esc(p.ward):''}${p.ward&&p.bed?' · ':''}${p.bed?'Bed '+esc(p.bed):''}</div>
+        <div class="p-time">${p.savedAt ? 'Updated '+timeAgo(p.savedAt) : ''}</div>
+      </div>
+      <span class="pill pill-${p.status||'stable'}">${(p.status||'stable').replace('_',' ')}</span>
+      <button class="p-del" onclick="event.stopPropagation();deletePatient(${p.id})" title="Delete">🗑</button>
+    </div>
+  `).join('');
 }
 
-function showToast(msg, type) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.className = type;
-  setTimeout(() => { t.className = ''; t.style.display = 'none'; }, 3000);
+function deletePatient(id){
+  if(!confirm('Delete this patient record?')) return;
+  patients = patients.filter(p=>p.id!==id);
+  savePatients();
+  renderHome();
 }
 
-function clearForm() {
-  ['f-name','f-age','f-gender','f-ward','f-bed','f-contact','f-address','f-obs','f-plan'].forEach(id => {
-    document.getElementById(id).value = '';
-  });
-  document.getElementById('v-bp').value = '120/80';
-  document.getElementById('v-hr').value = '72';
-  document.getElementById('v-spo2').value = '98';
-  document.getElementById('v-temp').value = '98.6';
-  docs = [];
-  renderDocs();
-  setCondition('stable');
+function esc(s){ return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function timeAgo(ts){
+  const s=Math.floor((Date.now()-ts)/1000);
+  if(s<60) return 'just now';
+  if(s<3600) return Math.floor(s/60)+'m ago';
+  if(s<86400) return Math.floor(s/3600)+'h ago';
+  return Math.floor(s/86400)+'d ago';
 }
 
-// Register service worker
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/sw.js');
+// ══ TOAST ══
+let _tt;
+function showToast(msg,type='info'){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.className='show-'+type;
+  clearTimeout(_tt); _tt=setTimeout(()=>t.className='',2800);
 }
+
+// ══ INIT ══
+loadAll();
+renderTopBar();
+renderHome();
+if('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(()=>{});
 </script>
 </body>
 </html>
