@@ -7,6 +7,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
 <title>RoundNotes — Patient</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 :root{
@@ -413,6 +414,19 @@ html,body{height:100%;font-family:'Inter',system-ui,-apple-system,sans-serif;bac
         <span>More…</span>
       </button>
     </div>
+    <!-- Google Drive backup row -->
+    <div id="driveBackupRow" style="margin:10px 0 4px;border-top:1px solid #e2e8f0;padding-top:14px;display:none">
+      <div style="font-size:10px;font-weight:800;color:#64748b;letter-spacing:.06em;text-transform:uppercase;margin-bottom:10px">☁️ Cloud Backup</div>
+      <button class="sh-opt" style="width:100%;flex-direction:row;justify-content:flex-start;gap:14px;padding:12px 14px;background:#f0fdf4;border-radius:13px;border:1.5px solid #bbf7d0" onclick="shareVia('gdrive')">
+        <div class="sh-icon" style="background:#fff;width:44px;height:44px;border-radius:11px;font-size:22px;flex-shrink:0">
+          <svg width="24" height="24" viewBox="0 0 87.3 78" xmlns="http://www.w3.org/2000/svg"><path d="m6.6 66.85 3.85 6.65c.8 1.4 1.95 2.5 3.3 3.3l13.75-23.8h-27.5c0 1.55.4 3.1 1.2 4.5z" fill="#0066da"/><path d="m43.65 25-13.75-23.8c-1.35.8-2.5 1.9-3.3 3.3l-25.4 44a9.06 9.06 0 0 0 -1.2 4.5h27.5z" fill="#00ac47"/><path d="m73.55 76.8c1.35-.8 2.5-1.9 3.3-3.3l1.6-2.75 7.65-13.25c.8-1.4 1.2-2.95 1.2-4.5h-27.502l5.852 11.5z" fill="#ea4335"/><path d="m43.65 25 13.75-23.8c-1.35-.8-2.9-1.2-4.5-1.2h-18.5c-1.6 0-3.15.45-4.5 1.2z" fill="#00832d"/><path d="m59.8 53h-32.3l-13.75 23.8c1.35.8 2.9 1.2 4.5 1.2h50.8c1.6 0 3.15-.45 4.5-1.2z" fill="#2684fc"/><path d="m73.4 26.5-12.7-22c-.8-1.4-1.95-2.5-3.3-3.3l-13.75 23.8 16.15 28h27.45c0-1.55-.4-3.1-1.2-4.5z" fill="#ffba00"/></svg>
+        </div>
+        <div style="text-align:left">
+          <div style="font-size:14px;font-weight:800;color:#15803d">Save to Google Drive</div>
+          <div style="font-size:11px;color:#64748b;margin-top:2px">PDF saved to your Drive — always accessible</div>
+        </div>
+      </button>
+    </div>
     <button class="sh-cancel" onclick="closeShareSheet()">Cancel</button>
   </div>
 </div>
@@ -717,6 +731,10 @@ function showToast(msg,type='info'){
 function openShareSheet(){
   const data=getFormData();
   if(!data.name){ showToast('Enter patient name and save first','error'); return; }
+  // Show/hide Drive option based on whether client ID is configured
+  const hasClientId = !!getGoogleClientId();
+  const driveRow = document.getElementById('driveBackupRow');
+  if(driveRow) driveRow.style.display = hasClientId ? 'block' : 'none';
   document.getElementById('shareSheet').classList.add('open');
 }
 function closeShareSheet(){ document.getElementById('shareSheet').classList.remove('open'); }
@@ -773,7 +791,60 @@ async function shareVia(mode){
     }
     downloadBlob(pdfBlob, fileName);
     showToast('PDF saved to device ✓','success');
+  } else if(mode==='gdrive'){
+    showProgress('Uploading to Google Drive…');
+    try {
+      await uploadToGoogleDrive(pdfBlob, fileName);
+    } catch(e) {
+      hideProgress();
+      showToast('Drive upload failed — PDF saved to device','error');
+      downloadBlob(pdfBlob, fileName);
+    }
   }
+}
+
+// ══ GOOGLE DRIVE UPLOAD ══
+async function uploadToGoogleDrive(blob, fileName){
+  // Step 1: Get OAuth token via Google Identity Services
+  return new Promise((resolve, reject) => {
+    if(!window.google || !window.google.accounts){
+      reject(new Error('Google API not loaded'));
+      return;
+    }
+    const client = google.accounts.oauth2.initTokenClient({
+      client_id: getGoogleClientId(),
+      scope: 'https://www.googleapis.com/auth/drive.file',
+      callback: async (tokenResponse) => {
+        if(tokenResponse.error){ reject(new Error(tokenResponse.error)); return; }
+        try {
+          await driveUpload(blob, fileName, tokenResponse.access_token);
+          hideProgress();
+          showToast('Saved to Google Drive ✓','success');
+          resolve();
+        } catch(e) { reject(e); }
+      }
+    });
+    client.requestAccessToken();
+  });
+}
+
+function getGoogleClientId(){
+  // Doctors can set their Google Client ID in settings
+  try { return JSON.parse(localStorage.getItem('rn_doctor')||'{}').googleClientId || ''; } catch(e){ return ''; }
+}
+
+async function driveUpload(blob, fileName, accessToken){
+  const metadata = { name: fileName, mimeType: 'application/pdf' };
+  const form = new FormData();
+  form.append('metadata', new Blob([JSON.stringify(metadata)], {type:'application/json'}));
+  form.append('file', blob);
+  const res = await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart', {
+    method: 'POST',
+    headers: { 'Authorization': 'Bearer ' + accessToken },
+    body: form
+  });
+  if(!res.ok) throw new Error('Upload failed: ' + res.status);
+  return res.json();
 }
 
 function downloadBlob(blob, name){
@@ -802,16 +873,43 @@ async function buildPDF(){
 
   // Header
   doc.setFillColor(10,79,110);
-  doc.rect(0,0,W,32,'F');
+  doc.rect(0,0,W,36,'F');
+
+  // Left side: App name + subtitle
   doc.setTextColor(255,255,255);
   doc.setFontSize(16); doc.setFont('helvetica','bold');
   doc.text('RoundNotes',M,13);
   doc.setFontSize(9); doc.setFont('helvetica','normal');
   doc.text('Patient Medical Record',M,20);
   doc.setFontSize(8);
-  doc.text('Generated: '+new Date().toLocaleString(),W-M,13,{align:'right'});
-  if(doctor.hospital) doc.text(doctor.hospital,W-M,20,{align:'right'});
-  y=40;
+  doc.text('Generated: '+new Date().toLocaleString(),M,27);
+
+  // Right side: Doctor info box
+  const drLines = [];
+  if(doctor.name)    drLines.push({text: doctor.name,    bold:true,  size:10});
+  if(doctor.desig)   drLines.push({text: doctor.desig,   bold:false, size:8.5});
+  if(doctor.dept)    drLines.push({text: doctor.dept,    bold:false, size:8});
+  if(doctor.hospital)drLines.push({text: doctor.hospital,bold:false, size:8});
+  if(doctor.phone)   drLines.push({text: '📞 '+doctor.phone, bold:false, size:8});
+
+  if(drLines.length){
+    // White semi-transparent box on right
+    doc.setFillColor(255,255,255);
+    doc.setGState && doc.setGState(new doc.GState({opacity:0.12}));
+    const boxW = 80, boxH = drLines.length*7+6, boxX = W-M-boxW, boxY = 2;
+    doc.roundedRect(boxX, boxY, boxW, boxH, 2, 2, 'F');
+    doc.setGState && doc.setGState(new doc.GState({opacity:1}));
+
+    let dy = boxY+6;
+    drLines.forEach(l=>{
+      doc.setFont('helvetica', l.bold ? 'bold' : 'normal');
+      doc.setFontSize(l.size);
+      doc.setTextColor(255,255,255);
+      doc.text(l.text, W-M-2, dy, {align:'right', maxWidth: boxW-4});
+      dy += 7;
+    });
+  }
+  y=44;
 
   // Status badge
   const sc={stable:[22,163,74],under_review:[217,119,6],critical:[220,38,38]}[d.status]||[22,163,74];
@@ -917,24 +1015,37 @@ async function buildPDF(){
     }
   }
 
-  // Attached Images
+  // Attached Images — each image on its own full page for clarity
   const imgDocs=docs.filter(d=>d.isImage);
   if(imgDocs.length){
-    if(y>220){doc.addPage();y=M;}
-    section('Attached Images');
-    const imgW=52,imgH=42,gap=5;
-    let ix=M,iy=y;
     for(let i=0;i<imgDocs.length;i++){
-      if(ix+imgW>W-M){ix=M;iy+=imgH+gap+10;}
-      if(iy+imgH>272){doc.addPage();iy=M;ix=M;}
-      try{
-        doc.addImage(imgDocs[i].dataUrl,'JPEG',ix,iy,imgW,imgH);
-        doc.setFont('helvetica','normal'); doc.setFontSize(6.5); doc.setTextColor(100,116,139);
-        doc.text(imgDocs[i].name.substring(0,20),ix,iy+imgH+4);
-      }catch(e){ console.warn('Image error',e); }
-      ix+=imgW+gap;
+      doc.addPage();
+      // Page header bar
+      doc.setFillColor(10,79,110);
+      doc.rect(0,0,W,18,'F');
+      doc.setTextColor(255,255,255);
+      doc.setFont('helvetica','bold'); doc.setFontSize(10);
+      doc.text('Attached Image '+(i+1)+' of '+imgDocs.length,M,12);
+      doc.setFont('helvetica','normal'); doc.setFontSize(8);
+      doc.text(imgDocs[i].name.substring(0,50), W-M, 12, {align:'right'});
+
+      // Image: full usable area, preserve aspect ratio
+      try {
+        // Determine image dimensions using a canvas
+        const imgEl = new Image();
+        await new Promise(res=>{ imgEl.onload=res; imgEl.onerror=res; imgEl.src=imgDocs[i].dataUrl; });
+        const natW = imgEl.naturalWidth||1, natH = imgEl.naturalHeight||1;
+        const maxW = W - M*2, maxH = 255 - 4; // usable area below header
+        const scale = Math.min(maxW/natW, maxH/natH);
+        const drawW = natW*scale, drawH = natH*scale;
+        const drawX = M + (maxW - drawW)/2;
+        const drawY = 22 + (maxH - drawH)/2;
+        doc.addImage(imgDocs[i].dataUrl,'JPEG',drawX,drawY,drawW,drawH);
+      } catch(e) {
+        doc.setFont('helvetica','normal'); doc.setFontSize(10); doc.setTextColor(150,150,150);
+        doc.text('[Image could not be rendered]', W/2, 150, {align:'center'});
+      }
     }
-    y=iy+imgH+16;
   }
 
   // Doctor Signature
