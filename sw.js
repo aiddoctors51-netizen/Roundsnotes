@@ -1,6 +1,6 @@
-// RoundNotes Service Worker — enables offline use on iPad
-const CACHE = 'roundnotes-v1';
-const ASSETS = ['/', '/index.html', '/manifest.json'];
+// RoundNotes Service Worker v2 — offline support
+const CACHE = 'roundnotes-v2';
+const ASSETS = ['/', '/index.html', '/patient.html', '/manifest.json'];
 
 self.addEventListener('install', e => {
   e.waitUntil(
