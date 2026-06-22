@@ -368,7 +368,7 @@ function fillForm(p){
 function getFormData(){
   return {
     id: activeId,
-    user_id: currentUser?.id || localStorage.getItem('rn_user_id'),
+    doctor_id: doctor.id,
     name: fget('f-name'), age: fget('f-age'), gender: document.getElementById('f-gender').value,
     ward: fget('f-ward'), bed: fget('f-bed'), contact: fget('f-contact'), address: fget('f-address'),
     obs: fget('f-obs'), plan: fget('f-plan'),
@@ -725,9 +725,9 @@ async function buildPDF(){
     pdf.setFillColor(13,61,86); pdf.rect(0,0,W,20,'F');
     pdf.setFillColor(0,168,150); pdf.rect(0,0,4,20,'F');
     pdf.setTextColor(255,255,255); pdf.setFont('helvetica','bold'); pdf.setFontSize(11);
-    pdf.text(`Image ${i+1} of ${imgDocs.length}`,M+2,13);
+    pdf.text(`${d.name||'Patient'}  •  Image ${i+1} of ${imgDocs.length}`,M+2,13);
     pdf.setFont('helvetica','normal'); pdf.setFontSize(8);
-    pdf.text(imgDocs[i].name.substring(0,55),W-M,13,{align:'right'});
+    pdf.text(imgDocs[i].name.substring(0,40),W-M,13,{align:'right'});
     try{
       const img=new Image(); await new Promise(r=>{ img.onload=r; img.onerror=r; img.src=imgDocs[i].dataUrl; });
       const nW=img.naturalWidth||1, nH=img.naturalHeight||1;
@@ -748,7 +748,7 @@ async function buildPDF(){
     pdf.setFillColor(248,250,252); pdf.rect(0,281,W,16,'F');
     pdf.setDrawColor(221,228,234); pdf.setLineWidth(0.3); pdf.line(0,281,W,281);
     pdf.setFont('helvetica','normal'); pdf.setFontSize(8); pdf.setTextColor(143,160,176);
-    pdf.text(`RoundNotes  •  Page ${pg} of ${total}`,W/2,289,{align:'center'});
+    pdf.text(`RoundNotes  •  ${d.name||'Patient'}  •  Page ${pg} of ${total}`,W/2,289,{align:'center'});
     if(pg===total&&(doctor.name||doctor.desig)){
       const sigY=Math.max(y+10,242);
       pdf.setDrawColor(0,168,150); pdf.setLineWidth(0.5); pdf.line(W-M-65,sigY,W-M,sigY);
