@@ -326,7 +326,14 @@ function loadLocalState(){
   // Parse user from JWT
   const token = localStorage.getItem('rn_token');
   if(token){
-    try{ const p=JSON.parse(atob(token.split('.')[1])); currentUser={id:p.sub,email:p.email}; }catch(e){}
+    try{
+      const p=JSON.parse(atob(token.split('.')[1]));
+      currentUser={id:p.sub,email:p.email};
+    }catch(e){}
+  }
+  if(!currentUser){
+    const uid = localStorage.getItem('rn_user_id');
+    if(uid) currentUser = {id:uid};
   }
 }
 
