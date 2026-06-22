@@ -15,7 +15,7 @@
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 :root{
   --navy:#0D3D56;--navy-deep:#092d40;
-  --teal:#00A896;--teal-dim:#008f7f;--teal-light:#e0f5f3;--teal-xlight:#f0faf9;
+  --teal:#00A896;--teal-light:#e0f5f3;--teal-xlight:#f0faf9;
   --green:#059669;--green-bg:#d1fae5;
   --amber:#b45309;--amber-bg:#fef3c7;
   --red:#dc2626;--red-bg:#fee2e2;
@@ -30,7 +30,6 @@
 }
 html,body{height:100%;font-family:var(--font);background:var(--bg);color:var(--ink);overflow:hidden;-webkit-font-smoothing:antialiased}
 
-/* SPLASH */
 #splash{position:fixed;inset:0;z-index:9999;background:linear-gradient(145deg,var(--navy-deep) 0%,var(--navy) 55%,#0e5a70 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;transition:opacity .5s ease,visibility .5s ease}
 #splash.hide{opacity:0;visibility:hidden;pointer-events:none}
 .splash-logo{width:88px;height:88px;border-radius:24px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:42px;box-shadow:0 12px 40px rgba(0,0,0,.25);animation:splashPop .5s cubic-bezier(.34,1.56,.64,1) both}
@@ -40,18 +39,15 @@ html,body{height:100%;font-family:var(--font);background:var(--bg);color:var(--i
 @keyframes splashFade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 .splash-dots{display:flex;gap:7px;margin-top:10px;animation:splashFade .5s .5s ease both}
 .splash-dots span{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.35);animation:dotPulse 1.2s .7s ease-in-out infinite}
-.splash-dots span:nth-child(2){animation-delay:.85s}
-.splash-dots span:nth-child(3){animation-delay:1s}
+.splash-dots span:nth-child(2){animation-delay:.85s}.splash-dots span:nth-child(3){animation-delay:1s}
 @keyframes dotPulse{0%,100%{opacity:.35;transform:scale(1)}50%{opacity:1;transform:scale(1.35)}}
 
-/* SCREENS */
 .screen{display:none;flex-direction:column;height:100dvh;height:100vh;overflow:hidden}
 .screen.active{display:flex}
 
-/* AUTH */
 #authScreen{background:linear-gradient(160deg,var(--navy-deep) 0%,#0e5272 60%,#12697a 100%);align-items:center;justify-content:center;padding:20px;overflow-y:auto}
 .auth-card{background:var(--surface);border-radius:22px;padding:28px 22px 24px;width:100%;max-width:400px;box-shadow:0 24px 64px rgba(0,0,0,.28)}
-.auth-logo{display:flex;align-items:center;gap:12px;margin-bottom:24px;justify-content:center}
+.auth-logo{display:flex;align-items:center;gap:12px;margin-bottom:22px;justify-content:center}
 .auth-logo-icon{width:48px;height:48px;border-radius:13px;background:linear-gradient(135deg,var(--navy) 0%,var(--teal) 100%);display:flex;align-items:center;justify-content:center;font-size:24px}
 .auth-logo-text{font-family:var(--font-display);font-size:22px;color:var(--navy)}
 .auth-tabs{display:flex;background:var(--bg);border-radius:12px;padding:4px;margin-bottom:20px;gap:4px}
@@ -61,16 +57,13 @@ html,body{height:100%;font-family:var(--font);background:var(--bg);color:var(--i
 .auth-field label{font-size:11px;font-weight:700;color:var(--slate);letter-spacing:.07em;text-transform:uppercase}
 .auth-field input{padding:13px 14px;border-radius:var(--radius-sm);border:1.5px solid var(--border);font-size:15px;outline:none;font-family:var(--font);width:100%;background:var(--surface-2);color:var(--ink);transition:border-color .15s}
 .auth-field input:focus{border-color:var(--teal);background:var(--surface)}
-.field-hint{font-size:11px;color:var(--muted);margin-top:4px;line-height:1.5}
-.username-preview{font-size:12px;color:var(--teal);font-weight:700;margin-top:4px;min-height:18px}
+.field-hint{font-size:11px;color:var(--muted);margin-top:3px;line-height:1.5}
 .auth-btn{width:100%;background:linear-gradient(135deg,var(--navy) 0%,#0e5a70 100%);color:#fff;border:none;border-radius:var(--radius-sm);padding:15px;font-size:15px;font-weight:700;cursor:pointer;font-family:var(--font);margin-top:4px;box-shadow:0 4px 14px rgba(13,61,86,.3);transition:opacity .15s,transform .1s}
 .auth-btn:active{opacity:.88;transform:scale(.98)}
 .auth-error{background:var(--red-bg);color:var(--red);border-radius:9px;padding:10px 13px;font-size:13px;font-weight:600;margin-bottom:12px;display:none;line-height:1.5}
 .auth-error.show{display:block}
 .auth-hint{font-size:11px;color:var(--muted);text-align:center;margin-top:12px;line-height:1.6}
-.code-badge{display:inline-block;background:var(--teal-light);color:var(--teal);border-radius:6px;padding:2px 8px;font-weight:700;font-size:13px;font-family:monospace;letter-spacing:.03em}
 
-/* TOPBAR */
 .topbar{background:linear-gradient(110deg,var(--navy-deep) 0%,var(--navy) 60%,#0e6070 100%);padding:calc(14px + var(--safe-top)) 16px 16px;display:flex;align-items:center;gap:10px;flex-shrink:0}
 .topbar h1{color:#fff;font-family:var(--font-display);font-size:20px;font-weight:400;flex:1;display:flex;align-items:center;gap:9px}
 .topbar-logo{width:30px;height:30px;border-radius:8px;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;border:1px solid rgba(255,255,255,.2)}
@@ -82,7 +75,6 @@ html,body{height:100%;font-family:var(--font);background:var(--bg);color:var(--i
 .sync-dot.offline{background:#f87171}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
 
-/* HOME */
 #homeBody{flex:1;overflow-y:auto;overflow-x:hidden;padding:20px 16px calc(28px + var(--safe-bottom));-webkit-overflow-scrolling:touch}
 .add-btn{width:100%;background:linear-gradient(135deg,var(--teal) 0%,#008a7a 100%);color:#fff;border:none;border-radius:var(--radius);padding:16px 20px;font-size:15px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;box-shadow:0 4px 18px rgba(0,168,150,.35);margin-bottom:24px;font-family:var(--font);transition:transform .1s,opacity .15s}
 .add-btn:active{transform:scale(.98);opacity:.9}
@@ -90,13 +82,11 @@ html,body{height:100%;font-family:var(--font);background:var(--bg);color:var(--i
 .section-label{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between}
 .section-hint{font-size:10px;color:var(--muted);font-weight:500;text-transform:none;letter-spacing:0;opacity:.75}
 
-/* PATIENT CARD */
-.patient-card{background:var(--surface);border-radius:var(--radius);margin-bottom:10px;box-shadow:var(--shadow);display:flex;align-items:stretch;cursor:pointer;border:1.5px solid var(--border);transition:border-color .12s,box-shadow .12s,opacity .15s,transform .12s;overflow:hidden}
+.patient-card{background:var(--surface);border-radius:var(--radius);margin-bottom:10px;box-shadow:var(--shadow);display:flex;align-items:stretch;cursor:pointer;border:1.5px solid var(--border);transition:border-color .12s,box-shadow .12s,opacity .15s;overflow:hidden}
 .patient-card:active{border-color:var(--teal);box-shadow:var(--shadow-md)}
 .patient-card.dragging{opacity:.4;transform:scale(.97)}
 .p-accent{width:4px;flex-shrink:0;background:var(--teal)}
-.p-accent.under_review{background:var(--amber)}
-.p-accent.critical{background:var(--red)}
+.p-accent.under_review{background:var(--amber)}.p-accent.critical{background:var(--red)}
 .p-inner{display:flex;align-items:center;gap:12px;flex:1;padding:13px 13px 13px 12px;min-width:0}
 .drag-handle{color:#d1d9e0;cursor:grab;padding:4px 2px;flex-shrink:0;touch-action:none;user-select:none;display:flex;align-items:center}
 .drag-handle svg{pointer-events:none}
@@ -116,7 +106,6 @@ html,body{height:100%;font-family:var(--font);background:var(--bg);color:var(--i
 .empty-state h3{font-family:var(--font-display);font-size:20px;color:var(--slate);margin-bottom:8px;font-weight:400}
 .empty-state p{font-size:14px;line-height:1.7}
 
-/* SETTINGS */
 #settingsModal{position:fixed;inset:0;z-index:800;display:none}
 #settingsModal.open{display:flex;flex-direction:column;justify-content:flex-end}
 #settingsModal .ovl{position:absolute;inset:0;background:rgba(9,29,42,.5);backdrop-filter:blur(2px)}
@@ -128,22 +117,15 @@ html,body{height:100%;font-family:var(--font);background:var(--bg);color:var(--i
 .setting-field label{font-size:11px;font-weight:700;color:var(--slate);letter-spacing:.07em;text-transform:uppercase}
 .setting-field input{padding:12px 13px;border-radius:var(--radius-sm);border:1.5px solid var(--border);font-size:15px;outline:none;font-family:var(--font);width:100%;background:var(--surface-2);color:var(--ink);transition:border-color .15s}
 .setting-field input:focus{border-color:var(--teal)}
-.my-code-box{background:var(--teal-xlight);border:1.5px solid var(--teal-light);border-radius:var(--radius-sm);padding:14px;margin-bottom:16px;display:flex;align-items:center;gap:12px}
-.my-code-box .code-label{font-size:11px;font-weight:700;color:var(--slate);text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px}
-.my-code-box .code-value{font-size:22px;font-weight:800;color:var(--navy);font-family:monospace;letter-spacing:.05em}
 .btn-save-settings{width:100%;background:linear-gradient(135deg,var(--navy) 0%,#0e5a70 100%);color:#fff;border:none;border-radius:var(--radius-sm);padding:14px;font-size:15px;font-weight:700;cursor:pointer;font-family:var(--font);margin-top:6px;transition:opacity .15s}
 .btn-save-settings:active{opacity:.85}
 .btn-logout{width:100%;background:var(--red-bg);color:var(--red);border:none;border-radius:var(--radius-sm);padding:13px;font-size:14px;font-weight:700;cursor:pointer;font-family:var(--font);margin-top:10px}
 .settings-section-title{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin:18px 0 12px;padding-top:16px;border-top:1px solid var(--border)}
 .settings-hint{font-size:11px;color:var(--muted);text-align:center;margin-top:14px;line-height:1.6}
+.my-code-box{background:var(--teal-xlight);border:1.5px solid var(--teal-light);border-radius:var(--radius-sm);padding:14px;margin-bottom:16px}
+.my-code-label{font-size:11px;font-weight:700;color:var(--slate);text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px}
+.my-code-value{font-size:20px;font-weight:800;color:var(--navy);font-family:monospace}
 
-/* DRIVE */
-.drive-status-row{display:flex;align-items:center;gap:8px;padding:10px 12px;background:#f0fdf4;border-radius:var(--radius-sm);border:1.5px solid #bbf7d0;margin-bottom:14px}
-.drive-status-dot{width:8px;height:8px;border-radius:50%;background:#22c55e;flex-shrink:0}
-.drive-status-text{flex:1;font-size:12px;color:#15803d;font-weight:600}
-.drive-disconnect-btn{background:none;border:none;color:var(--muted);font-size:11px;cursor:pointer;font-family:var(--font);font-weight:600}
-
-/* TOAST */
 #toast{position:fixed;bottom:calc(28px + var(--safe-bottom));left:50%;transform:translateX(-50%);padding:11px 22px;border-radius:var(--radius-sm);font-weight:600;font-size:13px;z-index:9999;display:none;white-space:nowrap;box-shadow:0 4px 20px rgba(0,0,0,.18);pointer-events:none;font-family:var(--font)}
 #toast.show-success{display:block;background:var(--green);color:#fff}
 #toast.show-error{display:block;background:var(--red);color:#fff}
@@ -163,7 +145,6 @@ html,body{height:100%;font-family:var(--font);background:var(--bg);color:var(--i
   <div class="splash-dots"><span></span><span></span><span></span></div>
 </div>
 
-<!-- AUTH SCREEN -->
 <div id="authScreen" class="screen">
   <div class="auth-card">
     <div class="auth-logo">
@@ -176,51 +157,44 @@ html,body{height:100%;font-family:var(--font);background:var(--bg);color:var(--i
     </div>
     <div id="authError" class="auth-error"></div>
 
-    <!-- LOGIN -->
     <div id="loginForm">
       <div class="auth-field">
-        <label>Email Address</label>
-        <input id="login-code" type="email" placeholder="doctor@gmail.com" autocomplete="email" inputmode="email"/>
+        <label>Doctor Code</label>
+        <input id="l-code" type="text" placeholder="e.g. dr.sanjid" autocapitalize="none" spellcheck="false" autocomplete="username"/>
       </div>
       <div class="auth-field">
         <label>Password</label>
-        <input id="login-password" type="password" placeholder="Your password" autocomplete="current-password"/>
+        <input id="l-pass" type="password" placeholder="Your password" autocomplete="current-password"/>
       </div>
       <button class="auth-btn" onclick="handleLogin()">Sign In →</button>
-      <p class="auth-hint">You'll stay signed in permanently on this device.</p>
+      <p class="auth-hint">Stay signed in on this device automatically.</p>
     </div>
 
-    <!-- SIGNUP -->
     <div id="signupForm" style="display:none">
       <div class="auth-field">
         <label>Full Name</label>
-        <input id="su-name" type="text" placeholder="Dr. Muhammed Sanjid" autocomplete="name" oninput="previewCode()"/>
+        <input id="s-name" type="text" placeholder="Dr. Muhammed Sanjid" autocomplete="name"/>
+        <div class="field-hint">Shown on PDF reports</div>
       </div>
       <div class="auth-field">
-        <label>Email Address</label>
-        <input id="su-email" type="email" placeholder="doctor@gmail.com" autocomplete="email" inputmode="email"/>
+        <label>Doctor Code</label>
+        <input id="s-code" type="text" placeholder="e.g. dr.sanjid" autocapitalize="none" spellcheck="false"/>
+        <div class="field-hint">Unique ID to sign in — letters, numbers, dots only</div>
       </div>
       <div class="auth-field">
         <label>Password</label>
-        <input id="su-password" type="password" placeholder="Min 6 characters" autocomplete="new-password"/>
+        <input id="s-pass" type="password" placeholder="Min 6 characters" autocomplete="new-password"/>
       </div>
       <div class="auth-field">
-        <label>Hospital / Institution</label>
-        <input id="su-hospital" type="text" placeholder="City General Hospital"/>
-      </div>
-      <div class="auth-field">
-        <label>Doctor Code <small style="color:var(--muted);font-weight:400;text-transform:none">(optional — e.g. dr.sanjid)</small></label>
-        <input id="su-code" type="text" placeholder="dr.sanjid" autocapitalize="none" spellcheck="false" oninput="sanitizeCode(this)"/>
-        <div class="username-preview" id="codePreview"></div>
-        <div class="field-hint">Short code shown on your profile. Leave blank to skip.</div>
+        <label>Hospital</label>
+        <input id="s-hosp" type="text" placeholder="City General Hospital"/>
       </div>
       <button class="auth-btn" onclick="handleSignup()">Create Account →</button>
-      <p class="auth-hint">Free forever. Sign in with email + password from any device.</p>
+      <p class="auth-hint">No email needed. Just your code and password.</p>
     </div>
   </div>
 </div>
 
-<!-- HOME SCREEN -->
 <div id="homeScreen" class="screen">
   <div class="topbar">
     <h1><div class="topbar-logo">🏥</div>RoundNotes</h1>
@@ -237,45 +211,34 @@ html,body{height:100%;font-family:var(--font);background:var(--bg);color:var(--i
   </div>
 </div>
 
-<!-- SETTINGS -->
 <div id="settingsModal">
   <div class="ovl" onclick="closeSettings()"></div>
   <div class="sheet">
     <div class="sheet-handle"></div>
     <h3>Doctor Profile</h3>
     <p class="sh-sub">Appears on your PDF reports</p>
-
-    <!-- My Code box -->
     <div class="my-code-box">
-      <div style="font-size:28px">🪪</div>
-      <div>
-        <div class="code-label">Your Doctor Code</div>
-        <div class="code-value" id="myCodeDisplay">—</div>
-        <div style="font-size:11px;color:var(--slate);margin-top:3px">Use this code to sign in on any device</div>
-      </div>
+      <div class="my-code-label">Your Sign-in Code</div>
+      <div class="my-code-value" id="myCodeDisplay">—</div>
+      <div style="font-size:11px;color:var(--slate);margin-top:3px">Use this to sign in on any device</div>
     </div>
-
-    <div class="setting-field"><label>Full Name</label><input id="s-drname" placeholder="Dr. Jane Smith"/></div>
-    <div class="setting-field"><label>Designation / Speciality</label><input id="s-desig" placeholder="MBBS, MD — Cardiology"/></div>
-    <div class="setting-field"><label>Department</label><input id="s-dept" placeholder="Department of Cardiology"/></div>
-    <div class="setting-field"><label>Hospital</label><input id="s-hospital" placeholder="City General Hospital"/></div>
-    <div class="setting-field"><label>Phone</label><input id="s-phone" type="tel" inputmode="tel" placeholder="+91 98765 43210"/></div>
+    <div class="setting-field"><label>Full Name</label><input id="sf-name" placeholder="Dr. Jane Smith"/></div>
+    <div class="setting-field"><label>Designation</label><input id="sf-desig" placeholder="MBBS, MD — Cardiology"/></div>
+    <div class="setting-field"><label>Department</label><input id="sf-dept" placeholder="Department of Cardiology"/></div>
+    <div class="setting-field"><label>Hospital</label><input id="sf-hosp" placeholder="City General Hospital"/></div>
+    <div class="setting-field"><label>Phone</label><input id="sf-phone" type="tel" inputmode="tel" placeholder="+91 98765 43210"/></div>
     <button class="btn-save-settings" onclick="saveSettings()">Save Profile</button>
-
     <div class="settings-section-title">☁️ Google Drive Backup</div>
-    <p style="font-size:12px;color:var(--slate);margin-bottom:12px;line-height:1.6">Automatically back up patient PDFs to your Google Drive, organized by month.</p>
-    <div id="driveStatusArea"></div>
     <div class="setting-field">
       <label>Google OAuth Client ID <small style="color:var(--muted);font-weight:400;text-transform:none">(optional)</small></label>
-      <input id="s-googleClientId" placeholder="Paste your Client ID"/>
-      <div style="font-size:10px;color:var(--muted);margin-top:5px">Get one free at <a href="https://console.cloud.google.com/apis/credentials" target="_blank" style="color:var(--teal)">Google Cloud Console →</a></div>
+      <input id="sf-drive" placeholder="Paste your Client ID"/>
+      <div style="font-size:10px;color:var(--muted);margin-top:5px">Get free at <a href="https://console.cloud.google.com/apis/credentials" target="_blank" style="color:var(--teal)">Google Cloud Console →</a></div>
     </div>
-    <button class="btn-save-settings" onclick="saveDriveClientId()" style="background:linear-gradient(135deg,#15803d 0%,#047857 100%)">Save Drive Settings</button>
-
+    <button class="btn-save-settings" onclick="saveDrive()" style="background:linear-gradient(135deg,#15803d 0%,#047857 100%)">Save Drive Settings</button>
     <div class="settings-section-title">🔐 Account</div>
-    <div style="font-size:13px;color:var(--slate);margin-bottom:10px">Signed in as <strong id="userCodeDisplay"></strong></div>
+    <div style="font-size:13px;color:var(--slate);margin-bottom:10px">Signed in as <strong id="signedInAs"></strong></div>
     <button class="btn-logout" onclick="handleLogout()">Sign Out</button>
-    <p class="settings-hint">You'll stay signed in on this device unless you sign out manually.</p>
+    <p class="settings-hint">You stay signed in on this device until you manually sign out.</p>
   </div>
 </div>
 
@@ -288,296 +251,175 @@ const SB_URL = 'https://mkpvsbysngnuqtbkuzzt.supabase.co';
 const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1rcHZzYnlzbmdudXF0Ymt1enp0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEzNzkxNzAsImV4cCI6MjA5Njk1NTE3MH0.ug0nnioSrYoCqQ_ZQfduBUbwSO7MnryVFlFjXtWe6SY';
 
 // ══ STATE ══
-let currentUser = null, doctor = {}, patients = [];
+let session = null, doctor = {}, patients = [];
 
-// ══ SUPABASE ══
-async function sbFetch(path, opts={}){
-  const token = localStorage.getItem('rn_token');
-  const headers = {'Content-Type':'application/json','apikey':SB_KEY,'Authorization':`Bearer ${token||SB_KEY}`,...(opts.headers||{})};
-  return fetch(`${SB_URL}${path}`, {...opts, headers});
-}
-async function sbPost(endpoint, body){
-  const res = await fetch(`${SB_URL}/auth/v1/${endpoint}`, {
-    method:'POST',
-    headers:{'Content-Type':'application/json','apikey':SB_KEY},
-    body:JSON.stringify(body)
-  });
-  return res.json();
+// ══ SIMPLE HASH (no crypto dependency) ══
+async function hashPass(pass){
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(pass+'rn_salt_2024'));
+  return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
 }
 
-// ══ SIGNUP — uses real email ══
+// ══ SUPABASE (anon key, used for DB reads/writes only) ══
+async function db(path, opts={}){
+  const headers = {'Content-Type':'application/json','apikey':SB_KEY,'Authorization':`Bearer ${SB_KEY}`,...(opts.headers||{})};
+  const res = await fetch(`${SB_URL}${path}`, {...opts, headers});
+  if(!res.ok){
+    const t = await res.text();
+    throw new Error(`DB ${res.status}: ${t}`);
+  }
+  const text = await res.text();
+  return text ? JSON.parse(text) : [];
+}
+
+// ══ SIGNUP ══
 async function handleSignup(){
-  const name     = document.getElementById('su-name').value.trim();
-  const email    = document.getElementById('su-email').value.trim().toLowerCase();
-  const code     = document.getElementById('su-code').value.trim().toLowerCase();
-  const password = document.getElementById('su-password').value;
-  const hospital = document.getElementById('su-hospital').value.trim();
-
-  if(!name)                       { showAuthError('Please enter your full name'); return; }
-  if(!email || !email.includes('@')){ showAuthError('Please enter a valid email address'); return; }
-  if(password.length < 6)         { showAuthError('Password must be at least 6 characters'); return; }
+  const name = g('s-name'), code = g('s-code').toLowerCase(), pass = g('s-pass'), hosp = g('s-hosp');
+  if(!name){ showErr('Enter your full name'); return; }
+  if(!code){ showErr('Choose a doctor code'); return; }
+  if(!/^[a-z0-9._-]+$/.test(code)){ showErr('Code can only have letters, numbers, dots, hyphens'); return; }
+  if(pass.length < 6){ showErr('Password must be at least 6 characters'); return; }
 
   showLoading('Creating account…');
+  try{
+    // Check if code already taken
+    const existing = await db(`/rest/v1/rn_doctors?doctor_code=eq.${encodeURIComponent(code)}&select=doctor_code`);
+    if(existing.length){ hideLoading(); showErr('That code is already taken — try dr.'+code+Date.now()%100); return; }
 
-  let data;
-  try {
-    data = await sbPost('signup', {
-      email,
-      password,
-      data: { full_name: name, doctor_code: code||'', hospital }
+    const passHash = await hashPass(pass);
+    const id = crypto.randomUUID();
+    await db('/rest/v1/rn_doctors', {
+      method:'POST',
+      headers:{'Prefer':'return=minimal'},
+      body: JSON.stringify({ id, doctor_code:code, pass_hash:passHash, name, hospital:hosp, desig:'', dept:'', phone:'', googleClientId:'' })
     });
-  } catch(e) {
+
+    // Save session locally
+    session = { id, doctor_code:code };
+    doctor  = { id, doctor_code:code, name, hospital:hosp, desig:'', dept:'', phone:'', googleClientId:'' };
+    localStorage.setItem('rn_session', JSON.stringify(session));
+    localStorage.setItem('rn_doctor', JSON.stringify(doctor));
+
     hideLoading();
-    showAuthError('Network error — check your connection and try again');
-    return;
-  }
-
-  console.log('Signup response:', JSON.stringify(data));
-
-  if(data.error || data.error_code) {
+    await loadPatients();
+    showScreen('homeScreen');
+    showToast('Welcome, '+name+' 👋','success');
+  } catch(e){
     hideLoading();
-    const m = data.error_description || data.message || data.error || '';
-    if(m.toLowerCase().includes('already') || m.toLowerCase().includes('registered'))
-      showAuthError('This email is already registered — please Sign In instead');
-    else if(m.toLowerCase().includes('invalid') && m.toLowerCase().includes('email'))
-      showAuthError('Invalid email address — please check and try again');
-    else if(m)
-      showAuthError(m);
-    else
-      showAuthError('Sign up failed — please try again');
-    return;
+    console.error('Signup error:',e);
+    showErr('Error: ' + e.message);
   }
-
-  // Account created — now sign in immediately
-  showLoading('Signing you in…');
-  let loginData;
-  try {
-    loginData = await sbPost('token?grant_type=password', {email, password});
-  } catch(e) {
-    hideLoading();
-    // Account was created, just can't auto-login
-    switchTab('login');
-    document.getElementById('login-code').value = email;
-    showAuthError('Account created! Please sign in with your email and password.');
-    return;
-  }
-
-  if(loginData.error || loginData.error_code) {
-    hideLoading();
-    switchTab('login');
-    document.getElementById('login-code').value = email;
-    showAuthError('Account created! Please sign in with your email and password.');
-    return;
-  }
-
-  doctor = { name, hospital, desig:'', dept:'', phone:'', googleClientId:'', doctor_code: code };
-  localStorage.setItem('rn_doctor', JSON.stringify(doctor));
-  await onAuthSuccess(loginData, true);
 }
 
-// ══ LOGIN — email + password only ══
+// ══ LOGIN ══
 async function handleLogin(){
-  const email    = document.getElementById('login-code').value.trim().toLowerCase();
-  const password = document.getElementById('login-password').value;
-
-  if(!email)    { showAuthError('Please enter your email address'); return; }
-  if(!password) { showAuthError('Please enter your password'); return; }
-  if(!email.includes('@')) { showAuthError('Please enter a valid email address (e.g. doctor@gmail.com)'); return; }
+  const code = g('l-code').toLowerCase(), pass = g('l-pass');
+  if(!code){ showErr('Enter your doctor code'); return; }
+  if(!pass){ showErr('Enter your password'); return; }
 
   showLoading('Signing in…');
+  try{
+    const passHash = await hashPass(pass);
+    const rows = await db(`/rest/v1/rn_doctors?doctor_code=eq.${encodeURIComponent(code)}&select=*`);
+    if(!rows.length){ hideLoading(); showErr('No account found with that code — please Create Account'); return; }
+    const doc = rows[0];
+    if(doc.pass_hash !== passHash){ hideLoading(); showErr('Wrong password — please try again'); return; }
 
-  let data;
-  try {
-    data = await sbPost('token?grant_type=password', {email, password});
-  } catch(e) {
+    session = { id:doc.id, doctor_code:code };
+    doctor  = doc;
+    localStorage.setItem('rn_session', JSON.stringify(session));
+    localStorage.setItem('rn_doctor',  JSON.stringify(doctor));
+
     hideLoading();
-    showAuthError('Network error — check your connection and try again');
-    return;
-  }
-
-  console.log('Login response:', JSON.stringify(data));
-
-  if(data.error || data.error_code) {
+    await loadPatients();
+    showScreen('homeScreen');
+  } catch(e){
     hideLoading();
-    const m = data.error_description || data.message || data.error || '';
-    if(m.toLowerCase().includes('invalid'))
-      showAuthError('Wrong email or password — please try again');
-    else if(m.toLowerCase().includes('not found') || m.toLowerCase().includes('no user'))
-      showAuthError('No account found with this email — please Create Account first');
-    else if(m)
-      showAuthError(m);
-    else
-      showAuthError('Sign in failed — check your email and password');
-    return;
+    console.error('Login error:',e);
+    showErr('Error: ' + e.message);
   }
-
-  await onAuthSuccess(data, false);
-}
-
-// ══ AUTH SUCCESS ══
-async function onAuthSuccess(data, isNew){
-  localStorage.setItem('rn_token',   data.access_token);
-  localStorage.setItem('rn_refresh', data.refresh_token);
-  currentUser = data.user;
-  localStorage.setItem('rn_user_id', currentUser.id);
-  if(isNew) await saveDoctorProfileToDB();
-  else      await loadDoctorProfile();
-  await loadPatients();
-  hideLoading();
-  showScreen('homeScreen');
 }
 
 // ══ STAY LOGGED IN ══
 async function checkSession(){
-  const token   = localStorage.getItem('rn_token');
-  const refresh = localStorage.getItem('rn_refresh');
-  if(!token && !refresh) return false;
-
-  if(token){
-    try{
-      const res = await fetch(`${SB_URL}/auth/v1/user`, {
-        headers:{'apikey':SB_KEY,'Authorization':`Bearer ${token}`}
-      });
-      if(res.ok){ const u=await res.json(); if(u?.id){ currentUser=u; return true; } }
-    }catch(e){}
-  }
-
-  if(refresh){
-    try{
-      const data = await sbPost('token?grant_type=refresh_token', {refresh_token:refresh});
-      if(data.access_token){
-        localStorage.setItem('rn_token',   data.access_token);
-        localStorage.setItem('rn_refresh', data.refresh_token || refresh);
-        currentUser = data.user;
-        return true;
-      }
-    }catch(e){}
-  }
-
-  localStorage.removeItem('rn_token');
-  localStorage.removeItem('rn_refresh');
+  try{ session = JSON.parse(localStorage.getItem('rn_session')||'null'); }catch(e){ session=null; }
+  try{ doctor  = JSON.parse(localStorage.getItem('rn_doctor')||'{}'); }catch(e){ doctor={}; }
+  if(!session?.id) return false;
+  // Verify session still valid by checking DB
+  try{
+    const rows = await db(`/rest/v1/rn_doctors?id=eq.${session.id}&select=id,doctor_code,name,hospital,desig,dept,phone,googleClientId`);
+    if(rows.length){ doctor = rows[0]; localStorage.setItem('rn_doctor',JSON.stringify(doctor)); return true; }
+  }catch(e){}
+  // Offline — use cached session
+  if(doctor?.id) return true;
   return false;
 }
 
 // ══ LOGOUT ══
-async function handleLogout(){
-  if(!confirm('Sign out of RoundNotes on this device?')) return;
-  try{ await sbFetch('/auth/v1/logout', {method:'POST'}); }catch(e){}
-  localStorage.removeItem('rn_token');
-  localStorage.removeItem('rn_refresh');
-  localStorage.removeItem('rn_user_id');
-  currentUser=null; doctor={}; patients=[];
-  closeSettings();
-  showScreen('authScreen');
+function handleLogout(){
+  if(!confirm('Sign out on this device?')) return;
+  localStorage.removeItem('rn_session');
+  localStorage.removeItem('rn_doctor');
+  session=null; doctor={}; patients=[];
+  closeSettings(); showScreen('authScreen');
   showToast('Signed out','info');
-}
-
-// ══ DOCTOR PROFILE ══
-async function loadDoctorProfile(){
-  try{ const c=JSON.parse(localStorage.getItem('rn_doctor')||'{}'); if(c.name) doctor=c; }catch(e){}
-  if(!currentUser) return;
-  try{
-    const res=await sbFetch(`/rest/v1/doctor_profiles?user_id=eq.${currentUser.id}&select=*&limit=1`);
-    if(res.ok){ const rows=await res.json(); if(rows.length){ doctor=rows[0]; localStorage.setItem('rn_doctor',JSON.stringify(doctor)); } }
-  }catch(e){}
-}
-async function saveDoctorProfile(){ localStorage.setItem('rn_doctor',JSON.stringify(doctor)); await saveDoctorProfileToDB(); }
-async function saveDoctorProfileToDB(){
-  if(!currentUser) return;
-  try{
-    const payload={
-      user_id:currentUser.id, name:doctor.name||'', desig:doctor.desig||'',
-      dept:doctor.dept||'', hospital:doctor.hospital||'', phone:doctor.phone||'',
-      googleClientId:doctor.googleClientId||'', doctor_code:doctor.doctor_code||''
-    };
-    const res=await sbFetch('/rest/v1/doctor_profiles',{
-      method:'POST', headers:{'Prefer':'resolution=merge-duplicates'}, body:JSON.stringify(payload)
-    });
-    if(!res.ok) console.warn('Profile save failed:',res.status,await res.text());
-  }catch(e){ console.warn('Profile DB error:',e); }
 }
 
 // ══ PATIENTS ══
 async function loadPatients(){
-  if(!currentUser){ loadFromCache(); return; }
+  if(!session?.id){ loadFromCache(); renderHome(); return; }
   setSyncState('syncing');
   try{
-    const res=await sbFetch(`/rest/v1/patients?user_id=eq.${currentUser.id}&order=sort_order.asc,created_at.desc&select=*`);
-    if(res.ok){ patients=await res.json(); localStorage.setItem('rn_patients_cache',JSON.stringify(patients)); setSyncState('synced'); }
-    else{ loadFromCache(); setSyncState('offline'); }
+    const rows = await db(`/rest/v1/patients?doctor_id=eq.${session.id}&order=sort_order.asc,created_at.desc&select=*`);
+    patients = rows;
+    localStorage.setItem('rn_patients_cache',JSON.stringify(patients));
+    setSyncState('synced');
   }catch(e){ loadFromCache(); setSyncState('offline'); }
   renderHome();
 }
 function loadFromCache(){ try{ patients=JSON.parse(localStorage.getItem('rn_patients_cache')||'[]'); }catch(e){ patients=[]; } }
-async function deletePatientFromDB(id){
-  try{ await sbFetch(`/rest/v1/patients?id=eq.${id}&user_id=eq.${currentUser.id}`,{method:'DELETE'}); }catch(e){}
+async function deletePatientDB(id){
+  try{ await db(`/rest/v1/patients?id=eq.${id}&doctor_id=eq.${session.id}`,{method:'DELETE',headers:{'Prefer':'return=minimal'}}); }catch(e){}
 }
 
 // ══ SETTINGS ══
 function openSettings(){
-  document.getElementById('s-drname').value   = doctor.name||'';
-  document.getElementById('s-desig').value    = doctor.desig||'';
-  document.getElementById('s-dept').value     = doctor.dept||'';
-  document.getElementById('s-hospital').value = doctor.hospital||'';
-  document.getElementById('s-phone').value    = doctor.phone||'';
-  document.getElementById('s-googleClientId').value = doctor.googleClientId||'';
-  document.getElementById('myCodeDisplay').textContent   = doctor.doctor_code || currentUser?.email?.split('@')[0] || '—';
-  document.getElementById('userCodeDisplay').textContent = currentUser?.email || '—';
-  renderDriveStatus();
+  document.getElementById('sf-name').value  = doctor.name||'';
+  document.getElementById('sf-desig').value = doctor.desig||'';
+  document.getElementById('sf-dept').value  = doctor.dept||'';
+  document.getElementById('sf-hosp').value  = doctor.hospital||'';
+  document.getElementById('sf-phone').value = doctor.phone||'';
+  document.getElementById('sf-drive').value = doctor.googleClientId||'';
+  document.getElementById('myCodeDisplay').textContent = doctor.doctor_code||session?.doctor_code||'—';
+  document.getElementById('signedInAs').textContent    = doctor.doctor_code||'—';
   document.getElementById('settingsModal').classList.add('open');
 }
 function closeSettings(){ document.getElementById('settingsModal').classList.remove('open'); }
 async function saveSettings(){
-  doctor={...doctor, name:g('s-drname'), desig:g('s-desig'), dept:g('s-dept'), hospital:g('s-hospital'), phone:g('s-phone')};
-  await saveDoctorProfile(); closeSettings(); showToast('Profile saved ✓','success');
+  doctor={...doctor, name:g('sf-name'), desig:g('sf-desig'), dept:g('sf-dept'), hospital:g('sf-hosp'), phone:g('sf-phone')};
+  localStorage.setItem('rn_doctor',JSON.stringify(doctor));
+  try{
+    await db(`/rest/v1/rn_doctors?id=eq.${session.id}`,{method:'PATCH',headers:{'Prefer':'return=minimal'},body:JSON.stringify({name:doctor.name,desig:doctor.desig,dept:doctor.dept,hospital:doctor.hospital,phone:doctor.phone})});
+  }catch(e){}
+  closeSettings(); showToast('Profile saved ✓','success');
 }
-async function saveDriveClientId(){
-  doctor={...doctor, googleClientId:g('s-googleClientId')};
-  await saveDoctorProfile(); renderDriveStatus();
-  showToast(doctor.googleClientId?'Drive settings saved ✓':'Drive disconnected','success');
-}
-function renderDriveStatus(){
-  const area=document.getElementById('driveStatusArea');
-  if(doctor.googleClientId)
-    area.innerHTML=`<div class="drive-status-row"><div class="drive-status-dot"></div><div class="drive-status-text">Google Drive connected</div><button class="drive-disconnect-btn" onclick="disconnectDrive()">Disconnect</button></div>`;
-  else
-    area.innerHTML=`<div style="font-size:12px;color:var(--muted);margin-bottom:8px">No Drive connected. Enter your Client ID below.</div>`;
-}
-function disconnectDrive(){
-  if(!confirm('Remove Google Drive connection?')) return;
-  doctor={...doctor,googleClientId:''}; document.getElementById('s-googleClientId').value='';
-  saveDoctorProfile(); renderDriveStatus(); showToast('Drive disconnected','info');
+async function saveDrive(){
+  doctor={...doctor, googleClientId:g('sf-drive')};
+  localStorage.setItem('rn_doctor',JSON.stringify(doctor));
+  try{ await db(`/rest/v1/rn_doctors?id=eq.${session.id}`,{method:'PATCH',headers:{'Prefer':'return=minimal'},body:JSON.stringify({googleClientId:doctor.googleClientId})}); }catch(e){}
+  showToast('Drive settings saved ✓','success');
 }
 
 // ══ AUTH UI ══
 function switchTab(tab){
-  document.getElementById('tab-login').classList.toggle('active',  tab==='login');
-  document.getElementById('tab-signup').classList.toggle('active', tab==='signup');
+  document.getElementById('tab-login').classList.toggle('active',tab==='login');
+  document.getElementById('tab-signup').classList.toggle('active',tab==='signup');
   document.getElementById('loginForm').style.display  = tab==='login'  ? 'block':'none';
   document.getElementById('signupForm').style.display = tab==='signup' ? 'block':'none';
   document.getElementById('authError').classList.remove('show');
 }
-function showAuthError(msg){
-  const el=document.getElementById('authError');
-  el.textContent=msg; el.classList.add('show');
-  el.scrollIntoView({behavior:'smooth',block:'nearest'});
-}
-function previewCode(){
-  const name=document.getElementById('su-name').value.trim();
-  const codeInp=document.getElementById('su-code');
-  if(!codeInp.value && name){
-    const first=name.toLowerCase().replace(/^dr\.?\s*/i,'').split(' ')[0].replace(/[^a-z0-9]/g,'');
-    codeInp.value='dr.'+first; sanitizeCode(codeInp);
-  }
-}
-function sanitizeCode(inp){
-  inp.value=inp.value.toLowerCase().replace(/[^a-z0-9._-]/g,'');
-  const el=document.getElementById('codePreview');
-  if(inp.value) el.textContent='✓ Your display code: '+inp.value;
-  else el.textContent='';
-}
+function showErr(msg){ const el=document.getElementById('authError'); el.textContent=msg; el.classList.add('show'); }
 
-// ══ HOME RENDER ══
+// ══ HOME ══
 function renderHome(){
   const list=document.getElementById('patientList');
   if(!patients.length){
@@ -604,10 +446,10 @@ function renderHome(){
   initDrag();
 }
 async function deletePatient(id){
-  if(!confirm('Delete this patient record?')) return;
+  if(!confirm('Delete this patient?')) return;
   patients=patients.filter(p=>p.id!==id);
   localStorage.setItem('rn_patients_cache',JSON.stringify(patients));
-  renderHome(); await deletePatientFromDB(id);
+  renderHome(); await deletePatientDB(id);
 }
 
 // ══ DRAG ══
@@ -615,33 +457,9 @@ function initDrag(){
   const list=document.getElementById('patientList');
   let el=null,ph=null,dragging=false,timer=null,startY=0;
   const cards=()=>Array.from(list.querySelectorAll('.patient-card'));
-  const start=(card,clientY)=>{
-    el=card; dragging=true;
-    ph=document.createElement('div');
-    ph.style.cssText=`height:${card.offsetHeight}px;margin-bottom:10px;border-radius:16px;background:var(--teal-xlight);border:2px dashed var(--teal)`;
-    card.parentNode.insertBefore(ph,card);
-    card.classList.add('dragging');
-    card.style.cssText=`position:fixed;width:${card.offsetWidth}px;z-index:500;left:${card.getBoundingClientRect().left}px;top:${card.getBoundingClientRect().top}px;box-shadow:0 10px 36px rgba(0,0,0,.18);pointer-events:none`;
-    startY=clientY-card.getBoundingClientRect().top;
-    if(navigator.vibrate) navigator.vibrate(30);
-  };
-  const move=(clientY)=>{
-    if(!dragging||!el) return;
-    el.style.top=(clientY-startY)+'px';
-    const rest=cards().filter(c=>c!==el); let ins=null;
-    for(const c of rest){ const r=c.getBoundingClientRect(); if(clientY<r.top+r.height/2){ins=c;break;} }
-    ins?list.insertBefore(ph,ins):list.appendChild(ph);
-  };
-  const end=()=>{
-    if(!dragging||!el) return; dragging=false;
-    list.insertBefore(el,ph); ph.remove();
-    el.removeAttribute('style'); el.classList.remove('dragging');
-    const order=cards().map(c=>c.dataset.id);
-    const map={}; patients.forEach(p=>map[p.id]=p);
-    patients=order.map(id=>map[id]).filter(Boolean);
-    localStorage.setItem('rn_patients_cache',JSON.stringify(patients));
-    el=null; ph=null;
-  };
+  const start=(card,cy)=>{ el=card;dragging=true;ph=document.createElement('div');ph.style.cssText=`height:${card.offsetHeight}px;margin-bottom:10px;border-radius:16px;background:var(--teal-xlight);border:2px dashed var(--teal)`;card.parentNode.insertBefore(ph,card);card.classList.add('dragging');card.style.cssText=`position:fixed;width:${card.offsetWidth}px;z-index:500;left:${card.getBoundingClientRect().left}px;top:${card.getBoundingClientRect().top}px;box-shadow:0 10px 36px rgba(0,0,0,.18);pointer-events:none`;startY=cy-card.getBoundingClientRect().top;if(navigator.vibrate)navigator.vibrate(30); };
+  const move=(cy)=>{ if(!dragging||!el)return;el.style.top=(cy-startY)+'px';const rest=cards().filter(c=>c!==el);let ins=null;for(const c of rest){const r=c.getBoundingClientRect();if(cy<r.top+r.height/2){ins=c;break;}}ins?list.insertBefore(ph,ins):list.appendChild(ph); };
+  const end=()=>{ if(!dragging||!el)return;dragging=false;list.insertBefore(el,ph);ph.remove();el.removeAttribute('style');el.classList.remove('dragging');const order=cards().map(c=>c.dataset.id);const map={};patients.forEach(p=>map[p.id]=p);patients=order.map(id=>map[id]).filter(Boolean);localStorage.setItem('rn_patients_cache',JSON.stringify(patients));el=null;ph=null; };
   list.querySelectorAll('.drag-handle').forEach(h=>{
     h.addEventListener('touchstart',e=>{const c=h.closest('.patient-card');timer=setTimeout(()=>start(c,e.touches[0].clientY),200);},{passive:true});
     h.addEventListener('touchmove',e=>{clearTimeout(timer);if(!dragging)return;e.preventDefault();move(e.touches[0].clientY);},{passive:false});
@@ -650,25 +468,26 @@ function initDrag(){
   });
 }
 
-// ══ NAV & UTILS ══
+// ══ NAV ══
 function showScreen(id){ document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active')); document.getElementById(id).classList.add('active'); }
 function goToForm(id){ if(id)sessionStorage.setItem('rn_edit_id',id); else sessionStorage.removeItem('rn_edit_id'); window.location.href='patient.html'; }
 function setSyncState(s){ const dot=document.getElementById('syncDot'),lbl=document.getElementById('syncLabel'); if(!dot)return; dot.className='sync-dot'+(s==='syncing'?' syncing':s==='offline'?' offline':''); lbl.textContent=s==='syncing'?'Syncing…':s==='offline'?'Offline':'Synced'; }
+
+// ══ UTILS ══
 const g=id=>{ const el=document.getElementById(id); return el?el.value.trim():''; };
 function esc(s){ return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 function timeAgo(ts){ const s=Math.floor((Date.now()-ts)/1000); if(s<60)return 'just now'; if(s<3600)return Math.floor(s/60)+'m ago'; if(s<86400)return Math.floor(s/3600)+'h ago'; return Math.floor(s/86400)+'d ago'; }
 let _tt; function showToast(msg,type='info'){ const t=document.getElementById('toast'); t.textContent=msg; t.className='show-'+type; clearTimeout(_tt); _tt=setTimeout(()=>t.className='',2800); }
 function showLoading(msg){ document.getElementById('loadingMsg').textContent=msg||'Loading…'; document.getElementById('loadingOverlay').classList.add('show'); }
 function hideLoading(){ document.getElementById('loadingOverlay').classList.remove('show'); }
-
-window.addEventListener('online',  ()=>{ if(currentUser) loadPatients(); });
-window.addEventListener('offline', ()=>setSyncState('offline'));
+window.addEventListener('online',()=>{ if(session) loadPatients(); });
+window.addEventListener('offline',()=>setSyncState('offline'));
 
 // ══ INIT ══
 async function init(){
   const valid = await checkSession();
   document.getElementById('splash').classList.add('hide');
-  if(valid){ await loadDoctorProfile(); await loadPatients(); showScreen('homeScreen'); }
+  if(valid){ await loadPatients(); showScreen('homeScreen'); }
   else { showScreen('authScreen'); }
 }
 
