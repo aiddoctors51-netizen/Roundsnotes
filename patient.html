@@ -7,6 +7,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
 <title>RoundNotes — Patient</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
@@ -166,6 +167,14 @@ html,body{height:100%;font-family:var(--font);background:var(--bg);color:var(--i
   </div>
 
   <div id="formBody">
+    <!-- Scan Sheet -->
+    <div class="card" style="background:linear-gradient(135deg,var(--teal-xlight) 0%,#fff 70%);border:1.5px dashed #9fd9d2">
+      <div class="card-title"><span class="icon">🪪</span><span class="t">Scan Admission Sheet</span></div>
+      <p style="font-size:12px;color:var(--slate);margin:0 0 12px;line-height:1.55">Photograph the hospital ID label and we'll fill in the name, age, gender, ward, contact and address below. Always check before saving.</p>
+      <input type="file" id="fileInputScan" accept="image/*" capture="environment" style="display:none" onchange="scanIDSheet(this.files[0])"/>
+      <div class="upload-btn" style="width:100%" onclick="document.getElementById('fileInputScan').click()"><div class="ub-icon">📷</div><div class="ub-label">Scan ID Sheet</div></div>
+    </div>
+
     <!-- Patient Info -->
     <div class="card">
       <div class="card-title"><span class="icon">👤</span><span class="t">Patient Information</span></div>
@@ -289,6 +298,8 @@ html,body{height:100%;font-family:var(--font);background:var(--bg);color:var(--i
 // ══ CONFIG (mirrored from index.html) ══
 const SB_URL = 'https://mkpvsbysngnuqtbkuzzt.supabase.co';
 const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1rcHZzYnlzbmdudXF0Ymt1enp0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEzNzkxNzAsImV4cCI6MjA5Njk1NTE3MH0.ug0nnioSrYoCqQ_ZQfduBUbwSO7MnryVFlFjXtWe6SY';
+// ⚠️ Must be the SAME value as DRIVE_CLIENT_ID in index.html
+const DRIVE_CLIENT_ID = 'PASTE_YOUR_GOOGLE_OAUTH_CLIENT_ID_HERE.apps.googleusercontent.com';
 
 // ══ STATE ══
 let patients = [], doctor = {}, currentUser = null;
@@ -317,7 +328,7 @@ async function init(){
     updateTitle('New Patient');
     initVitalOpacity();
   }
-  document.getElementById('driveRow').style.display = doctor.googleClientId ? 'block' : 'none';
+  document.getElementById('driveRow').style.display = doctor.driveConnected ? 'block' : 'none';
 }
 
 function loadLocalState(){
@@ -437,6 +448,97 @@ function handleFiles(files){
     reader.readAsDataURL(file);
   });
 }
+
+// ══ SCAN ID SHEET (on-device OCR, nothing leaves the phone) ══
+let ocrWorker = null;
+async function getOcrWorker(){
+  if(!ocrWorker) ocrWorker = await Tesseract.createWorker('eng');
+  return ocrWorker;
+}
+function resizeForOCR(dataUrl, cb){
+  const img=new Image();
+  img.onload=function(){
+    let w=img.width,h=img.height; const MAX=1600;
+    if(w>MAX||h>MAX){ const r=Math.min(MAX/w,MAX/h); w=Math.round(w*r); h=Math.round(h*r); }
+    const c=document.createElement('canvas'); c.width=w; c.height=h;
+    c.getContext('2d').drawImage(img,0,0,w,h);
+    cb(c.toDataURL('image/jpeg',0.92));
+  };
+  img.onerror=()=>cb(dataUrl);
+  img.src=dataUrl;
+}
+function scanIDSheet(file){
+  if(!file) return;
+  document.getElementById('fileInputScan').value='';
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    showProgress('Reading sheet…');
+    resizeForOCR(e.target.result, async (resized) => {
+      try{
+        const worker = await getOcrWorker();
+        const { data:{ text } } = await worker.recognize(resized);
+        hideProgress();
+        fillFromSheet(text);
+      }catch(err){
+        hideProgress(); console.error('OCR error:',err);
+        showToast('Could not read the sheet — try a clearer, well-lit photo','error');
+      }
+    });
+  };
+  reader.readAsDataURL(file);
+}
+function ocrField(text, label, stops){
+  const re = new RegExp(label+'\\s*:?\\s*([\\s\\S]*?)(?:'+stops.join('|')+'|$)','i');
+  const m = text.match(re);
+  return m ? m[1].replace(/\n/g,' ').replace(/\s+/g,' ').trim().replace(/[:,]+$/,'') : '';
+}
+function fillFromSheet(text){
+  const uhid     = ocrField(text,'UHID',['IPD\\s*No','Dept']);
+  const ipd      = ocrField(text,'IPD\\s*No\\.?',['Dept','Date']);
+  const dept     = ocrField(text,'Dept\\s*/?\\s*Unit',['Date','Ward']);
+  const admTime  = ocrField(text,'Date\\s*&?\\s*Time',['Ward','Unit\\s*Head']);
+  const wardRaw  = ocrField(text,'Ward',['Unit\\s*Head','Patient']);
+  const unitHead = ocrField(text,'Unit\\s*Head',['Patient']);
+  const patRaw   = ocrField(text,'Patient',['Adm\\.?\\s*Doctor','Address']);
+  const admDoc   = ocrField(text,'Adm\\.?\\s*Doctor',['Address','Income']);
+  const addrRaw  = ocrField(text,'Address',['Phone','C\\/O','Income']);
+  const phoneRaw = ocrField(text,'Phone\\s*No\\.?',['C\\/O','Income']);
+
+  let found = 0;
+  const nameMatch = patRaw.match(/^([A-Za-z.\s]+?)\s*\(\s*(\d{1,3})\s*Y[^A-Z]*([MF])/i);
+  if(nameMatch){
+    fset('f-name', nameMatch[1].trim());
+    fset('f-age', nameMatch[2]);
+    document.getElementById('f-gender').value = nameMatch[3].toUpperCase()==='M' ? 'Male' : 'Female';
+    found++;
+  } else if(patRaw){
+    fset('f-name', patRaw.replace(/\(.*$/,'').trim());
+    if(document.getElementById('f-name').value) found++;
+  }
+  if(wardRaw){ fset('f-ward', wardRaw.replace(/^WARD\s*/i,'').trim()||wardRaw); found++; }
+  const phoneDigits = (phoneRaw.match(/\d{6,}/)||[])[0];
+  if(phoneDigits){ fset('f-contact', phoneDigits); found++; }
+  if(addrRaw){ fset('f-address', addrRaw); found++; }
+
+  const noteParts = [];
+  if(uhid) noteParts.push('UHID: '+uhid);
+  if(ipd) noteParts.push('IPD No: '+ipd);
+  if(dept) noteParts.push('Dept/Unit: '+dept);
+  if(unitHead) noteParts.push('Unit Head: '+unitHead);
+  if(admDoc) noteParts.push('Admitting Doctor: '+admDoc);
+  if(admTime) noteParts.push('Admitted: '+admTime);
+  if(noteParts.length){
+    const obsEl = document.getElementById('f-obs');
+    const header = '📋 From admission sheet — '+noteParts.join(' · ');
+    if(!obsEl.value.includes('From admission sheet')){
+      obsEl.value = obsEl.value ? header+'\n\n'+obsEl.value : header;
+    }
+    found++;
+  }
+  updateTitle(document.getElementById('f-name').value||'Patient');
+  if(found) showToast('Scanned ✓ — please check the details before saving','success');
+  else showToast('Could not find patient details on that sheet','error');
+}
 function finishFiles(newDocs){
   docs=[...docs,...newDocs.filter(Boolean)]; renderDocGrid(); updateStorageBar();
   document.getElementById('fileInputGallery').value='';
@@ -481,7 +583,18 @@ async function saveRecord(){
     if(res.ok){ synced=true; }
     else { console.warn('Patient save failed:', res.status, await res.text()); }
   }catch(e){ console.warn('Patient save network error:', e); }
+  if(doctor.driveConnected) autoBackupToDrive(data); // fire-and-forget, doesn't block the save
   showSuccessAndReturn(data.name, synced ? 'Saved & synced to cloud ✓' : 'Saved locally — will sync when online');
+}
+
+// Silent background backup — never blocks or interrupts the doctor's save flow
+async function autoBackupToDrive(data){
+  try{
+    const blob = await buildPDF();
+    const safe = (data.name||'patient').replace(/[^a-zA-Z0-9]/g,'_');
+    const fileName = `${safe}_${new Date().toISOString().slice(0,10)}.pdf`;
+    await uploadToDrive(blob, fileName, true);
+  }catch(e){ console.warn('Drive auto-backup skipped (will retry next save):', e); }
 }
 
 function showSuccessAndReturn(name, msg){
@@ -495,7 +608,7 @@ function showSuccessAndReturn(name, msg){
 function openShareSheet(){
   const data = getFormData();
   if(!data.name){ showToast('Enter patient name first','error'); return; }
-  document.getElementById('driveRow').style.display = doctor.googleClientId ? 'block' : 'none';
+  document.getElementById('driveRow').style.display = doctor.driveConnected ? 'block' : 'none';
   document.getElementById('shareSheet').classList.add('open');
 }
 function closeShareSheet(){ document.getElementById('shareSheet').classList.remove('open'); }
@@ -536,7 +649,7 @@ async function shareVia(mode){
     }
     dlBlob(blob,fileName); showToast('PDF saved ✓','success');
   } else if(mode==='gdrive'){
-    if(!doctor.googleClientId){ showToast('Set up Google Drive in Settings first','error'); return; }
+    if(!doctor.driveConnected){ showToast('Connect Google Drive in Settings first','error'); return; }
     showProgress('Connecting to Google Drive…');
     try{ await uploadToDrive(blob,fileName); }
     catch(e){ hideProgress(); showToast('Drive upload failed — PDF saved locally','error'); dlBlob(blob,fileName); }
@@ -544,26 +657,25 @@ async function shareVia(mode){
 }
 
 // ══ GOOGLE DRIVE ══
-async function uploadToDrive(blob, fileName){
+async function uploadToDrive(blob, fileName, silent=false){
   return new Promise((resolve,reject)=>{
     if(!window.google?.accounts?.oauth2){ reject(new Error('Google API not loaded')); return; }
     const client = google.accounts.oauth2.initTokenClient({
-      client_id: doctor.googleClientId,
+      client_id: DRIVE_CLIENT_ID,
       scope: 'https://www.googleapis.com/auth/drive.file',
       callback: async(resp)=>{
         if(resp.error){ reject(new Error(resp.error)); return; }
         try{
-          showProgress('Creating folder in Drive…');
+          if(!silent) showProgress('Creating folder in Drive…');
           const folderId = await getOrCreateMonthFolder(resp.access_token);
-          showProgress('Uploading PDF…');
+          if(!silent) showProgress('Uploading PDF…');
           await driveUpload(blob, fileName, resp.access_token, folderId);
-          hideProgress();
-          showToast('Saved to Google Drive ✓','success');
+          if(!silent){ hideProgress(); showToast('Saved to Google Drive ✓','success'); }
           resolve();
         }catch(e){ reject(e); }
       }
     });
-    client.requestAccessToken();
+    client.requestAccessToken(silent ? {prompt:'none'} : {});
   });
 }
 
