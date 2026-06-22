@@ -179,16 +179,15 @@ html,body{height:100%;font-family:var(--font);background:var(--bg);color:var(--i
     <!-- LOGIN -->
     <div id="loginForm">
       <div class="auth-field">
-        <label>Email or Doctor Code</label>
-        <input id="login-code" type="email" placeholder="your@email.com or dr.sanjid" autocomplete="email" autocapitalize="none" spellcheck="false" inputmode="email"/>
-        <div class="field-hint">Use your email address or the doctor code you chose</div>
+        <label>Email Address</label>
+        <input id="login-code" type="email" placeholder="doctor@gmail.com" autocomplete="email" inputmode="email"/>
       </div>
       <div class="auth-field">
         <label>Password</label>
         <input id="login-password" type="password" placeholder="Your password" autocomplete="current-password"/>
       </div>
       <button class="auth-btn" onclick="handleLogin()">Sign In →</button>
-      <p class="auth-hint">You'll stay signed in on this device.</p>
+      <p class="auth-hint">You'll stay signed in permanently on this device.</p>
     </div>
 
     <!-- SIGNUP -->
@@ -196,18 +195,10 @@ html,body{height:100%;font-family:var(--font);background:var(--bg);color:var(--i
       <div class="auth-field">
         <label>Full Name</label>
         <input id="su-name" type="text" placeholder="Dr. Muhammed Sanjid" autocomplete="name" oninput="previewCode()"/>
-        <div class="field-hint">Your name as it appears on PDF reports</div>
       </div>
       <div class="auth-field">
         <label>Email Address</label>
         <input id="su-email" type="email" placeholder="doctor@gmail.com" autocomplete="email" inputmode="email"/>
-        <div class="field-hint">Used to recover your account if needed</div>
-      </div>
-      <div class="auth-field">
-        <label>Choose a Doctor Code <small style="color:var(--muted);font-weight:400;text-transform:none">(optional)</small></label>
-        <input id="su-code" type="text" placeholder="e.g. dr.sanjid" autocapitalize="none" spellcheck="false" oninput="sanitizeCode(this)"/>
-        <div class="username-preview" id="codePreview"></div>
-        <div class="field-hint">Short nickname shown on your profile. Optional.</div>
       </div>
       <div class="auth-field">
         <label>Password</label>
@@ -217,8 +208,14 @@ html,body{height:100%;font-family:var(--font);background:var(--bg);color:var(--i
         <label>Hospital / Institution</label>
         <input id="su-hospital" type="text" placeholder="City General Hospital"/>
       </div>
+      <div class="auth-field">
+        <label>Doctor Code <small style="color:var(--muted);font-weight:400;text-transform:none">(optional — e.g. dr.sanjid)</small></label>
+        <input id="su-code" type="text" placeholder="dr.sanjid" autocapitalize="none" spellcheck="false" oninput="sanitizeCode(this)"/>
+        <div class="username-preview" id="codePreview"></div>
+        <div class="field-hint">Short code shown on your profile. Leave blank to skip.</div>
+      </div>
       <button class="auth-btn" onclick="handleSignup()">Create Account →</button>
-      <p class="auth-hint">Free forever. Sign in with your email + password anytime.</p>
+      <p class="auth-hint">Free forever. Sign in with email + password from any device.</p>
     </div>
   </div>
 </div>
@@ -293,7 +290,7 @@ const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJ
 // ══ STATE ══
 let currentUser = null, doctor = {}, patients = [];
 
-// ══ SUPABASE HELPERS ══
+// ══ SUPABASE ══
 async function sbFetch(path, opts={}){
   const token = localStorage.getItem('rn_token');
   const headers = {'Content-Type':'application/json','apikey':SB_KEY,'Authorization':`Bearer ${token||SB_KEY}`,...(opts.headers||{})};
@@ -301,145 +298,150 @@ async function sbFetch(path, opts={}){
 }
 async function sbPost(endpoint, body){
   const res = await fetch(`${SB_URL}/auth/v1/${endpoint}`, {
-    method:'POST', headers:{'Content-Type':'application/json','apikey':SB_KEY}, body:JSON.stringify(body)
+    method:'POST',
+    headers:{'Content-Type':'application/json','apikey':SB_KEY},
+    body:JSON.stringify(body)
   });
   return res.json();
 }
 
-// ══ CODE HELPERS ══
-// We use email format internally: code@roundnotes.app
-// so Supabase email auth works without a real email
-function codeToEmail(code){ return code.trim().toLowerCase().replace(/[^a-z0-9._-]/g,'')+'@rn-doctors.com'; }
-function sanitizeCode(inp){
-  inp.value = inp.value.toLowerCase().replace(/[^a-z0-9._-]/g,'');
-  const el = document.getElementById('codePreview');
-  if(inp.value) el.textContent = '✓ Your login code: ' + inp.value;
-  else el.textContent = '';
-}
-function previewCode(){
-  const name = document.getElementById('su-name').value.trim();
-  const codeInp = document.getElementById('su-code');
-  if(!codeInp.value && name){
-    // Auto-suggest: dr.firstname
-    const first = name.toLowerCase().replace(/^dr\.?\s*/i,'').split(' ')[0].replace(/[^a-z0-9]/g,'');
-    codeInp.value = 'dr.' + first;
-    sanitizeCode(codeInp);
-  }
-}
-
-// ══ SIGNUP ══
+// ══ SIGNUP — uses real email ══
 async function handleSignup(){
   const name     = document.getElementById('su-name').value.trim();
   const email    = document.getElementById('su-email').value.trim().toLowerCase();
-  const code     = document.getElementById('su-code').value.trim().toLowerCase() || name.toLowerCase().replace(/[^a-z0-9]/g,'.').replace(/^dr\./,'dr.').substring(0,20);
+  const code     = document.getElementById('su-code').value.trim().toLowerCase();
   const password = document.getElementById('su-password').value;
   const hospital = document.getElementById('su-hospital').value.trim();
-  if(!name)              { showAuthError('Please enter your full name'); return; }
-  if(!email || !email.includes('@')) { showAuthError('Please enter a valid email address'); return; }
-  if(password.length < 6){ showAuthError('Password must be at least 6 characters'); return; }
+
+  if(!name)                       { showAuthError('Please enter your full name'); return; }
+  if(!email || !email.includes('@')){ showAuthError('Please enter a valid email address'); return; }
+  if(password.length < 6)         { showAuthError('Password must be at least 6 characters'); return; }
 
   showLoading('Creating account…');
 
   let data;
-  try { data = await sbPost('signup', {email, password, data:{full_name:name, doctor_code:code, hospital}}); }
-  catch(e){ hideLoading(); showAuthError('Network error — check your connection'); return; }
+  try {
+    data = await sbPost('signup', {
+      email,
+      password,
+      data: { full_name: name, doctor_code: code||'', hospital }
+    });
+  } catch(e) {
+    hideLoading();
+    showAuthError('Network error — check your connection and try again');
+    return;
+  }
 
-  if(data.error || data.error_code){
+  console.log('Signup response:', JSON.stringify(data));
+
+  if(data.error || data.error_code) {
     hideLoading();
     const m = data.error_description || data.message || data.error || '';
-    console.error('Signup error:', JSON.stringify(data));
     if(m.toLowerCase().includes('already') || m.toLowerCase().includes('registered'))
-      showAuthError('That code is already taken — choose a different one (e.g. dr.sanjid2)');
-    else if(m) showAuthError(m);
-    else showAuthError('Sign up failed — please try a different code');
+      showAuthError('This email is already registered — please Sign In instead');
+    else if(m.toLowerCase().includes('invalid') && m.toLowerCase().includes('email'))
+      showAuthError('Invalid email address — please check and try again');
+    else if(m)
+      showAuthError(m);
+    else
+      showAuthError('Sign up failed — please try again');
     return;
   }
 
-  // Now sign in immediately (works regardless of email-confirm setting)
+  // Account created — now sign in immediately
   showLoading('Signing you in…');
   let loginData;
-  try { loginData = await sbPost('token?grant_type=password', {email, password}); }
-  catch(e){ hideLoading(); showAuthError('Account created! Please sign in with your code.'); switchTab('login'); document.getElementById('login-code').value=code; return; }
-
-  if(loginData.error || loginData.error_code){
+  try {
+    loginData = await sbPost('token?grant_type=password', {email, password});
+  } catch(e) {
     hideLoading();
-    showAuthError('Account created! Please sign in with your code.');
-    switchTab('login'); document.getElementById('login-code').value=code;
+    // Account was created, just can't auto-login
+    switchTab('login');
+    document.getElementById('login-code').value = email;
+    showAuthError('Account created! Please sign in with your email and password.');
     return;
   }
 
-  // Save doctor profile to localStorage immediately
-  doctor = {name, hospital, desig:'', dept:'', phone:'', googleClientId:'', doctor_code:code};
+  if(loginData.error || loginData.error_code) {
+    hideLoading();
+    switchTab('login');
+    document.getElementById('login-code').value = email;
+    showAuthError('Account created! Please sign in with your email and password.');
+    return;
+  }
+
+  doctor = { name, hospital, desig:'', dept:'', phone:'', googleClientId:'', doctor_code: code };
   localStorage.setItem('rn_doctor', JSON.stringify(doctor));
   await onAuthSuccess(loginData, true);
 }
 
-// ══ LOGIN ══
+// ══ LOGIN — email + password only ══
 async function handleLogin(){
-  const code     = document.getElementById('login-code').value.trim().toLowerCase();
+  const email    = document.getElementById('login-code').value.trim().toLowerCase();
   const password = document.getElementById('login-password').value;
-  if(!code)     { showAuthError('Please enter your email or doctor code'); return; }
+
+  if(!email)    { showAuthError('Please enter your email address'); return; }
   if(!password) { showAuthError('Please enter your password'); return; }
+  if(!email.includes('@')) { showAuthError('Please enter a valid email address (e.g. doctor@gmail.com)'); return; }
 
   showLoading('Signing in…');
-  // Support both email and doctor code login
-  const email = code.includes('@') ? code : code+'@rn-doctors.com';
 
   let data;
-  try { data = await sbPost('token?grant_type=password', {email, password}); }
-  catch(e){ hideLoading(); showAuthError('Network error — check your connection'); return; }
-
-  if(data.error || data.error_code){
+  try {
+    data = await sbPost('token?grant_type=password', {email, password});
+  } catch(e) {
     hideLoading();
-    const m = data.error_description || data.message || data.error || '';
-    console.error('Login error:', JSON.stringify(data));
-    if(m.toLowerCase().includes('invalid') || m.toLowerCase().includes('credentials'))
-      showAuthError('Wrong code or password — please try again');
-    else if(m.toLowerCase().includes('confirm'))
-      showAuthError('Account not confirmed — contact support');
-    else if(m) showAuthError(m);
-    else showAuthError('Sign in failed — check your code and password');
+    showAuthError('Network error — check your connection and try again');
     return;
   }
+
+  console.log('Login response:', JSON.stringify(data));
+
+  if(data.error || data.error_code) {
+    hideLoading();
+    const m = data.error_description || data.message || data.error || '';
+    if(m.toLowerCase().includes('invalid'))
+      showAuthError('Wrong email or password — please try again');
+    else if(m.toLowerCase().includes('not found') || m.toLowerCase().includes('no user'))
+      showAuthError('No account found with this email — please Create Account first');
+    else if(m)
+      showAuthError(m);
+    else
+      showAuthError('Sign in failed — check your email and password');
+    return;
+  }
+
   await onAuthSuccess(data, false);
 }
 
 // ══ AUTH SUCCESS ══
 async function onAuthSuccess(data, isNew){
-  // Persist tokens — these keep the user logged in
   localStorage.setItem('rn_token',   data.access_token);
   localStorage.setItem('rn_refresh', data.refresh_token);
   currentUser = data.user;
   localStorage.setItem('rn_user_id', currentUser.id);
-
-  if(isNew){
-    await saveDoctorProfileToDB();
-  } else {
-    await loadDoctorProfile();
-  }
+  if(isNew) await saveDoctorProfileToDB();
+  else      await loadDoctorProfile();
   await loadPatients();
   hideLoading();
   showScreen('homeScreen');
 }
 
-// ══ SESSION RESTORE (stay logged in) ══
+// ══ STAY LOGGED IN ══
 async function checkSession(){
   const token   = localStorage.getItem('rn_token');
   const refresh = localStorage.getItem('rn_refresh');
   if(!token && !refresh) return false;
 
-  // Try existing access token
   if(token){
     try{
-      const res = await fetch(`${SB_URL}/auth/v1/user`, {headers:{'apikey':SB_KEY,'Authorization':`Bearer ${token}`}});
-      if(res.ok){
-        const u = await res.json();
-        if(u?.id){ currentUser = u; return true; }
-      }
+      const res = await fetch(`${SB_URL}/auth/v1/user`, {
+        headers:{'apikey':SB_KEY,'Authorization':`Bearer ${token}`}
+      });
+      if(res.ok){ const u=await res.json(); if(u?.id){ currentUser=u; return true; } }
     }catch(e){}
   }
 
-  // Access token expired — use refresh token to get a new one silently
   if(refresh){
     try{
       const data = await sbPost('token?grant_type=refresh_token', {refresh_token:refresh});
@@ -452,7 +454,6 @@ async function checkSession(){
     }catch(e){}
   }
 
-  // Both failed — clear storage, show login
   localStorage.removeItem('rn_token');
   localStorage.removeItem('rn_refresh');
   return false;
@@ -465,7 +466,7 @@ async function handleLogout(){
   localStorage.removeItem('rn_token');
   localStorage.removeItem('rn_refresh');
   localStorage.removeItem('rn_user_id');
-  currentUser = null; doctor = {}; patients = [];
+  currentUser=null; doctor={}; patients=[];
   closeSettings();
   showScreen('authScreen');
   showToast('Signed out','info');
@@ -473,11 +474,10 @@ async function handleLogout(){
 
 // ══ DOCTOR PROFILE ══
 async function loadDoctorProfile(){
-  // Always load local cache first (instant)
   try{ const c=JSON.parse(localStorage.getItem('rn_doctor')||'{}'); if(c.name) doctor=c; }catch(e){}
   if(!currentUser) return;
   try{
-    const res = await sbFetch(`/rest/v1/doctor_profiles?user_id=eq.${currentUser.id}&select=*&limit=1`);
+    const res=await sbFetch(`/rest/v1/doctor_profiles?user_id=eq.${currentUser.id}&select=*&limit=1`);
     if(res.ok){ const rows=await res.json(); if(rows.length){ doctor=rows[0]; localStorage.setItem('rn_doctor',JSON.stringify(doctor)); } }
   }catch(e){}
 }
@@ -485,9 +485,15 @@ async function saveDoctorProfile(){ localStorage.setItem('rn_doctor',JSON.string
 async function saveDoctorProfileToDB(){
   if(!currentUser) return;
   try{
-    const payload={user_id:currentUser.id,name:doctor.name||'',desig:doctor.desig||'',dept:doctor.dept||'',hospital:doctor.hospital||'',phone:doctor.phone||'',googleClientId:doctor.googleClientId||'',doctor_code:doctor.doctor_code||''};
-    const res=await sbFetch('/rest/v1/doctor_profiles',{method:'POST',headers:{'Prefer':'resolution=merge-duplicates'},body:JSON.stringify(payload)});
-    if(!res.ok) console.warn('Profile save:',res.status,await res.text());
+    const payload={
+      user_id:currentUser.id, name:doctor.name||'', desig:doctor.desig||'',
+      dept:doctor.dept||'', hospital:doctor.hospital||'', phone:doctor.phone||'',
+      googleClientId:doctor.googleClientId||'', doctor_code:doctor.doctor_code||''
+    };
+    const res=await sbFetch('/rest/v1/doctor_profiles',{
+      method:'POST', headers:{'Prefer':'resolution=merge-duplicates'}, body:JSON.stringify(payload)
+    });
+    if(!res.ok) console.warn('Profile save failed:',res.status,await res.text());
   }catch(e){ console.warn('Profile DB error:',e); }
 }
 
@@ -498,12 +504,14 @@ async function loadPatients(){
   try{
     const res=await sbFetch(`/rest/v1/patients?user_id=eq.${currentUser.id}&order=sort_order.asc,created_at.desc&select=*`);
     if(res.ok){ patients=await res.json(); localStorage.setItem('rn_patients_cache',JSON.stringify(patients)); setSyncState('synced'); }
-    else { loadFromCache(); setSyncState('offline'); }
+    else{ loadFromCache(); setSyncState('offline'); }
   }catch(e){ loadFromCache(); setSyncState('offline'); }
   renderHome();
 }
 function loadFromCache(){ try{ patients=JSON.parse(localStorage.getItem('rn_patients_cache')||'[]'); }catch(e){ patients=[]; } }
-async function deletePatientFromDB(id){ try{ await sbFetch(`/rest/v1/patients?id=eq.${id}&user_id=eq.${currentUser.id}`,{method:'DELETE'}); }catch(e){} }
+async function deletePatientFromDB(id){
+  try{ await sbFetch(`/rest/v1/patients?id=eq.${id}&user_id=eq.${currentUser.id}`,{method:'DELETE'}); }catch(e){}
+}
 
 // ══ SETTINGS ══
 function openSettings(){
@@ -513,8 +521,8 @@ function openSettings(){
   document.getElementById('s-hospital').value = doctor.hospital||'';
   document.getElementById('s-phone').value    = doctor.phone||'';
   document.getElementById('s-googleClientId').value = doctor.googleClientId||'';
-  document.getElementById('myCodeDisplay').textContent    = doctor.doctor_code || currentUser?.email?.split('@')[0] || '—';
-  document.getElementById('userCodeDisplay').textContent  = doctor.doctor_code || '—';
+  document.getElementById('myCodeDisplay').textContent   = doctor.doctor_code || currentUser?.email?.split('@')[0] || '—';
+  document.getElementById('userCodeDisplay').textContent = currentUser?.email || '—';
   renderDriveStatus();
   document.getElementById('settingsModal').classList.add('open');
 }
@@ -543,13 +551,31 @@ function disconnectDrive(){
 
 // ══ AUTH UI ══
 function switchTab(tab){
-  document.getElementById('tab-login').classList.toggle('active', tab==='login');
+  document.getElementById('tab-login').classList.toggle('active',  tab==='login');
   document.getElementById('tab-signup').classList.toggle('active', tab==='signup');
   document.getElementById('loginForm').style.display  = tab==='login'  ? 'block':'none';
   document.getElementById('signupForm').style.display = tab==='signup' ? 'block':'none';
   document.getElementById('authError').classList.remove('show');
 }
-function showAuthError(msg){ const el=document.getElementById('authError'); el.textContent=msg; el.classList.add('show'); el.scrollIntoView({behavior:'smooth',block:'nearest'}); }
+function showAuthError(msg){
+  const el=document.getElementById('authError');
+  el.textContent=msg; el.classList.add('show');
+  el.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+function previewCode(){
+  const name=document.getElementById('su-name').value.trim();
+  const codeInp=document.getElementById('su-code');
+  if(!codeInp.value && name){
+    const first=name.toLowerCase().replace(/^dr\.?\s*/i,'').split(' ')[0].replace(/[^a-z0-9]/g,'');
+    codeInp.value='dr.'+first; sanitizeCode(codeInp);
+  }
+}
+function sanitizeCode(inp){
+  inp.value=inp.value.toLowerCase().replace(/[^a-z0-9._-]/g,'');
+  const el=document.getElementById('codePreview');
+  if(inp.value) el.textContent='✓ Your display code: '+inp.value;
+  else el.textContent='';
+}
 
 // ══ HOME RENDER ══
 function renderHome(){
@@ -589,9 +615,33 @@ function initDrag(){
   const list=document.getElementById('patientList');
   let el=null,ph=null,dragging=false,timer=null,startY=0;
   const cards=()=>Array.from(list.querySelectorAll('.patient-card'));
-  const start=(card,clientY)=>{ el=card;dragging=true; ph=document.createElement('div'); ph.style.cssText=`height:${card.offsetHeight}px;margin-bottom:10px;border-radius:16px;background:var(--teal-xlight);border:2px dashed var(--teal)`; card.parentNode.insertBefore(ph,card); card.classList.add('dragging'); card.style.cssText=`position:fixed;width:${card.offsetWidth}px;z-index:500;left:${card.getBoundingClientRect().left}px;top:${card.getBoundingClientRect().top}px;box-shadow:0 10px 36px rgba(0,0,0,.18);pointer-events:none`; startY=clientY-card.getBoundingClientRect().top; if(navigator.vibrate)navigator.vibrate(30); };
-  const move=(clientY)=>{ if(!dragging||!el)return; el.style.top=(clientY-startY)+'px'; const rest=cards().filter(c=>c!==el); let ins=null; for(const c of rest){const r=c.getBoundingClientRect();if(clientY<r.top+r.height/2){ins=c;break;}} ins?list.insertBefore(ph,ins):list.appendChild(ph); };
-  const end=()=>{ if(!dragging||!el)return; dragging=false; list.insertBefore(el,ph); ph.remove(); el.removeAttribute('style'); el.classList.remove('dragging'); const order=cards().map(c=>c.dataset.id); const map={}; patients.forEach(p=>map[p.id]=p); patients=order.map(id=>map[id]).filter(Boolean); localStorage.setItem('rn_patients_cache',JSON.stringify(patients)); el=null;ph=null; };
+  const start=(card,clientY)=>{
+    el=card; dragging=true;
+    ph=document.createElement('div');
+    ph.style.cssText=`height:${card.offsetHeight}px;margin-bottom:10px;border-radius:16px;background:var(--teal-xlight);border:2px dashed var(--teal)`;
+    card.parentNode.insertBefore(ph,card);
+    card.classList.add('dragging');
+    card.style.cssText=`position:fixed;width:${card.offsetWidth}px;z-index:500;left:${card.getBoundingClientRect().left}px;top:${card.getBoundingClientRect().top}px;box-shadow:0 10px 36px rgba(0,0,0,.18);pointer-events:none`;
+    startY=clientY-card.getBoundingClientRect().top;
+    if(navigator.vibrate) navigator.vibrate(30);
+  };
+  const move=(clientY)=>{
+    if(!dragging||!el) return;
+    el.style.top=(clientY-startY)+'px';
+    const rest=cards().filter(c=>c!==el); let ins=null;
+    for(const c of rest){ const r=c.getBoundingClientRect(); if(clientY<r.top+r.height/2){ins=c;break;} }
+    ins?list.insertBefore(ph,ins):list.appendChild(ph);
+  };
+  const end=()=>{
+    if(!dragging||!el) return; dragging=false;
+    list.insertBefore(el,ph); ph.remove();
+    el.removeAttribute('style'); el.classList.remove('dragging');
+    const order=cards().map(c=>c.dataset.id);
+    const map={}; patients.forEach(p=>map[p.id]=p);
+    patients=order.map(id=>map[id]).filter(Boolean);
+    localStorage.setItem('rn_patients_cache',JSON.stringify(patients));
+    el=null; ph=null;
+  };
   list.querySelectorAll('.drag-handle').forEach(h=>{
     h.addEventListener('touchstart',e=>{const c=h.closest('.patient-card');timer=setTimeout(()=>start(c,e.touches[0].clientY),200);},{passive:true});
     h.addEventListener('touchmove',e=>{clearTimeout(timer);if(!dragging)return;e.preventDefault();move(e.touches[0].clientY);},{passive:false});
@@ -600,12 +650,10 @@ function initDrag(){
   });
 }
 
-// ══ NAV ══
+// ══ NAV & UTILS ══
 function showScreen(id){ document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active')); document.getElementById(id).classList.add('active'); }
 function goToForm(id){ if(id)sessionStorage.setItem('rn_edit_id',id); else sessionStorage.removeItem('rn_edit_id'); window.location.href='patient.html'; }
 function setSyncState(s){ const dot=document.getElementById('syncDot'),lbl=document.getElementById('syncLabel'); if(!dot)return; dot.className='sync-dot'+(s==='syncing'?' syncing':s==='offline'?' offline':''); lbl.textContent=s==='syncing'?'Syncing…':s==='offline'?'Offline':'Synced'; }
-
-// ══ UTILS ══
 const g=id=>{ const el=document.getElementById(id); return el?el.value.trim():''; };
 function esc(s){ return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 function timeAgo(ts){ const s=Math.floor((Date.now()-ts)/1000); if(s<60)return 'just now'; if(s<3600)return Math.floor(s/60)+'m ago'; if(s<86400)return Math.floor(s/3600)+'h ago'; return Math.floor(s/86400)+'d ago'; }
@@ -620,13 +668,8 @@ window.addEventListener('offline', ()=>setSyncState('offline'));
 async function init(){
   const valid = await checkSession();
   document.getElementById('splash').classList.add('hide');
-  if(valid){
-    await loadDoctorProfile();
-    await loadPatients();
-    showScreen('homeScreen');
-  } else {
-    showScreen('authScreen');
-  }
+  if(valid){ await loadDoctorProfile(); await loadPatients(); showScreen('homeScreen'); }
+  else { showScreen('authScreen'); }
 }
 
 if('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(()=>{});
