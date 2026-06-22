@@ -92,7 +92,9 @@ html,body{height:100%;font-family:var(--font);background:var(--bg);color:var(--i
 .drag-handle svg{pointer-events:none}
 .p-avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,var(--teal-light) 0%,#c8eee9 100%);display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:var(--navy);flex-shrink:0}
 .p-info{flex:1;min-width:0}
-.p-name{font-weight:700;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.p-name{font-weight:700;font-size:15px;display:flex;align-items:center;gap:7px}
+.p-name-text{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.p-bed-tag{flex-shrink:0;background:var(--teal-light);color:var(--navy);font-size:10.5px;font-weight:700;padding:2px 8px;border-radius:10px;letter-spacing:.02em}
 .p-sub{font-size:12px;color:var(--slate);margin-top:3px}
 .p-time{font-size:10px;color:var(--muted);margin-top:3px}
 .pill{border-radius:20px;padding:4px 10px;font-size:10px;font-weight:700;flex-shrink:0;text-transform:uppercase;letter-spacing:.06em}
@@ -434,8 +436,8 @@ function renderHome(){
         <div class="drag-handle"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg></div>
         <div class="p-avatar" onclick="goToForm('${p.id}')">${(p.name||'?')[0].toUpperCase()}</div>
         <div class="p-info" onclick="goToForm('${p.id}')">
-          <div class="p-name">${esc(p.name||'Unnamed')}</div>
-          <div class="p-sub">${p.ward?'Ward '+esc(p.ward):''}${p.ward&&p.bed?' · ':''}${p.bed?'Bed '+esc(p.bed):''}</div>
+          <div class="p-name"><span class="p-name-text">${esc(p.name||'Unnamed')}</span>${p.bed?`<span class="p-bed-tag">Bed ${esc(p.bed)}</span>`:''}</div>
+          <div class="p-sub">${p.ward?'Ward '+esc(p.ward):''}</div>
           <div class="p-time">${p.updated_at?timeAgo(new Date(p.updated_at).getTime()):''}</div>
         </div>
         <span class="pill pill-${st}" onclick="goToForm('${p.id}')">${st.replace('_',' ')}</span>
