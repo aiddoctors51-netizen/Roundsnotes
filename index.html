@@ -179,9 +179,9 @@ html,body{height:100%;font-family:var(--font);background:var(--bg);color:var(--i
     <!-- LOGIN -->
     <div id="loginForm">
       <div class="auth-field">
-        <label>Your Doctor Code</label>
-        <input id="login-code" type="text" placeholder="e.g. dr.sanjid" autocomplete="username" autocapitalize="none" spellcheck="false"/>
-        <div class="field-hint">The unique code you chose when creating your account</div>
+        <label>Email or Doctor Code</label>
+        <input id="login-code" type="email" placeholder="your@email.com or dr.sanjid" autocomplete="email" autocapitalize="none" spellcheck="false" inputmode="email"/>
+        <div class="field-hint">Use your email address or the doctor code you chose</div>
       </div>
       <div class="auth-field">
         <label>Password</label>
@@ -199,10 +199,15 @@ html,body{height:100%;font-family:var(--font);background:var(--bg);color:var(--i
         <div class="field-hint">Your name as it appears on PDF reports</div>
       </div>
       <div class="auth-field">
-        <label>Choose Your Doctor Code</label>
-        <input id="su-code" type="text" placeholder="e.g. dr.sanjid" autocomplete="username" autocapitalize="none" spellcheck="false" oninput="sanitizeCode(this)"/>
+        <label>Email Address</label>
+        <input id="su-email" type="email" placeholder="doctor@gmail.com" autocomplete="email" inputmode="email"/>
+        <div class="field-hint">Used to recover your account if needed</div>
+      </div>
+      <div class="auth-field">
+        <label>Choose a Doctor Code <small style="color:var(--muted);font-weight:400;text-transform:none">(optional)</small></label>
+        <input id="su-code" type="text" placeholder="e.g. dr.sanjid" autocapitalize="none" spellcheck="false" oninput="sanitizeCode(this)"/>
         <div class="username-preview" id="codePreview"></div>
-        <div class="field-hint">Lowercase letters, numbers, dots, hyphens only. This is your login ID — no email needed.</div>
+        <div class="field-hint">Short nickname shown on your profile. Optional.</div>
       </div>
       <div class="auth-field">
         <label>Password</label>
@@ -213,7 +218,7 @@ html,body{height:100%;font-family:var(--font);background:var(--bg);color:var(--i
         <input id="su-hospital" type="text" placeholder="City General Hospital"/>
       </div>
       <button class="auth-btn" onclick="handleSignup()">Create Account →</button>
-      <p class="auth-hint">Free forever. Your code + password is all you need to sign in.</p>
+      <p class="auth-hint">Free forever. Sign in with your email + password anytime.</p>
     </div>
   </div>
 </div>
@@ -304,7 +309,7 @@ async function sbPost(endpoint, body){
 // ══ CODE HELPERS ══
 // We use email format internally: code@roundnotes.app
 // so Supabase email auth works without a real email
-function codeToEmail(code){ return code.trim().toLowerCase().replace(/[^a-z0-9._-]/g,'')+('@roundnotes.internal'); }
+function codeToEmail(code){ return code.trim().toLowerCase().replace(/[^a-z0-9._-]/g,'')+'@rn-doctors.com'; }
 function sanitizeCode(inp){
   inp.value = inp.value.toLowerCase().replace(/[^a-z0-9._-]/g,'');
   const el = document.getElementById('codePreview');
@@ -325,16 +330,15 @@ function previewCode(){
 // ══ SIGNUP ══
 async function handleSignup(){
   const name     = document.getElementById('su-name').value.trim();
-  const code     = document.getElementById('su-code').value.trim().toLowerCase();
+  const email    = document.getElementById('su-email').value.trim().toLowerCase();
+  const code     = document.getElementById('su-code').value.trim().toLowerCase() || name.toLowerCase().replace(/[^a-z0-9]/g,'.').replace(/^dr\./,'dr.').substring(0,20);
   const password = document.getElementById('su-password').value;
   const hospital = document.getElementById('su-hospital').value.trim();
-  if(!name)     { showAuthError('Please enter your full name'); return; }
-  if(!code)     { showAuthError('Please choose a doctor code'); return; }
-  if(!/^[a-z0-9._-]+$/.test(code)) { showAuthError('Code can only contain letters, numbers, dots, hyphens'); return; }
-  if(password.length < 6) { showAuthError('Password must be at least 6 characters'); return; }
+  if(!name)              { showAuthError('Please enter your full name'); return; }
+  if(!email || !email.includes('@')) { showAuthError('Please enter a valid email address'); return; }
+  if(password.length < 6){ showAuthError('Password must be at least 6 characters'); return; }
 
   showLoading('Creating account…');
-  const email = codeToEmail(code);
 
   let data;
   try { data = await sbPost('signup', {email, password, data:{full_name:name, doctor_code:code, hospital}}); }
@@ -374,11 +378,12 @@ async function handleSignup(){
 async function handleLogin(){
   const code     = document.getElementById('login-code').value.trim().toLowerCase();
   const password = document.getElementById('login-password').value;
-  if(!code)     { showAuthError('Please enter your doctor code'); return; }
+  if(!code)     { showAuthError('Please enter your email or doctor code'); return; }
   if(!password) { showAuthError('Please enter your password'); return; }
 
   showLoading('Signing in…');
-  const email = codeToEmail(code);
+  // Support both email and doctor code login
+  const email = code.includes('@') ? code : code+'@rn-doctors.com';
 
   let data;
   try { data = await sbPost('token?grant_type=password', {email, password}); }
