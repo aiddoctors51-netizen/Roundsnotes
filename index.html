@@ -310,9 +310,12 @@ async function handleSignup(){
   catch(e){ hideLoading(); showAuthError('Network error — check your connection and try again'); return; }
   if(data.error || data.error_code){
     hideLoading();
-    const m = data.error_description || data.message || '';
-    if(m.toLowerCase().includes('already')) showAuthError('Account exists — try signing in instead');
-    else showAuthError(m || 'Sign up failed');
+    const m = data.error_description || data.msg || data.message || data.error || '';
+    console.error('Signup error:', JSON.stringify(data));
+    if(m.toLowerCase().includes('already') || m.toLowerCase().includes('registered')) showAuthError('Account already exists — try signing in');
+    else if(m.toLowerCase().includes('password')) showAuthError('Password too weak — use at least 6 characters');
+    else if(m) showAuthError(m);
+    else showAuthError('Sign up failed (error ' + (data.status||data.code||'unknown') + ') — see browser console');
     return;
   }
   // Supabase may or may not return a token depending on email confirm setting
