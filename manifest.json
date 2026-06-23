@@ -1,7 +1,7 @@
 {
-  "name": "RoundNotes — Doctor's Round Assistant",
+  "name": "RoundNotes — powered by Fovea",
   "short_name": "RoundNotes",
-  "description": "A digital assistant for documenting hospital patient rounds",
+  "description": "A digital assistant for documenting hospital patient rounds, by Fovea",
   "start_url": "/index.html",
   "display": "standalone",
   "background_color": "#0D3D56",
