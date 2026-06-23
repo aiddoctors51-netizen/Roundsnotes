@@ -70,6 +70,54 @@ html,body{height:100%;font-family:var(--font);background:var(--bg);color:var(--i
 .cond-btn.active-critical{border-color:var(--red);background:var(--red-light);color:var(--red);font-weight:700}
 .cond-btn.active-critical .dot{background:var(--red)}
 
+/* WARD STATUS */
+.ward-status-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.ward-status-btn{display:flex;align-items:center;gap:8px;padding:11px 10px;border-radius:var(--radius-sm);border:1.5px solid var(--border);background:var(--surface-2);font-size:12.5px;font-weight:600;cursor:pointer;transition:all .12s;font-family:var(--font);text-align:left;line-height:1.25}
+.ward-status-btn .dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;background:#d1d5db}
+.ward-status-btn.active{font-weight:700;border-width:1.5px}
+.ws-conservative.active{border-color:#64748b;background:#f1f5f9;color:#475569}
+.ws-conservative.active .dot{background:#64748b}
+.ws-surgery_planned.active{border-color:#7c3aed;background:#f3e8ff;color:#7c3aed}
+.ws-surgery_planned.active .dot{background:#7c3aed}
+.ws-pac_pending.active{border-color:var(--amber);background:var(--amber-light);color:var(--amber)}
+.ws-pac_pending.active .dot{background:var(--amber)}
+.ws-pac_done.active{border-color:#0891b2;background:#e0f7fa;color:#0891b2}
+.ws-pac_done.active .dot{background:#0891b2}
+.ws-awaiting_surgery.active{border-color:#d97706;background:#fef3e2;color:#d97706}
+.ws-awaiting_surgery.active .dot{background:#d97706}
+.ws-post_operative.active{border-color:var(--teal);background:var(--teal-xlight);color:var(--teal)}
+.ws-post_operative.active .dot{background:var(--teal)}
+.ws-discharge_awaiting.active{border-color:#2563eb;background:#dbeafe;color:#2563eb}
+.ws-discharge_awaiting.active .dot{background:#2563eb}
+.ws-discharged.active{border-color:var(--green);background:var(--green-light);color:var(--green)}
+.ws-discharged.active .dot{background:var(--green)}
+.pod-badge{display:inline-flex;align-items:center;padding:7px 14px;border-radius:20px;background:var(--teal);color:#fff;font-size:13px;font-weight:700}
+
+/* TASKS */
+.task-tabs{display:flex;gap:6px;margin-bottom:12px;background:var(--bg);border-radius:var(--radius-sm);padding:4px}
+.task-tab{flex:1;padding:9px;border:none;background:none;border-radius:8px;font-size:12.5px;font-weight:700;color:var(--slate);cursor:pointer;font-family:var(--font);transition:all .15s}
+.task-tab.active{background:var(--surface);color:var(--navy);box-shadow:0 1px 4px rgba(0,0,0,.08)}
+.task-list{display:flex;flex-direction:column;gap:7px}
+.task-item{display:flex;align-items:center;gap:10px;padding:11px 12px;border-radius:var(--radius-sm);background:var(--bg);transition:background .15s}
+.task-item.done{background:var(--green-light)}
+.task-check{width:21px;height:21px;border-radius:6px;border:2px solid #cbd5e1;flex-shrink:0;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .15s;font-size:13px;color:#fff;background:#fff}
+.task-item.done .task-check{background:var(--green);border-color:var(--green)}
+.task-label{flex:1;font-size:13.5px;color:var(--ink);cursor:pointer}
+.task-item.done .task-label{color:var(--green);text-decoration:line-through;opacity:.75}
+.task-del{background:none;border:none;color:#cbd5e1;font-size:14px;cursor:pointer;padding:2px;flex-shrink:0}
+.task-add-row{display:flex;gap:8px;margin-top:10px}
+.task-add-row input{flex:1;border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:10px 12px;font-size:13px;font-family:var(--font);outline:none;background:var(--surface-2)}
+.task-add-row input:focus{border-color:var(--teal)}
+.task-add-row button{width:40px;border:none;border-radius:var(--radius-sm);background:var(--teal);color:#fff;font-size:18px;font-weight:700;cursor:pointer}
+
+/* INSURANCE */
+.ins-status-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.ins-status-btn{padding:11px 10px;border-radius:var(--radius-sm);border:1.5px solid var(--border);background:var(--surface-2);font-size:12.5px;font-weight:600;cursor:pointer;font-family:var(--font);text-align:center;transition:all .12s}
+.ins-status-btn.active-not_covered{border-color:var(--red);background:var(--red-light);color:var(--red);font-weight:700}
+.ins-status-btn.active-pending{border-color:var(--amber);background:var(--amber-light);color:var(--amber);font-weight:700}
+.ins-status-btn.active-approved{border-color:var(--green);background:var(--green-light);color:var(--green);font-weight:700}
+.ins-status-btn.active-covered{border-color:var(--teal);background:var(--teal-xlight);color:var(--teal);font-weight:700}
+
 /* VITALS */
 .vital-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .vital-box{background:var(--bg);border-radius:var(--radius-sm);padding:13px;border:1.5px solid transparent;transition:border-color .15s}
@@ -144,6 +192,10 @@ html,body{height:100%;font-family:var(--font);background:var(--bg);color:var(--i
 .sh-cancel{width:100%;margin-top:10px;padding:14px;border-radius:var(--radius-sm);border:none;background:var(--bg);font-size:15px;font-weight:700;color:var(--slate);cursor:pointer;font-family:var(--font);transition:background .15s}
 .sh-cancel:active{background:var(--border)}
 
+/* OFFLINE BANNER */
+#offlineBanner{background:var(--amber-bg);color:var(--amber);font-size:11.5px;font-weight:700;text-align:center;padding:7px 10px;flex-shrink:0;display:none;letter-spacing:.02em}
+#offlineBanner.show{display:block}
+
 /* TOAST & PROGRESS */
 #toast{position:fixed;bottom:calc(28px + var(--safe-bottom));left:50%;transform:translateX(-50%);padding:11px 22px;border-radius:var(--radius-sm);font-weight:600;font-size:13px;z-index:9999;display:none;white-space:nowrap;box-shadow:0 4px 20px rgba(0,0,0,.18);pointer-events:none;font-family:var(--font)}
 #toast.show-success{display:block;background:var(--green);color:#fff}
@@ -162,9 +214,8 @@ html,body{height:100%;font-family:var(--font);background:var(--bg);color:var(--i
     <h1 id="pageTitle">New Patient</h1>
     <button class="tb-share" onclick="openShareSheet()">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
-      Share PDF
-    </button>
   </div>
+  <div id="offlineBanner">📡 Offline — changes save on this device and sync when you're back online</div>
 
   <div id="formBody">
     <!-- Scan Sheet -->
@@ -191,6 +242,7 @@ html,body{height:100%;font-family:var(--font);background:var(--bg);color:var(--i
         <div class="field"><label>Contact <small style="color:var(--muted);text-transform:none;font-weight:400">(opt.)</small></label><input id="f-contact" type="tel" placeholder="Phone" inputmode="tel"/></div>
         <div class="field"><label>Address <small style="color:var(--muted);text-transform:none;font-weight:400">(opt.)</small></label><input id="f-address" placeholder="City, State" autocomplete="off"/></div>
       </div>
+      <div class="field"><label>Diagnosis</label><input id="f-diagnosis" placeholder="e.g. Right Intertrochanteric Fracture" autocomplete="off"/></div>
     </div>
 
     <!-- Condition -->
@@ -200,6 +252,43 @@ html,body{height:100%;font-family:var(--font);background:var(--bg);color:var(--i
         <button class="cond-btn" data-key="stable" onclick="setCondition('stable')"><span class="dot"></span>Stable</button>
         <button class="cond-btn" data-key="under_review" onclick="setCondition('under_review')"><span class="dot"></span>Under Review</button>
         <button class="cond-btn" data-key="critical" onclick="setCondition('critical')"><span class="dot"></span>Critical</button>
+      </div>
+    </div>
+
+    <!-- Ward Status -->
+    <div class="card">
+      <div class="card-title"><span class="icon">🛏️</span><span class="t">Ward Status</span></div>
+      <div class="ward-status-grid" id="wardStatusGrid"></div>
+      <div id="surgeryDateRow" class="field" style="margin-top:12px;display:none">
+        <label>Surgery Date</label>
+        <input id="f-surgeryDate" type="date" oninput="onSurgeryDateChange()"/>
+      </div>
+      <div id="podBadgeRow" style="display:none;margin-top:10px">
+        <span class="pod-badge" id="podBadge">POD 1</span>
+      </div>
+    </div>
+
+    <!-- Pending Tasks -->
+    <div class="card">
+      <div class="card-title"><span class="icon">✅</span><span class="t">Pending Tasks</span></div>
+      <div class="task-tabs">
+        <button class="task-tab active" data-phase="preop" onclick="switchTaskPhase('preop')">Pre-Op</button>
+        <button class="task-tab" data-phase="postop" onclick="switchTaskPhase('postop')">Post-Op</button>
+      </div>
+      <div class="task-list" id="taskList"></div>
+      <div class="task-add-row">
+        <input id="customTaskInput" placeholder="Add custom task…" onkeydown="if(event.key==='Enter'){addCustomTask();event.preventDefault();}"/>
+        <button onclick="addCustomTask()">+</button>
+      </div>
+    </div>
+
+    <!-- Insurance -->
+    <div class="card">
+      <div class="card-title"><span class="icon">🛡️</span><span class="t">Insurance</span></div>
+      <div class="ins-status-grid" id="insStatusGrid"></div>
+      <div class="row-2" style="margin-top:12px">
+        <div class="field"><label>Insurance Company</label><input id="f-insCompany" placeholder="e.g. Star Health" autocomplete="off"/></div>
+        <div class="field"><label>Pending Documents</label><input id="f-insDocs" placeholder="e.g. ID proof, est." autocomplete="off"/></div>
       </div>
     </div>
 
@@ -304,7 +393,24 @@ const DRIVE_CLIENT_ID = 'PASTE_YOUR_GOOGLE_OAUTH_CLIENT_ID_HERE.apps.googleuserc
 // ══ STATE ══
 let patients = [], doctor = {}, currentUser = null;
 let activeId = null, currentCondition = 'stable', docs = [], customParams = [];
+let wardStatus = 'conservative', insStatus = 'pending', currentTaskPhase = 'preop';
+let tasks = { preop: [], postop: [] };
 const VITALS_DEFAULT = {'v-bp':'120/80','v-hr':'72','v-spo2':'98','v-temp':'98.6','v-sugar':''};
+
+const WARD_STATUSES = [
+  {key:'conservative',      label:'Conservative',       icon:'preop'},
+  {key:'surgery_planned',   label:'Surgery Planned',    icon:'preop'},
+  {key:'pac_pending',       label:'PAC Pending',        icon:'preop'},
+  {key:'pac_done',          label:'PAC Done',           icon:'preop'},
+  {key:'awaiting_surgery',  label:'Awaiting Surgery',   icon:'preop'},
+  {key:'post_operative',    label:'Post-Operative',     icon:'postop'},
+  {key:'discharge_awaiting',label:'Discharge Awaiting', icon:'postop'},
+  {key:'discharged',        label:'Discharged',         icon:'postop'}
+];
+const DEFAULT_TASKS = {
+  preop:  ['PAC','CBC','ECG','Chest X-ray','Blood Reservation','Fitness','Consent','Insurance Approval'],
+  postop: ['Dressing','Drain Removal','Suture Removal','Physiotherapy','Weight Bearing','Discharge Summary']
+};
 
 // ══ SUPABASE ══
 async function sbFetch(path, opts={}){
@@ -316,6 +422,9 @@ async function sbFetch(path, opts={}){
 // ══ INIT ══
 async function init(){
   loadLocalState();
+  updateOfflineBanner();
+  window.addEventListener('online', updateOfflineBanner);
+  window.addEventListener('offline', updateOfflineBanner);
   const editId = sessionStorage.getItem('rn_edit_id');
   if(editId){
     activeId = editId;
@@ -325,10 +434,19 @@ async function init(){
   } else {
     activeId = (crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(36)+Math.random().toString(36).slice(2));
     setCondition('stable');
+    wardStatus = 'conservative';
+    ensureDefaultTasks();
+    insStatus = 'pending';
     updateTitle('New Patient');
     initVitalOpacity();
+    renderWardStatusGrid(); switchTaskPhase('preop'); renderInsGrid();
   }
   document.getElementById('driveRow').style.display = doctor.driveConnected ? 'block' : 'none';
+}
+
+function updateOfflineBanner(){
+  const el=document.getElementById('offlineBanner');
+  if(el) el.classList.toggle('show', !navigator.onLine);
 }
 
 function loadLocalState(){
@@ -349,11 +467,17 @@ function loadLocalState(){
 }
 
 async function fetchFromDB(id){
-  try{
-    const res = await sbFetch(`/rest/v1/patients?id=eq.${id}&select=*&limit=1`);
-    if(res.ok){ const rows=await res.json(); if(rows.length) fillForm(rows[0]); }
-  }catch(e){}
-  if(!document.getElementById('f-name').value) setCondition('stable');
+  if(navigator.onLine){
+    try{
+      const res = await withTimeout(sbFetch(`/rest/v1/patients?id=eq.${id}&select=*&limit=1`), 5000);
+      if(res.ok){ const rows=await res.json(); if(rows.length) fillForm(rows[0]); }
+    }catch(e){ console.warn('fetchFromDB failed, using local state only:', e); }
+  }
+  if(!document.getElementById('f-name').value){
+    setCondition('stable');
+    wardStatus = 'conservative'; ensureDefaultTasks(); insStatus = 'pending';
+    renderWardStatusGrid(); switchTaskPhase('preop'); renderInsGrid();
+  }
 }
 
 function updateTitle(name){ document.getElementById('pageTitle').textContent = name||'Patient'; }
@@ -363,6 +487,7 @@ function goBack(){ sessionStorage.removeItem('rn_edit_id'); window.location.href
 function fillForm(p){
   fset('f-name', p.name); fset('f-age', p.age); fset('f-ward', p.ward);
   fset('f-bed', p.bed); fset('f-contact', p.contact); fset('f-address', p.address);
+  fset('f-diagnosis', p.diagnosis);
   fset('f-obs', p.obs); fset('f-plan', p.plan);
   document.getElementById('f-gender').value = p.gender||'';
   fset('v-bp', p.bp||'120/80'); fset('v-hr', p.hr||'72');
@@ -371,8 +496,15 @@ function fillForm(p){
   docs = (p.docs||[]).map(d=>({...d}));
   customParams = (p.custom_params||p.customParams||[]).map(c=>({...c}));
   setCondition(p.status||'stable');
+  wardStatus = p.ward_status || 'conservative';
+  fset('f-surgeryDate', p.surgeryDate||'');
+  tasks = p.tasks && (p.tasks.preop || p.tasks.postop) ? p.tasks : {preop:[],postop:[]};
+  ensureDefaultTasks();
+  insStatus = p.insStatus || 'pending';
+  fset('f-insCompany', p.insCompany); fset('f-insDocs', p.insDocs);
   updateTitle(p.name||'Patient');
   renderDocGrid(); renderCustomParams(); initVitalOpacity();
+  renderWardStatusGrid(); switchTaskPhase(wardStatus==='post_operative' ? 'postop' : 'preop'); renderInsGrid();
   Object.keys(VITALS_DEFAULT).forEach(id=>{ const el=document.getElementById(id); if(el&&el.value) el.classList.add('has-value'); });
 }
 
@@ -382,10 +514,17 @@ function getFormData(){
     doctor_id: doctor.id,
     name: fget('f-name'), age: fget('f-age'), gender: document.getElementById('f-gender').value,
     ward: fget('f-ward'), bed: fget('f-bed'), contact: fget('f-contact'), address: fget('f-address'),
+    diagnosis: fget('f-diagnosis'),
     obs: fget('f-obs'), plan: fget('f-plan'),
     bp: fget('v-bp'), hr: fget('v-hr'), spo2: fget('v-spo2'), temp: fget('v-temp'), sugar: fget('v-sugar'),
     custom_params: customParams.filter(c=>c.name||c.value),
     status: currentCondition,
+    ward_status: wardStatus,
+    surgeryDate: fget('f-surgeryDate'),
+    tasks: tasks,
+    insStatus: insStatus,
+    insCompany: fget('f-insCompany'),
+    insDocs: fget('f-insDocs'),
     docs: docs,
     updated_at: new Date().toISOString()
   };
@@ -399,6 +538,79 @@ function setCondition(key){
   currentCondition = key;
   document.querySelectorAll('.cond-btn').forEach(btn=>{ btn.className='cond-btn'; if(btn.dataset.key===key) btn.classList.add('active-'+key); });
 }
+
+// ══ WARD STATUS ══
+function renderWardStatusGrid(){
+  document.getElementById('wardStatusGrid').innerHTML = WARD_STATUSES.map(s=>`
+    <button class="ward-status-btn ws-${s.key}${wardStatus===s.key?' active':''}" data-key="${s.key}" onclick="setWardStatus('${s.key}')">
+      <span class="dot"></span>${s.label}
+    </button>`).join('');
+  document.getElementById('surgeryDateRow').style.display = (wardStatus==='post_operative') ? 'block' : 'none';
+  updatePodBadge();
+}
+function setWardStatus(key){
+  wardStatus = key;
+  renderWardStatusGrid();
+  // Switching into Post-Operative defaults the task view to the post-op checklist, since that's what matters now
+  if(key==='post_operative' && currentTaskPhase==='preop') switchTaskPhase('postop');
+}
+function onSurgeryDateChange(){ updatePodBadge(); }
+function updatePodBadge(){
+  const row=document.getElementById('podBadgeRow'), badge=document.getElementById('podBadge');
+  const dateVal = document.getElementById('f-surgeryDate').value;
+  if(wardStatus!=='post_operative' || !dateVal){ row.style.display='none'; return; }
+  const surgery = new Date(dateVal+'T00:00:00');
+  const today = new Date(); today.setHours(0,0,0,0);
+  const podNum = Math.max(1, Math.round((today-surgery)/86400000)+1);
+  badge.textContent = 'POD '+podNum;
+  row.style.display='block';
+}
+
+// ══ TASKS ══
+function switchTaskPhase(phase){
+  currentTaskPhase = phase;
+  document.querySelectorAll('.task-tab').forEach(t=>t.classList.toggle('active', t.dataset.phase===phase));
+  renderTaskList();
+}
+function ensureDefaultTasks(){
+  ['preop','postop'].forEach(phase=>{
+    if(!tasks[phase] || !tasks[phase].length){
+      tasks[phase] = DEFAULT_TASKS[phase].map(label=>({label, done:false}));
+    }
+  });
+}
+function renderTaskList(){
+  const list = tasks[currentTaskPhase] || [];
+  document.getElementById('taskList').innerHTML = list.map((t,i)=>`
+    <div class="task-item${t.done?' done':''}">
+      <div class="task-check" onclick="toggleTask(${i})">${t.done?'✓':''}</div>
+      <div class="task-label" onclick="toggleTask(${i})">${esc(t.label)}</div>
+      <button class="task-del" onclick="removeTask(${i})">✕</button>
+    </div>`).join('') || '<div style="text-align:center;color:var(--muted);font-size:12.5px;padding:14px 0">No tasks yet</div>';
+}
+function toggleTask(i){ tasks[currentTaskPhase][i].done = !tasks[currentTaskPhase][i].done; renderTaskList(); }
+function removeTask(i){ tasks[currentTaskPhase].splice(i,1); renderTaskList(); }
+function addCustomTask(){
+  const inp=document.getElementById('customTaskInput');
+  const label=inp.value.trim();
+  if(!label) return;
+  tasks[currentTaskPhase].push({label, done:false});
+  inp.value='';
+  renderTaskList();
+}
+
+// ══ INSURANCE ══
+const INS_STATUSES = [
+  {key:'not_covered', label:'Not Covered'},
+  {key:'pending',     label:'Pending Approval'},
+  {key:'approved',    label:'Approved'},
+  {key:'covered',     label:'Covered'}
+];
+function renderInsGrid(){
+  document.getElementById('insStatusGrid').innerHTML = INS_STATUSES.map(s=>`
+    <button class="ins-status-btn${insStatus===s.key?' active-'+s.key:''}" onclick="setInsStatus('${s.key}')">${s.label}</button>`).join('');
+}
+function setInsStatus(key){ insStatus = key; renderInsGrid(); }
 
 // ══ VITALS ══
 function markVital(inp){ if(inp.value!==''&&inp.value!==VITALS_DEFAULT[inp.id]) inp.classList.add('has-value'); else if(inp.value==='') inp.classList.remove('has-value'); }
@@ -574,17 +786,36 @@ async function saveRecord(){
   localStorage.setItem('rn_patients_cache', JSON.stringify(patients));
   // Save to Supabase
   let synced = false;
-  try{
-    const res = await sbFetch('/rest/v1/patients', {
-      method:'POST',
-      headers:{'Prefer':'resolution=merge-duplicates'},
-      body: JSON.stringify(data)
-    });
-    if(res.ok){ synced=true; }
-    else { console.warn('Patient save failed:', res.status, await res.text()); }
-  }catch(e){ console.warn('Patient save network error:', e); }
+  if(navigator.onLine){
+    try{
+      const res = await withTimeout(sbFetch('/rest/v1/patients', {
+        method:'POST',
+        headers:{'Prefer':'resolution=merge-duplicates'},
+        body: JSON.stringify(data)
+      }), 6000);
+      if(res.ok){ synced=true; }
+      else { console.warn('Patient save failed:', res.status, await res.text()); }
+    }catch(e){ console.warn('Patient save network error:', e); }
+  }
+  if(!synced) queuePendingSync(data);
   if(doctor.driveConnected) autoBackupToDrive(data); // fire-and-forget, doesn't block the save
   showSuccessAndReturn(data.name, synced ? 'Saved & synced to cloud ✓' : 'Saved locally — will sync when online');
+}
+
+function withTimeout(promise, ms){
+  return new Promise((resolve,reject)=>{
+    const t=setTimeout(()=>reject(new Error('timeout')), ms);
+    promise.then(v=>{clearTimeout(t);resolve(v);}, e=>{clearTimeout(t);reject(e);});
+  });
+}
+
+// Queue a record for retry next time the app is online (deduped by id)
+function queuePendingSync(data){
+  let queue=[];
+  try{ queue=JSON.parse(localStorage.getItem('rn_pending_sync')||'[]'); }catch(e){ queue=[]; }
+  queue = queue.filter(d=>String(d.id)!==String(data.id));
+  queue.push(data);
+  localStorage.setItem('rn_pending_sync', JSON.stringify(queue));
 }
 
 // Silent background backup — never blocks or interrupts the doctor's save flow
@@ -621,12 +852,19 @@ async function shareVia(mode){
   const idx = patients.findIndex(p=>String(p.id)===String(activeId));
   if(idx>=0) patients[idx]=data; else patients.unshift(data);
   localStorage.setItem('rn_patients_cache', JSON.stringify(patients));
-  try{ await sbFetch('/rest/v1/patients',{method:'POST',headers:{'Prefer':'resolution=merge-duplicates'},body:JSON.stringify(data)}); }catch(e){}
+  if(navigator.onLine){
+    try{
+      const res = await withTimeout(sbFetch('/rest/v1/patients',{method:'POST',headers:{'Prefer':'resolution=merge-duplicates'},body:JSON.stringify(data)}), 6000);
+      if(!res.ok) queuePendingSync(data);
+    }catch(e){ queuePendingSync(data); }
+  } else {
+    queuePendingSync(data);
+  }
 
   showProgress('Generating PDF…');
   let blob;
   try{ blob = await buildPDF(); }
-  catch(e){ hideProgress(); showToast('PDF generation failed','error'); console.error(e); return; }
+  catch(e){ hideProgress(); showToast(e.message&&e.message.includes('offline')?'Connect once to enable offline PDF export':'PDF generation failed','error'); console.error(e); return; }
   hideProgress();
 
   const safe = (data.name||'patient').replace(/[^a-zA-Z0-9]/g,'_');
@@ -709,6 +947,7 @@ async function driveUpload(blob, fileName, token, folderId){
 
 // ══ PDF BUILDER ══
 async function buildPDF(){
+  if(!window.jspdf){ throw new Error('PDF library unavailable — connect to the internet once to cache it, then PDF export works offline.'); }
   const {jsPDF} = window.jspdf;
   const d = getFormData();
   const pdf = new jsPDF({unit:'mm',format:'a4'});
