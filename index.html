@@ -118,7 +118,7 @@ html,body{height:100%;font-family:var(--font);background:var(--bg);color:var(--i
 .ws-pill-post_operative{background:var(--teal-xlight);color:var(--teal)}
 .ws-pill-discharge_awaiting{background:#dbeafe;color:#2563eb}
 .ws-pill-discharged{background:var(--green-bg);color:var(--green)}
-.p-diagnosis{font-size:11.5px;color:var(--slate);margin-top:1px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.p-diagnosis-pill{display:inline-flex;align-items:center;gap:3px;font-size:10px;font-weight:700;color:var(--navy);background:var(--surface-2);border:1px solid var(--border);border-radius:10px;padding:2px 7px;max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .p-badge-row{display:flex;gap:6px;margin-top:5px;flex-wrap:wrap}
 .p-task-badge{display:inline-flex;align-items:center;gap:3px;font-size:10px;font-weight:700;color:var(--amber);background:var(--amber-bg);border-radius:10px;padding:2px 7px}
 .p-ins-badge{display:inline-flex;align-items:center;gap:3px;font-size:10px;font-weight:700;border-radius:10px;padding:2px 7px}
@@ -199,7 +199,7 @@ html,body{height:100%;font-family:var(--font);background:var(--bg);color:var(--i
     <div id="loginForm">
       <div class="auth-field">
         <label>Doctor Code</label>
-        <input id="l-code" type="text" placeholder="e.g. dr.sanjid" autocapitalize="none" spellcheck="false" autocomplete="username"/>
+        <input id="l-code" type="text" placeholder="e.g. drsmith" autocapitalize="none" spellcheck="false" autocomplete="username"/>
       </div>
       <div class="auth-field">
         <label>Password</label>
@@ -217,7 +217,7 @@ html,body{height:100%;font-family:var(--font);background:var(--bg);color:var(--i
       </div>
       <div class="auth-field">
         <label>Doctor Code</label>
-        <input id="s-code" type="text" placeholder="e.g. dr.sanjid" autocapitalize="none" spellcheck="false"/>
+        <input id="s-code" type="text" placeholder="e.g. drsmith" autocapitalize="none" spellcheck="false"/>
         <div class="field-hint">Unique ID to sign in — letters, numbers, dots only</div>
       </div>
       <div class="auth-field">
@@ -508,8 +508,8 @@ function renderHome(){
           <div class="p-info" onclick="goToForm('${p.id}')">
             <div class="p-name"><span class="p-name-text">${esc(p.name||'Unnamed')}</span>${p.bed?`<span class="p-bed-tag">Bed ${esc(p.bed)}</span>`:''}</div>
             <div class="p-sub">${[p.age?p.age+(p.gender?'/'+p.gender[0]:''):'',p.ward?'Ward '+esc(p.ward):''].filter(Boolean).join(' • ')}</div>
-            ${p.diagnosis?`<div class="p-diagnosis">${esc(p.diagnosis)}</div>`:''}
             <div class="p-badge-row">
+              ${p.diagnosis?`<span class="p-diagnosis-pill">🩺 ${esc(p.diagnosis)}</span>`:''}
               <span class="ws-pill ws-pill-${ws}">${WARD_STATUS_LABELS[ws]||ws}</span>
               ${pendingCount?`<span class="p-task-badge">⏳ ${pendingCount} pending</span>`:''}
               ${p.insStatus?`<span class="p-ins-badge p-ins-${insKey}">🛡 ${INS_LABELS[insKey]}</span>`:''}
