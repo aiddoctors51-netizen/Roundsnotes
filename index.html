@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
 <meta name="mobile-web-app-capable" content="yes"/>
-<title>RoundNotes</title>
+<title>RoundNotes — powered by Fovea</title>
 <link rel="manifest" href="manifest.json"/>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
@@ -36,6 +36,7 @@ html,body{height:100%;font-family:var(--font);background:var(--bg);color:var(--i
 @keyframes splashPop{from{transform:scale(.4);opacity:0}to{transform:scale(1);opacity:1}}
 .splash-name{color:#fff;font-family:var(--font-display);font-size:30px;animation:splashFade .5s .25s ease both}
 .splash-tagline{color:rgba(255,255,255,.6);font-size:12px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;animation:splashFade .5s .35s ease both}
+.splash-powered{color:rgba(255,255,255,.4);font-size:10.5px;font-weight:600;letter-spacing:.04em;margin-top:2px;animation:splashFade .5s .42s ease both}
 @keyframes splashFade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 .splash-dots{display:flex;gap:7px;margin-top:10px;animation:splashFade .5s .5s ease both}
 .splash-dots span{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.35);animation:dotPulse 1.2s .7s ease-in-out infinite}
@@ -50,6 +51,7 @@ html,body{height:100%;font-family:var(--font);background:var(--bg);color:var(--i
 .auth-logo{display:flex;align-items:center;gap:12px;margin-bottom:22px;justify-content:center}
 .auth-logo-icon{width:48px;height:48px;border-radius:13px;background:linear-gradient(135deg,var(--navy) 0%,var(--teal) 100%);display:flex;align-items:center;justify-content:center;font-size:24px}
 .auth-logo-text{font-family:var(--font-display);font-size:22px;color:var(--navy)}
+.auth-logo-powered{font-size:9px;font-weight:700;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin-top:-2px}
 .auth-tabs{display:flex;background:var(--bg);border-radius:12px;padding:4px;margin-bottom:20px;gap:4px}
 .auth-tab{flex:1;padding:10px;border:none;border-radius:9px;font-size:14px;font-weight:600;cursor:pointer;background:transparent;color:var(--slate);font-family:var(--font);transition:all .15s}
 .auth-tab.active{background:var(--surface);color:var(--navy);box-shadow:0 1px 5px rgba(0,0,0,.1);font-weight:700}
@@ -65,7 +67,9 @@ html,body{height:100%;font-family:var(--font);background:var(--bg);color:var(--i
 .auth-hint{font-size:11px;color:var(--muted);text-align:center;margin-top:12px;line-height:1.6}
 
 .topbar{background:linear-gradient(110deg,var(--navy-deep) 0%,var(--navy) 60%,#0e6070 100%);padding:calc(14px + var(--safe-top)) 16px 16px;display:flex;align-items:center;gap:10px;flex-shrink:0}
-.topbar h1{color:#fff;font-family:var(--font-display);font-size:20px;font-weight:400;flex:1;display:flex;align-items:center;gap:9px}
+.topbar h1{color:#fff;font-family:var(--font-display);font-size:20px;font-weight:400;flex:1;display:flex;align-items:center;gap:9px;flex-direction:column;align-items:flex-start;gap:0}
+.topbar h1 .h1-row{display:flex;align-items:center;gap:9px}
+.topbar h1 .h1-powered{font-family:var(--font);font-size:9px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:rgba(255,255,255,.5);margin-left:39px}
 .topbar-logo{width:30px;height:30px;border-radius:8px;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;border:1px solid rgba(255,255,255,.2)}
 .icon-btn{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.15);color:#fff;width:38px;height:38px;border-radius:50%;font-size:17px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .icon-btn:active{background:rgba(255,255,255,.22)}
@@ -76,15 +80,17 @@ html,body{height:100%;font-family:var(--font);background:var(--bg);color:var(--i
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
 
 #homeBody{flex:1;overflow-y:auto;overflow-x:hidden;padding:20px 16px calc(28px + var(--safe-bottom));-webkit-overflow-scrolling:touch}
+#offlineBanner{background:var(--amber-bg);color:var(--amber);font-size:11.5px;font-weight:700;text-align:center;padding:7px 10px;flex-shrink:0;display:none;letter-spacing:.02em}
+#offlineBanner.show{display:block}
 .add-btn{width:100%;background:linear-gradient(135deg,var(--teal) 0%,#008a7a 100%);color:#fff;border:none;border-radius:var(--radius);padding:16px 20px;font-size:15px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;box-shadow:0 4px 18px rgba(0,168,150,.35);margin-bottom:24px;font-family:var(--font);transition:transform .1s,opacity .15s}
 .add-btn:active{transform:scale(.98);opacity:.9}
 .add-btn-icon{width:28px;height:28px;border-radius:8px;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .section-label{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between}
 .section-hint{font-size:10px;color:var(--muted);font-weight:500;text-transform:none;letter-spacing:0;opacity:.75}
 
-.patient-card{background:var(--surface);border-radius:var(--radius);margin-bottom:10px;box-shadow:var(--shadow);display:flex;align-items:stretch;cursor:pointer;border:1.5px solid var(--border);transition:border-color .12s,box-shadow .12s,opacity .15s;overflow:hidden}
+.patient-card{background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);display:flex;align-items:stretch;cursor:pointer;border:1.5px solid var(--border);transition:border-color .12s,box-shadow .12s,opacity .15s;overflow:hidden;position:relative;z-index:1}
 .patient-card:active{border-color:var(--teal);box-shadow:var(--shadow-md)}
-.patient-card.dragging{opacity:.4;transform:scale(.97)}
+.patient-card-wrap.dragging{opacity:.4;transform:scale(.97)}
 .p-accent{width:4px;flex-shrink:0;background:var(--teal)}
 .p-accent.under_review{background:var(--amber)}.p-accent.critical{background:var(--red)}
 .p-inner{display:flex;align-items:center;gap:12px;flex:1;padding:13px 13px 13px 12px;min-width:0}
@@ -101,6 +107,33 @@ html,body{height:100%;font-family:var(--font);background:var(--bg);color:var(--i
 .pill-stable{background:var(--green-bg);color:var(--green)}
 .pill-under_review{background:var(--amber-bg);color:var(--amber)}
 .pill-critical{background:var(--red-bg);color:var(--red)}
+
+/* WARD STATUS PILL (home card) */
+.ws-pill{display:inline-flex;align-items:center;border-radius:20px;padding:3px 9px;font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;flex-shrink:0}
+.ws-pill-conservative{background:#f1f5f9;color:#475569}
+.ws-pill-surgery_planned{background:#f3e8ff;color:#7c3aed}
+.ws-pill-pac_pending{background:var(--amber-bg);color:var(--amber)}
+.ws-pill-pac_done{background:#e0f7fa;color:#0891b2}
+.ws-pill-awaiting_surgery{background:#fef3e2;color:#d97706}
+.ws-pill-post_operative{background:var(--teal-xlight);color:var(--teal)}
+.ws-pill-discharge_awaiting{background:#dbeafe;color:#2563eb}
+.ws-pill-discharged{background:var(--green-bg);color:var(--green)}
+.p-diagnosis{font-size:11.5px;color:var(--slate);margin-top:1px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.p-badge-row{display:flex;gap:6px;margin-top:5px;flex-wrap:wrap}
+.p-task-badge{display:inline-flex;align-items:center;gap:3px;font-size:10px;font-weight:700;color:var(--amber);background:var(--amber-bg);border-radius:10px;padding:2px 7px}
+.p-ins-badge{display:inline-flex;align-items:center;gap:3px;font-size:10px;font-weight:700;border-radius:10px;padding:2px 7px}
+.p-ins-not_covered{color:var(--red);background:var(--red-bg)}
+.p-ins-pending{color:var(--amber);background:var(--amber-bg)}
+.p-ins-approved{color:var(--green);background:var(--green-bg)}
+.p-ins-covered{color:var(--teal);background:var(--teal-xlight)}
+
+/* SWIPE ACTIONS */
+.patient-card-wrap{position:relative;border-radius:var(--radius);overflow:hidden;margin-bottom:10px}
+.swipe-actions{position:absolute;inset:0;display:flex;justify-content:space-between;border-radius:var(--radius)}
+.swipe-action{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;width:84px;color:#fff;font-size:10.5px;font-weight:700}
+.swipe-action.pac{background:var(--navy)}
+.swipe-action.discharge{background:var(--green);margin-left:auto}
+.swipe-action .ic{font-size:18px}
 .p-del{background:none;border:none;color:#c8d2db;font-size:16px;padding:8px 4px;cursor:pointer;flex-shrink:0}
 .p-del:active{color:var(--red)}
 .empty-state{text-align:center;padding:60px 28px;color:var(--muted)}
@@ -144,6 +177,7 @@ html,body{height:100%;font-family:var(--font);background:var(--bg);color:var(--i
   <div class="splash-logo">🏥</div>
   <div class="splash-name">RoundNotes</div>
   <div class="splash-tagline">Doctor's Round Assistant</div>
+  <div class="splash-powered">Powered by Fovea</div>
   <div class="splash-dots"><span></span><span></span><span></span></div>
 </div>
 
@@ -151,7 +185,10 @@ html,body{height:100%;font-family:var(--font);background:var(--bg);color:var(--i
   <div class="auth-card">
     <div class="auth-logo">
       <div class="auth-logo-icon">🏥</div>
-      <div class="auth-logo-text">RoundNotes</div>
+      <div>
+        <div class="auth-logo-text">RoundNotes</div>
+        <div class="auth-logo-powered">Powered by Fovea</div>
+      </div>
     </div>
     <div class="auth-tabs">
       <button class="auth-tab active" id="tab-login" onclick="switchTab('login')">Sign In</button>
@@ -199,10 +236,11 @@ html,body{height:100%;font-family:var(--font);background:var(--bg);color:var(--i
 
 <div id="homeScreen" class="screen">
   <div class="topbar">
-    <h1><div class="topbar-logo">🏥</div>RoundNotes</h1>
+    <h1><div class="h1-row"><div class="topbar-logo">🏥</div>RoundNotes</div><div class="h1-powered">Powered by Fovea</div></h1>
     <div class="sync-bar" id="syncBar"><div class="sync-dot" id="syncDot"></div><span id="syncLabel">Synced</span></div>
     <button class="icon-btn" onclick="openSettings()">⚙️</button>
   </div>
+  <div id="offlineBanner">📡 Offline — changes save on this device and sync when you're back online</div>
   <div id="homeBody">
     <button class="add-btn" onclick="goToForm()">
       <div class="add-btn-icon"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.8" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
@@ -259,6 +297,14 @@ let session = null, doctor = {}, patients = [];
 async function hashPass(pass){
   const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(pass+'rn_salt_2024'));
   return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+
+// ══ TIMEOUT WRAPPER — keeps the app usable on slow/dead connections ══
+function withTimeout(promise, ms){
+  return new Promise((resolve,reject)=>{
+    const t=setTimeout(()=>reject(new Error('timeout')), ms);
+    promise.then(v=>{clearTimeout(t);resolve(v);}, e=>{clearTimeout(t);reject(e);});
+  });
 }
 
 // ══ SUPABASE (anon key, used for DB reads/writes only) ══
@@ -346,9 +392,11 @@ async function checkSession(){
   try{ session = JSON.parse(localStorage.getItem('rn_session')||'null'); }catch(e){ session=null; }
   try{ doctor  = JSON.parse(localStorage.getItem('rn_doctor')||'{}'); }catch(e){ doctor={}; }
   if(!session?.id) return false;
-  // Verify session still valid by checking DB
+  // If we're already known to be offline, skip straight to cached session — don't wait on a dead network
+  if(!navigator.onLine){ return !!doctor?.id; }
+  // Verify session still valid by checking DB, but don't let a slow/dead connection block boot
   try{
-    const rows = await db(`/rest/v1/rn_doctors?id=eq.${session.id}&select=id,doctor_code,name,hospital,desig,dept,phone,googleClientId`);
+    const rows = await withTimeout(db(`/rest/v1/rn_doctors?id=eq.${session.id}&select=id,doctor_code,name,hospital,desig,dept,phone,googleClientId`), 4000);
     if(rows.length){ doctor = rows[0]; localStorage.setItem('rn_doctor',JSON.stringify(doctor)); return true; }
   }catch(e){}
   // Offline — use cached session
@@ -369,9 +417,10 @@ function handleLogout(){
 // ══ PATIENTS ══
 async function loadPatients(){
   if(!session?.id){ loadFromCache(); renderHome(); return; }
+  if(!navigator.onLine){ loadFromCache(); setSyncState('offline'); renderHome(); return; }
   setSyncState('syncing');
   try{
-    const rows = await db(`/rest/v1/patients?doctor_id=eq.${session.id}&order=sort_order.asc,created_at.desc&select=*`);
+    const rows = await withTimeout(db(`/rest/v1/patients?doctor_id=eq.${session.id}&order=sort_order.asc,created_at.desc&select=*`), 6000);
     patients = rows;
     localStorage.setItem('rn_patients_cache',JSON.stringify(patients));
     setSyncState('synced');
@@ -422,6 +471,19 @@ function switchTab(tab){
 function showErr(msg){ const el=document.getElementById('authError'); el.textContent=msg; el.classList.add('show'); }
 
 // ══ HOME ══
+const WARD_STATUS_LABELS = {
+  conservative:'Conservative', surgery_planned:'Surgery Planned', pac_pending:'PAC Pending',
+  pac_done:'PAC Done', awaiting_surgery:'Awaiting Surgery', post_operative:'Post-Op',
+  discharge_awaiting:'D/C Awaiting', discharged:'Discharged'
+};
+const INS_LABELS = { not_covered:'Not Covered', pending:'Insurance Pending', approved:'Insurance Approved', covered:'Covered' };
+
+function countPendingTasks(p){
+  const t = p.tasks || {};
+  const all = [...(t.preop||[]), ...(t.postop||[])];
+  return all.filter(x=>!x.done).length;
+}
+
 function renderHome(){
   const list=document.getElementById('patientList');
   if(!patients.length){
@@ -430,22 +492,37 @@ function renderHome(){
   }
   list.innerHTML=patients.map(p=>{
     const st=p.status||'stable';
-    return `<div class="patient-card" id="card-${p.id}" data-id="${p.id}">
-      <div class="p-accent ${st}"></div>
-      <div class="p-inner">
-        <div class="drag-handle"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg></div>
-        <div class="p-avatar" onclick="goToForm('${p.id}')">${(p.name||'?')[0].toUpperCase()}</div>
-        <div class="p-info" onclick="goToForm('${p.id}')">
-          <div class="p-name"><span class="p-name-text">${esc(p.name||'Unnamed')}</span>${p.bed?`<span class="p-bed-tag">Bed ${esc(p.bed)}</span>`:''}</div>
-          <div class="p-sub">${p.ward?'Ward '+esc(p.ward):''}</div>
-          <div class="p-time">${p.updated_at?timeAgo(new Date(p.updated_at).getTime()):''}</div>
+    const ws=p.ward_status||'conservative';
+    const pendingCount = countPendingTasks(p);
+    const insKey = p.insStatus||'pending';
+    return `<div class="patient-card-wrap" data-id="${p.id}">
+      <div class="swipe-actions">
+        <div class="swipe-action pac" onclick="quickAdvance('${p.id}','right')"><span class="ic">✓</span><span>${ws==='post_operative'?'Done':'PAC Done'}</span></div>
+        <div class="swipe-action discharge" onclick="quickAdvance('${p.id}','left')"><span class="ic">🏁</span><span>${ws==='discharge_awaiting'?'Discharged':'D/C Awaiting'}</span></div>
+      </div>
+      <div class="patient-card" id="card-${p.id}" data-id="${p.id}">
+        <div class="p-accent ${st}"></div>
+        <div class="p-inner">
+          <div class="drag-handle"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg></div>
+          <div class="p-avatar" onclick="goToForm('${p.id}')">${(p.name||'?')[0].toUpperCase()}</div>
+          <div class="p-info" onclick="goToForm('${p.id}')">
+            <div class="p-name"><span class="p-name-text">${esc(p.name||'Unnamed')}</span>${p.bed?`<span class="p-bed-tag">Bed ${esc(p.bed)}</span>`:''}</div>
+            <div class="p-sub">${[p.age?p.age+(p.gender?'/'+p.gender[0]:''):'',p.ward?'Ward '+esc(p.ward):''].filter(Boolean).join(' • ')}</div>
+            ${p.diagnosis?`<div class="p-diagnosis">${esc(p.diagnosis)}</div>`:''}
+            <div class="p-badge-row">
+              <span class="ws-pill ws-pill-${ws}">${WARD_STATUS_LABELS[ws]||ws}</span>
+              ${pendingCount?`<span class="p-task-badge">⏳ ${pendingCount} pending</span>`:''}
+              ${p.insStatus?`<span class="p-ins-badge p-ins-${insKey}">🛡 ${INS_LABELS[insKey]}</span>`:''}
+            </div>
+            <div class="p-time">${p.updated_at?timeAgo(new Date(p.updated_at).getTime()):''}</div>
+          </div>
+          <button class="p-del" onclick="event.stopPropagation();deletePatient('${p.id}')">🗑</button>
         </div>
-        <span class="pill pill-${st}" onclick="goToForm('${p.id}')">${st.replace('_',' ')}</span>
-        <button class="p-del" onclick="event.stopPropagation();deletePatient('${p.id}')">🗑</button>
       </div>
     </div>`;
   }).join('');
   initDrag();
+  initSwipe();
 }
 async function deletePatient(id){
   if(!confirm('Delete this patient?')) return;
@@ -454,19 +531,91 @@ async function deletePatient(id){
   renderHome(); await deletePatientDB(id);
 }
 
+// ══ QUICK STATUS ACTIONS (swipe shortcuts) ══
+function quickAdvance(id, dir){
+  const p = patients.find(x=>String(x.id)===String(id));
+  if(!p) return;
+  const ws = p.ward_status||'conservative';
+  if(dir==='right'){
+    // Swipe right: PAC Done, or Surgery Completed → Post-Operative
+    if(ws==='pac_pending') p.ward_status='pac_done';
+    else if(ws==='awaiting_surgery' || ws==='surgery_planned'){ p.ward_status='post_operative'; if(!p.surgeryDate) p.surgeryDate=new Date().toISOString().slice(0,10); }
+    else if(ws==='pac_done') p.ward_status='awaiting_surgery';
+    else { showToast('No quick action for this status — open patient to update','info'); return; }
+  } else {
+    // Swipe left: Discharge Awaiting → Discharged
+    if(ws==='discharge_awaiting') p.ward_status='discharged';
+    else p.ward_status='discharge_awaiting';
+  }
+  p.updated_at = new Date().toISOString();
+  localStorage.setItem('rn_patients_cache', JSON.stringify(patients));
+  renderHome();
+  syncWardStatus(p);
+  showToast(WARD_STATUS_LABELS[p.ward_status]+' — '+(p.name||'Patient'),'success');
+}
+async function syncWardStatus(p){
+  if(!navigator.onLine){ queuePendingSyncHome(p); return; }
+  try{
+    const res = await withTimeout(db('/rest/v1/patients', {method:'POST', headers:{'Prefer':'resolution=merge-duplicates'}, body: JSON.stringify(p)}), 6000);
+  }catch(e){ queuePendingSyncHome(p); }
+}
+function queuePendingSyncHome(data){
+  let queue=[];
+  try{ queue=JSON.parse(localStorage.getItem('rn_pending_sync')||'[]'); }catch(e){ queue=[]; }
+  queue = queue.filter(d=>String(d.id)!==String(data.id));
+  queue.push(data);
+  localStorage.setItem('rn_pending_sync', JSON.stringify(queue));
+}
+
+// ══ SWIPE GESTURES ══
+function initSwipe(){
+  document.querySelectorAll('.patient-card-wrap').forEach(wrap=>{
+    const card = wrap.querySelector('.patient-card');
+    let startX=0, startY=0, curX=0, dragging=false, axisLocked=null;
+    const onStart=e=>{
+      const t=e.touches[0]; startX=t.clientX; startY=t.clientY; curX=0; dragging=true; axisLocked=null;
+      card.style.transition='none';
+    };
+    const onMove=e=>{
+      if(!dragging) return;
+      const t=e.touches[0]; const dx=t.clientX-startX, dy=t.clientY-startY;
+      if(axisLocked===null && (Math.abs(dx)>8||Math.abs(dy)>8)) axisLocked = Math.abs(dx)>Math.abs(dy) ? 'x' : 'y';
+      if(axisLocked==='y'){ dragging=false; return; } // let vertical scroll/drag-handle take over
+      if(axisLocked==='x'){
+        e.preventDefault();
+        curX = Math.max(-84, Math.min(84, dx));
+        card.style.transform=`translateX(${curX}px)`;
+      }
+    };
+    const onEnd=()=>{
+      if(!dragging){ card.style.transition='transform .2s ease'; card.style.transform='translateX(0)'; return; }
+      dragging=false;
+      card.style.transition='transform .2s ease';
+      if(curX > 60){ card.style.transform='translateX(84px)'; setTimeout(()=>{ quickAdvance(wrap.dataset.id,'right'); card.style.transform='translateX(0)'; },150); }
+      else if(curX < -60){ card.style.transform='translateX(-84px)'; setTimeout(()=>{ quickAdvance(wrap.dataset.id,'left'); card.style.transform='translateX(0)'; },150); }
+      else { card.style.transform='translateX(0)'; }
+      curX=0;
+    };
+    card.addEventListener('touchstart', onStart, {passive:true});
+    card.addEventListener('touchmove', onMove, {passive:false});
+    card.addEventListener('touchend', onEnd);
+    card.addEventListener('touchcancel', onEnd);
+  });
+}
+
 // ══ DRAG ══
 function initDrag(){
   const list=document.getElementById('patientList');
   let el=null,ph=null,dragging=false,timer=null,startY=0;
-  const cards=()=>Array.from(list.querySelectorAll('.patient-card'));
-  const start=(card,cy)=>{ el=card;dragging=true;ph=document.createElement('div');ph.style.cssText=`height:${card.offsetHeight}px;margin-bottom:10px;border-radius:16px;background:var(--teal-xlight);border:2px dashed var(--teal)`;card.parentNode.insertBefore(ph,card);card.classList.add('dragging');card.style.cssText=`position:fixed;width:${card.offsetWidth}px;z-index:500;left:${card.getBoundingClientRect().left}px;top:${card.getBoundingClientRect().top}px;box-shadow:0 10px 36px rgba(0,0,0,.18);pointer-events:none`;startY=cy-card.getBoundingClientRect().top;if(navigator.vibrate)navigator.vibrate(30); };
-  const move=(cy)=>{ if(!dragging||!el)return;el.style.top=(cy-startY)+'px';const rest=cards().filter(c=>c!==el);let ins=null;for(const c of rest){const r=c.getBoundingClientRect();if(cy<r.top+r.height/2){ins=c;break;}}ins?list.insertBefore(ph,ins):list.appendChild(ph); };
-  const end=()=>{ if(!dragging||!el)return;dragging=false;list.insertBefore(el,ph);ph.remove();el.removeAttribute('style');el.classList.remove('dragging');const order=cards().map(c=>c.dataset.id);const map={};patients.forEach(p=>map[p.id]=p);patients=order.map(id=>map[id]).filter(Boolean);localStorage.setItem('rn_patients_cache',JSON.stringify(patients));el=null;ph=null; };
+  const wraps=()=>Array.from(list.querySelectorAll('.patient-card-wrap'));
+  const start=(wrap,cy)=>{ el=wrap;dragging=true;ph=document.createElement('div');ph.style.cssText=`height:${wrap.offsetHeight}px;margin-bottom:10px;border-radius:16px;background:var(--teal-xlight);border:2px dashed var(--teal)`;wrap.parentNode.insertBefore(ph,wrap);wrap.classList.add('dragging');wrap.style.cssText=`position:fixed;width:${wrap.offsetWidth}px;z-index:500;left:${wrap.getBoundingClientRect().left}px;top:${wrap.getBoundingClientRect().top}px;box-shadow:0 10px 36px rgba(0,0,0,.18);pointer-events:none`;startY=cy-wrap.getBoundingClientRect().top;if(navigator.vibrate)navigator.vibrate(30); };
+  const move=(cy)=>{ if(!dragging||!el)return;el.style.top=(cy-startY)+'px';const rest=wraps().filter(c=>c!==el);let ins=null;for(const c of rest){const r=c.getBoundingClientRect();if(cy<r.top+r.height/2){ins=c;break;}}ins?list.insertBefore(ph,ins):list.appendChild(ph); };
+  const end=()=>{ if(!dragging||!el)return;dragging=false;list.insertBefore(el,ph);ph.remove();el.removeAttribute('style');el.classList.remove('dragging');const order=wraps().map(c=>c.dataset.id);const map={};patients.forEach(p=>map[p.id]=p);patients=order.map(id=>map[id]).filter(Boolean);localStorage.setItem('rn_patients_cache',JSON.stringify(patients));el=null;ph=null; };
   list.querySelectorAll('.drag-handle').forEach(h=>{
-    h.addEventListener('touchstart',e=>{const c=h.closest('.patient-card');timer=setTimeout(()=>start(c,e.touches[0].clientY),200);},{passive:true});
+    h.addEventListener('touchstart',e=>{const c=h.closest('.patient-card-wrap');timer=setTimeout(()=>start(c,e.touches[0].clientY),200);},{passive:true});
     h.addEventListener('touchmove',e=>{clearTimeout(timer);if(!dragging)return;e.preventDefault();move(e.touches[0].clientY);},{passive:false});
     h.addEventListener('touchend',()=>{clearTimeout(timer);end();});
-    h.addEventListener('mousedown',e=>{e.preventDefault();const c=h.closest('.patient-card');start(c,e.clientY);const mm=ev=>move(ev.clientY);const mu=()=>{end();document.removeEventListener('mousemove',mm);document.removeEventListener('mouseup',mu);};document.addEventListener('mousemove',mm);document.addEventListener('mouseup',mu);});
+    h.addEventListener('mousedown',e=>{e.preventDefault();const c=h.closest('.patient-card-wrap');start(c,e.clientY);const mm=ev=>move(ev.clientY);const mu=()=>{end();document.removeEventListener('mousemove',mm);document.removeEventListener('mouseup',mu);};document.addEventListener('mousemove',mm);document.addEventListener('mouseup',mu);});
   });
 }
 
@@ -482,14 +631,34 @@ function timeAgo(ts){ const s=Math.floor((Date.now()-ts)/1000); if(s<60)return '
 let _tt; function showToast(msg,type='info'){ const t=document.getElementById('toast'); t.textContent=msg; t.className='show-'+type; clearTimeout(_tt); _tt=setTimeout(()=>t.className='',2800); }
 function showLoading(msg){ document.getElementById('loadingMsg').textContent=msg||'Loading…'; document.getElementById('loadingOverlay').classList.add('show'); }
 function hideLoading(){ document.getElementById('loadingOverlay').classList.remove('show'); }
-window.addEventListener('online',()=>{ if(session) loadPatients(); });
-window.addEventListener('offline',()=>setSyncState('offline'));
+window.addEventListener('online',()=>{ updateOfflineBanner(); if(session){ flushPendingSync(); loadPatients(); } });
+window.addEventListener('offline',()=>{ updateOfflineBanner(); setSyncState('offline'); });
+function updateOfflineBanner(){ const el=document.getElementById('offlineBanner'); if(el) el.classList.toggle('show', !navigator.onLine); }
+
+// ══ PENDING SYNC QUEUE — retries patient saves made while offline ══
+async function flushPendingSync(){
+  let queue=[];
+  try{ queue=JSON.parse(localStorage.getItem('rn_pending_sync')||'[]'); }catch(e){ queue=[]; }
+  if(!queue.length) return;
+  setSyncState('syncing');
+  const remaining=[];
+  for(const data of queue){
+    try{
+      const res = await db('/rest/v1/patients', { method:'POST', headers:{'Prefer':'resolution=merge-duplicates'}, body: JSON.stringify(data) });
+      if(!res) remaining.push(data);
+    }catch(e){ remaining.push(data); }
+  }
+  localStorage.setItem('rn_pending_sync', JSON.stringify(remaining));
+  if(remaining.length){ setSyncState('offline'); }
+  else { setSyncState('synced'); if(queue.length) showToast(queue.length+' patient record(s) synced ✓','success'); }
+}
 
 // ══ INIT ══
 async function init(){
+  updateOfflineBanner();
   const valid = await checkSession();
   document.getElementById('splash').classList.add('hide');
-  if(valid){ await loadPatients(); showScreen('homeScreen'); }
+  if(valid){ await loadPatients(); showScreen('homeScreen'); if(navigator.onLine) flushPendingSync(); }
   else { showScreen('authScreen'); }
 }
 
